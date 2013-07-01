@@ -9,5 +9,10 @@
         public const uint CreatePatchCommand = 0x500;
         public const uint ApplyPatchCommand = 0x600;
         public const uint RevertCommand = 0x700;
+        public const uint DiskBrowser = 0x800;
+        public const uint RepoBrowser = 0x900;
+        public const uint BranchCommand = 0x910;
+        public const uint SwitchCommand = 0x920;
+        public const uint MergeCommand = 0x930;
     };
 }

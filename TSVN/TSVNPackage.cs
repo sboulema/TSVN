@@ -80,6 +80,26 @@ namespace FundaRealEstateBV.TSVN
                 CommandID revertCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.RevertCommand);
                 MenuCommand revertMenuItem = new MenuCommand(RevertCommand, revertCommandId);
                 mcs.AddCommand(revertMenuItem);
+
+                CommandID diskBrowserCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.DiskBrowser);
+                MenuCommand diskBrowserMenuItem = new MenuCommand(DiskBrowserCommand, diskBrowserCommandId);
+                mcs.AddCommand(diskBrowserMenuItem);
+
+                CommandID repoBrowserCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.RepoBrowser);
+                MenuCommand repoBrowserMenuItem = new MenuCommand(RepoBrowserCommand, repoBrowserCommandId);
+                mcs.AddCommand(repoBrowserMenuItem);
+
+                CommandID branchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.BranchCommand);
+                MenuCommand branchMenuItem = new MenuCommand(BranchCommand, branchCommandId);
+                mcs.AddCommand(branchMenuItem);
+
+                CommandID switchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.SwitchCommand);
+                MenuCommand switchMenuItem = new MenuCommand(SwitchCommand, switchCommandId);
+                mcs.AddCommand(switchMenuItem);
+
+                CommandID mergeCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.MergeCommand);
+                MenuCommand mergeMenuItem = new MenuCommand(MergeCommand, mergeCommandId);
+                mcs.AddCommand(mergeMenuItem);
             }
         }
         #endregion
@@ -135,6 +155,36 @@ namespace FundaRealEstateBV.TSVN
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _solutionDir));
+        }
+
+        private void DiskBrowserCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start(_solutionDir);
+        }
+
+        private void RepoBrowserCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _solutionDir));
+        }
+
+        private void BranchCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:copy /path:\"{0}\"", _solutionDir));
+        }
+
+        private void SwitchCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:switch /path:\"{0}\"", _solutionDir));
+        }
+
+        private void MergeCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
         }
         #endregion
     }
