@@ -14,5 +14,7 @@
         public const uint BranchCommand = 0x910;
         public const uint SwitchCommand = 0x920;
         public const uint MergeCommand = 0x930;
+        public const uint DifferencesCommand = 0x940;
+        public const uint BlameCommand = 0x950;
     };
 }

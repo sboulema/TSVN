@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
@@ -32,6 +30,8 @@ namespace FundaRealEstateBV.TSVN
     public sealed class TSVNPackage : Package
     {
         private string _solutionDir;
+        private string _currentFilePath;
+        private int _currentLineIndex;
 
         #region Package Members
         /// <summary>
@@ -47,7 +47,9 @@ namespace FundaRealEstateBV.TSVN
             {
                 var pathParts = dte.Solution.FullName.Split(new[] {"\\"}, StringSplitOptions.None);
                 _solutionDir = string.Format("{0}\\{1}\\{2}\\", pathParts[0], pathParts[1], pathParts[2]);
-            }         
+            }
+            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentLineIndex = ((TextDocument)dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;           
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -100,6 +102,14 @@ namespace FundaRealEstateBV.TSVN
                 CommandID mergeCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.MergeCommand);
                 MenuCommand mergeMenuItem = new MenuCommand(MergeCommand, mergeCommandId);
                 mcs.AddCommand(mergeMenuItem);
+
+                CommandID differencesCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.DifferencesCommand);
+                MenuCommand differencesMenuItem = new MenuCommand(DifferencesCommand, differencesCommandId);
+                mcs.AddCommand(differencesMenuItem);
+
+                CommandID blameCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.BlameCommand);
+                MenuCommand blameMenuItem = new MenuCommand(BlameCommand, blameCommandId);
+                mcs.AddCommand(blameMenuItem);
             }
         }
         #endregion
@@ -185,6 +195,18 @@ namespace FundaRealEstateBV.TSVN
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
+        }
+
+        private void DifferencesCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
+        }
+
+        private void BlameCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
         }
         #endregion
     }
