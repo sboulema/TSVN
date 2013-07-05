@@ -16,5 +16,6 @@
         public const uint MergeCommand = 0x930;
         public const uint DifferencesCommand = 0x940;
         public const uint BlameCommand = 0x950;
+        public const uint ShowLogFileCommand = 0x960;
     };
 }

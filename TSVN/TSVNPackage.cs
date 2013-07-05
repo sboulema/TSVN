@@ -110,6 +110,10 @@ namespace FundaRealEstateBV.TSVN
                 CommandID blameCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.BlameCommand);
                 MenuCommand blameMenuItem = new MenuCommand(BlameCommand, blameCommandId);
                 mcs.AddCommand(blameMenuItem);
+
+                CommandID showLogFileCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ShowLogFileCommand);
+                MenuCommand showLogFileMenuItem = new MenuCommand(ShowLogFileCommand, showLogFileCommandId);
+                mcs.AddCommand(showLogFileMenuItem);
             }
         }
         #endregion
@@ -139,10 +143,16 @@ namespace FundaRealEstateBV.TSVN
             Process.Start("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
+        private void ShowLogFileCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
+        }
+
         private void CreatePatchCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:createPatch /path:\"{0}\" /noview /closeonend:0", _solutionDir));
+            Process.Start("TortoiseProc.exe", string.Format("/command:createpatch /path:\"{0}\" /noview /closeonend:0", _solutionDir));
         }
 
         private void ApplyPatchCommand(object sender, EventArgs e)
