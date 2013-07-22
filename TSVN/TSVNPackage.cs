@@ -29,6 +29,7 @@ namespace FundaRealEstateBV.TSVN
     [Guid(GuidList.guidTSVNPkgString)]
     public sealed class TSVNPackage : Package
     {
+        private DTE _dte;
         private string _solutionDir;
         private string _currentFilePath;
         private int _currentLineIndex;
@@ -42,14 +43,12 @@ namespace FundaRealEstateBV.TSVN
         {
             base.Initialize();
 
-            DTE dte = (DTE)GetService(typeof(DTE));
-            if (!string.IsNullOrEmpty(dte.Solution.FullName))
+            _dte = (DTE)GetService(typeof(DTE));
+            if (!string.IsNullOrEmpty(_dte.Solution.FullName))
             {
-                var pathParts = dte.Solution.FullName.Split(new[] {"\\"}, StringSplitOptions.None);
+                var pathParts = _dte.Solution.FullName.Split(new[] { "\\" }, StringSplitOptions.None);
                 _solutionDir = string.Format("{0}\\{1}\\{2}\\", pathParts[0], pathParts[1], pathParts[2]);
-            }
-            _currentFilePath = dte.ActiveDocument.FullName;
-            _currentLineIndex = ((TextDocument)dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;           
+            }        
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -145,6 +144,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void ShowLogFileCommand(object sender, EventArgs e)
         {
+            _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
@@ -161,7 +161,7 @@ namespace FundaRealEstateBV.TSVN
 
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Patch Files (.patch)|*.patch|All Files (*.*)|*.*",
+                Filter = Resources.PatchFileFilterString,
                 FilterIndex = 1,
                 Multiselect = false
             };
@@ -209,13 +209,16 @@ namespace FundaRealEstateBV.TSVN
 
         private void DifferencesCommand(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_solutionDir)) return;
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
         }
 
         private void BlameCommand(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(_solutionDir)) return;
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentLineIndex = ((TextDocument)_dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;  
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
         }
         #endregion
