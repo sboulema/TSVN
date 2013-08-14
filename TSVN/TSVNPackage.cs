@@ -106,9 +106,20 @@ namespace FundaRealEstateBV.TSVN
                 CommandID cleanupCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CleanupCommand);
                 MenuCommand cleanupMenuItem = new MenuCommand(CleanupCommand, cleanupCommandId);
                 mcs.AddCommand(cleanupMenuItem);
+
+
+                mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
+                mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
             }
         }
         #endregion
+
+        public MenuCommand CreateCommand(EventHandler handler, uint commandId)
+        {
+            CommandID menuCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)commandId);
+            MenuCommand menuItem = new MenuCommand(handler, menuCommandId);
+            return menuItem;
+        }
 
         #region Button Commands
         private void ShowChangesCommand(object sender, EventArgs e)
@@ -181,11 +192,24 @@ namespace FundaRealEstateBV.TSVN
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start(_solutionDir);
         }
+        private void DiskBrowserFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("explorer.exe", _currentFilePath);
+        }
 
         private void RepoBrowserCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _solutionDir));
+        }
+
+        private void RepoBrowserFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _currentFilePath));
         }
 
         private void BranchCommand(object sender, EventArgs e)
