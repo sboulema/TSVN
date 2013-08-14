@@ -44,8 +44,12 @@ namespace FundaRealEstateBV.TSVN
                 mcs.AddCommand(showChangesMenuItem);
 
                 CommandID updateCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.UpdateCommand);
-                MenuCommand menuItem = new MenuCommand(UpdateCommand, updateCommandId);
-                mcs.AddCommand( menuItem );
+                MenuCommand updateMenuItem = new MenuCommand(UpdateCommand, updateCommandId);
+                mcs.AddCommand(updateMenuItem);
+
+                CommandID updateToRevisionCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.UpdateToRevisionCommand);
+                MenuCommand updateToRevisionMenuItem = new MenuCommand(UpdateToRevisionCommand, updateToRevisionCommandId);
+                mcs.AddCommand(updateToRevisionMenuItem);
 
                 CommandID commitCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CommitCommand);
                 MenuCommand commitMenuItem = new MenuCommand(CommitCommand, commitCommandId);
@@ -98,6 +102,10 @@ namespace FundaRealEstateBV.TSVN
                 CommandID showLogFileCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ShowLogFileCommand);
                 MenuCommand showLogFileMenuItem = new MenuCommand(ShowLogFileCommand, showLogFileCommandId);
                 mcs.AddCommand(showLogFileMenuItem);
+
+                CommandID cleanupCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CleanupCommand);
+                MenuCommand cleanupMenuItem = new MenuCommand(CleanupCommand, cleanupCommandId);
+                mcs.AddCommand(cleanupMenuItem);
             }
         }
         #endregion
@@ -113,6 +121,12 @@ namespace FundaRealEstateBV.TSVN
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
+        }
+
+        private void UpdateToRevisionCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
         private void CommitCommand(object sender, EventArgs e)
@@ -190,6 +204,12 @@ namespace FundaRealEstateBV.TSVN
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
+        }
+
+        private void CleanupCommand(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:cleanup /path:\"{0}\"", _solutionDir));
         }
 
         private void DifferencesCommand(object sender, EventArgs e)

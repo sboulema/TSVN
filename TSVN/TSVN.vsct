@@ -144,6 +144,20 @@
           <ButtonText>Revert Changes...</ButtonText>
         </Strings>
       </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="updateToRevisionCommand" priority="0x0701" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Strings>
+          <ButtonText>Update To Revision...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="cleanupCommand" priority="0x0702" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Strings>
+          <ButtonText>Cleanup Working Copy</ButtonText>
+        </Strings>
+      </Button>
 
       <Button guid="guidTSVNCmdSet" id="showLogFileCommand" priority="0x0960" type="Button">
         <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
@@ -207,6 +221,8 @@
       <IDSymbol name="blameCommand" value="0x0940" />
       <IDSymbol name="differencesCommand" value="0x0950" />     
       <IDSymbol name="showLogFileCommand" value="0x0960" />
+      <IDSymbol name="updateToRevisionCommand" value="0x0970" />
+      <IDSymbol name="cleanupCommand" value="0x0702" />
     </GuidSymbol>  
 
     <GuidSymbol name="guidImages" value="{fec49b6d-c04a-42bd-b021-b8b2e5cfb291}" >
