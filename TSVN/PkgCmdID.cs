@@ -19,12 +19,17 @@
 
         public const uint RevertCommand = 0x0500;
         public const uint UpdateToRevisionCommand = 0x0501;
-        public const uint CleanupCommand = 0x0502;    
-        
-        public const uint DifferencesCommand = 0x0600;
+        public const uint CleanupCommand = 0x0502;
+
+        public const uint ShowLogFileCommand = 0x0600;       
         public const uint BlameCommand = 0x0601;
-        public const uint ShowLogFileCommand = 0x0602;
+        public const uint DifferencesCommand = 0x0602;
         public const uint DiskBrowserFileCommand = 0x0603;
         public const uint RepoBrowserFileCommand = 0x0604;
+        public const uint MergeFileCommand = 0x0605;
+        public const uint UpdateToRevisionFileCommand = 0x0606;
+        public const uint PropertiesCommand = 0x0607;
+        public const uint UpdateFileCommand = 0x0608;
+        public const uint CommitFileCommand = 0x0609;
     };
 }

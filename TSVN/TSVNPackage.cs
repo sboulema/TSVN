@@ -9,7 +9,7 @@ using Process = System.Diagnostics.Process;
 namespace FundaRealEstateBV.TSVN
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.2", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "1.3", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     public sealed class TSVNPackage : Package
@@ -37,80 +37,32 @@ namespace FundaRealEstateBV.TSVN
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if ( null != mcs )
-            {
-                CommandID showChangesCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ShowChangesCommand);
-                MenuCommand showChangesMenuItem = new MenuCommand(ShowChangesCommand, showChangesCommandId);
-                mcs.AddCommand(showChangesMenuItem);
+            if (null == mcs) return;
 
-                CommandID updateCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.UpdateCommand);
-                MenuCommand updateMenuItem = new MenuCommand(UpdateCommand, updateCommandId);
-                mcs.AddCommand(updateMenuItem);
-
-                CommandID updateToRevisionCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.UpdateToRevisionCommand);
-                MenuCommand updateToRevisionMenuItem = new MenuCommand(UpdateToRevisionCommand, updateToRevisionCommandId);
-                mcs.AddCommand(updateToRevisionMenuItem);
-
-                CommandID commitCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CommitCommand);
-                MenuCommand commitMenuItem = new MenuCommand(CommitCommand, commitCommandId);
-                mcs.AddCommand(commitMenuItem);
-
-                CommandID showLogCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ShowLogCommand);
-                MenuCommand showLogMenuItem = new MenuCommand(ShowLogCommand, showLogCommandId);
-                mcs.AddCommand(showLogMenuItem);
-
-                CommandID createPatchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CreatePatchCommand);
-                MenuCommand createPatchMenuItem = new MenuCommand(CreatePatchCommand, createPatchCommandId);
-                mcs.AddCommand(createPatchMenuItem);
-
-                CommandID applyPatchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ApplyPatchCommand);
-                MenuCommand applyPatchMenuItem = new MenuCommand(ApplyPatchCommand, applyPatchCommandId);
-                mcs.AddCommand(applyPatchMenuItem);
-
-                CommandID revertCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.RevertCommand);
-                MenuCommand revertMenuItem = new MenuCommand(RevertCommand, revertCommandId);
-                mcs.AddCommand(revertMenuItem);
-
-                CommandID diskBrowserCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.DiskBrowser);
-                MenuCommand diskBrowserMenuItem = new MenuCommand(DiskBrowserCommand, diskBrowserCommandId);
-                mcs.AddCommand(diskBrowserMenuItem);
-
-                CommandID repoBrowserCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.RepoBrowser);
-                MenuCommand repoBrowserMenuItem = new MenuCommand(RepoBrowserCommand, repoBrowserCommandId);
-                mcs.AddCommand(repoBrowserMenuItem);
-
-                CommandID branchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.BranchCommand);
-                MenuCommand branchMenuItem = new MenuCommand(BranchCommand, branchCommandId);
-                mcs.AddCommand(branchMenuItem);
-
-                CommandID switchCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.SwitchCommand);
-                MenuCommand switchMenuItem = new MenuCommand(SwitchCommand, switchCommandId);
-                mcs.AddCommand(switchMenuItem);
-
-                CommandID mergeCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.MergeCommand);
-                MenuCommand mergeMenuItem = new MenuCommand(MergeCommand, mergeCommandId);
-                mcs.AddCommand(mergeMenuItem);
-
-                CommandID differencesCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.DifferencesCommand);
-                MenuCommand differencesMenuItem = new MenuCommand(DifferencesCommand, differencesCommandId);
-                mcs.AddCommand(differencesMenuItem);
-
-                CommandID blameCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.BlameCommand);
-                MenuCommand blameMenuItem = new MenuCommand(BlameCommand, blameCommandId);
-                mcs.AddCommand(blameMenuItem);
-
-                CommandID showLogFileCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.ShowLogFileCommand);
-                MenuCommand showLogFileMenuItem = new MenuCommand(ShowLogFileCommand, showLogFileCommandId);
-                mcs.AddCommand(showLogFileMenuItem);
-
-                CommandID cleanupCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)PkgCmdIdList.CleanupCommand);
-                MenuCommand cleanupMenuItem = new MenuCommand(CleanupCommand, cleanupCommandId);
-                mcs.AddCommand(cleanupMenuItem);
-
-
-                mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
-                mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
-            }
+            mcs.AddCommand(CreateCommand(ShowChangesCommand, PkgCmdIdList.ShowChangesCommand));
+            mcs.AddCommand(CreateCommand(UpdateCommand, PkgCmdIdList.UpdateCommand));
+            mcs.AddCommand(CreateCommand(UpdateToRevisionCommand, PkgCmdIdList.UpdateToRevisionCommand));
+            mcs.AddCommand(CreateCommand(CommitCommand, PkgCmdIdList.CommitCommand));
+            mcs.AddCommand(CreateCommand(ShowLogCommand, PkgCmdIdList.ShowLogCommand));
+            mcs.AddCommand(CreateCommand(CreatePatchCommand, PkgCmdIdList.CreatePatchCommand));
+            mcs.AddCommand(CreateCommand(ApplyPatchCommand, PkgCmdIdList.ApplyPatchCommand));
+            mcs.AddCommand(CreateCommand(RevertCommand, PkgCmdIdList.RevertCommand));
+            mcs.AddCommand(CreateCommand(DiskBrowserCommand, PkgCmdIdList.DiskBrowser));
+            mcs.AddCommand(CreateCommand(RepoBrowserCommand, PkgCmdIdList.RepoBrowser));
+            mcs.AddCommand(CreateCommand(BranchCommand, PkgCmdIdList.BranchCommand));
+            mcs.AddCommand(CreateCommand(SwitchCommand, PkgCmdIdList.SwitchCommand));
+            mcs.AddCommand(CreateCommand(MergeCommand, PkgCmdIdList.MergeCommand));
+            mcs.AddCommand(CreateCommand(DifferencesCommand, PkgCmdIdList.DifferencesCommand));
+            mcs.AddCommand(CreateCommand(BlameCommand, PkgCmdIdList.BlameCommand));
+            mcs.AddCommand(CreateCommand(ShowLogFileCommand, PkgCmdIdList.ShowLogFileCommand));
+            mcs.AddCommand(CreateCommand(CleanupCommand, PkgCmdIdList.CleanupCommand));
+            mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
+            mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
+            mcs.AddCommand(CreateCommand(MergeFileCommand, PkgCmdIdList.MergeFileCommand));
+            mcs.AddCommand(CreateCommand(UpdateToRevisionFileCommand, PkgCmdIdList.UpdateToRevisionFileCommand));
+            mcs.AddCommand(CreateCommand(PropertiesCommand, PkgCmdIdList.PropertiesCommand));
+            mcs.AddCommand(CreateCommand(UpdateFileCommand, PkgCmdIdList.UpdateFileCommand));
+            mcs.AddCommand(CreateCommand(CommitFileCommand, PkgCmdIdList.CommitFileCommand));
         }
         #endregion
 
@@ -134,16 +86,44 @@ namespace FundaRealEstateBV.TSVN
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
+        private void UpdateFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
+        }
+
         private void UpdateToRevisionCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
+        private void UpdateToRevisionFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
+        }
+
+        private void PropertiesCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:properties /path:\"{0}\" /closeonend:0", _currentFilePath));
+        }
+
         private void CommitCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
+        }
+
+        private void CommitFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void ShowLogCommand(object sender, EventArgs e)
@@ -228,6 +208,13 @@ namespace FundaRealEstateBV.TSVN
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
+        }
+
+        private void MergeFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _currentFilePath));
         }
 
         private void CleanupCommand(object sender, EventArgs e)

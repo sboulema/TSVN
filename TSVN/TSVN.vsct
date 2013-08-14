@@ -51,6 +51,9 @@
       <Group guid="guidTSVNCmdSet" id="thirdContextMenuGroup" priority="0x0900">
         <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
       </Group>
+      <Group guid="guidTSVNCmdSet" id="fourthContextMenuGroup" priority="0x0901">
+        <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
+      </Group>
     </Groups>
     
     <Buttons>
@@ -188,9 +191,48 @@
           <ButtonText>Blame...</ButtonText>
         </Strings>
       </Button>
-
-      <Button guid="guidTSVNCmdSet" id="differencesCommand" priority="0x0200" type="Button">
-        <Parent guid="guidTSVNCmdSet" id="secondContextMenuGroup" />
+    
+      <Button guid="guidTSVNCmdSet" id="mergeFileCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Icon guid="guidImages" id="merge" />
+        <Strings>
+          <ButtonText>Merge...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="updateToRevisionFileCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Strings>
+          <ButtonText>Update To Revision...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="propertiesCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Icon guid="guidImages" id="properties" />
+        <Strings>
+          <ButtonText>Properties...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="updateFileCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="update" />
+        <Strings>
+          <ButtonText>Update...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="commitFileCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="commit" />
+        <Strings>
+          <ButtonText>Commit...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="differencesCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
         <Icon guid="guidImages" id="differences" />
         <Strings>
           <ButtonText>Show Differences</ButtonText>
@@ -199,7 +241,7 @@
     </Buttons>
    
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="showChanges, update, commit, showLog, revert, branch, merge, differences, blame"/>     
+      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="showChanges, update, commit, showLog, revert, branch, merge, differences, blame, properties"/>     
     </Bitmaps>
   </Commands>
 
@@ -219,7 +261,8 @@
       <IDSymbol name="firstContextMenuGroup" value="0x1028" />
       <IDSymbol name="secondContextMenuGroup" value="0x1029" />
       <IDSymbol name="thirdContextMenuGroup" value="0x1030" />
-
+      <IDSymbol name="fourthContextMenuGroup" value="0x1031" />
+      
       <IDSymbol name="showChangesCommand" value="0x0100" />
       <IDSymbol name="updateCommand" value="0x0101" />
       <IDSymbol name="commitCommand" value="0x0102" />
@@ -244,6 +287,11 @@
       <IDSymbol name="differencesCommand" value="0x0602" />  
       <IDSymbol name="diskBrowserFileCommand" value="0x0603" /> 
       <IDSymbol name="repoBrowserFileCommand" value="0x0604" /> 
+      <IDSymbol name="mergeFileCommand" value="0x0605" />
+      <IDSymbol name="updateToRevisionFileCommand" value="0x0606" />
+      <IDSymbol name="propertiesCommand" value="0x0607" />
+      <IDSymbol name="updateFileCommand" value="0x0608" />
+      <IDSymbol name="commitFileCommand" value="0x0609" />
     </GuidSymbol>  
 
     <GuidSymbol name="guidImages" value="{fec49b6d-c04a-42bd-b021-b8b2e5cfb291}" >
@@ -256,6 +304,7 @@
       <IDSymbol name="merge" value="7" />
       <IDSymbol name="differences" value="8" />
       <IDSymbol name="blame" value="9" />
+      <IDSymbol name="properties" value="10" />
     </GuidSymbol>
   </Symbols>
 
