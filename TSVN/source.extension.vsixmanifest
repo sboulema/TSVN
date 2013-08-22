@@ -5,9 +5,9 @@
     <DisplayName>TSVN</DisplayName>
     <Description>Control TortoiseSVN from within Visual Studio</Description>
     <MoreInfo>https://intranet.funda.nl/display/~samirboulema/TSVN</MoreInfo>
-    <License>License.txt</License>
+    <License>Resources\License.txt</License>
     <Icon>Resources\Package.ico</Icon>
-    <PreviewImage>tortoisesvn.png</PreviewImage>
+    <PreviewImage>Resources\tortoisesvn.png</PreviewImage>
     <Tags>SVN, Source control, Tortoise, repository</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
