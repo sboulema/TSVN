@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2012 Whut, https://github.com/whut/AttachTo
+Copyright (c) 2013 Samir L. Boulema, https://intranet.funda.nl/display/~samirboulema/TSVN
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
