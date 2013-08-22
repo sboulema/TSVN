@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53" Version="1.0" Language="en-US" Publisher="Funda Real Estate B.V." />
+    <Identity Id="f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53" Version="1.4" Language="en-US" Publisher="Samir L. Boulema" />
     <DisplayName>TSVN</DisplayName>
     <Description>Control TortoiseSVN from within Visual Studio</Description>
+    <MoreInfo>https://intranet.funda.nl/display/~samirboulema/TSVN</MoreInfo>
+    <Icon>Resources\Package.ico</Icon>
+    <PreviewImage>Resources\Package.ico</PreviewImage>
+    <Tags>SVN, Source control, Tortoise, repository</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="12.0" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0,]" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="4.5" />

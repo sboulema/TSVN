@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
 using System.Windows.Forms;
@@ -9,7 +11,7 @@ using Process = System.Diagnostics.Process;
 namespace FundaRealEstateBV.TSVN
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.3", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "1.4", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     public sealed class TSVNPackage : Package
@@ -29,11 +31,7 @@ namespace FundaRealEstateBV.TSVN
             base.Initialize();
 
             _dte = (DTE)GetService(typeof(DTE));
-            if (!string.IsNullOrEmpty(_dte.Solution.FullName))
-            {
-                var pathParts = _dte.Solution.FullName.Split(new[] { "\\" }, StringSplitOptions.None);
-                _solutionDir = string.Format("{0}\\{1}\\{2}\\", pathParts[0], pathParts[1], pathParts[2]);
-            }        
+            _solutionDir = GetSolutionDir();       
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -66,11 +64,29 @@ namespace FundaRealEstateBV.TSVN
         }
         #endregion
 
-        public MenuCommand CreateCommand(EventHandler handler, uint commandId)
+        private static MenuCommand CreateCommand(EventHandler handler, uint commandId)
         {
             CommandID menuCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)commandId);
             MenuCommand menuItem = new MenuCommand(handler, menuCommandId);
             return menuItem;
+        }
+
+        private string GetSolutionDir()
+        {
+            string fileName = _dte.Solution.FullName;
+            if (string.IsNullOrEmpty(fileName)) return string.Empty;
+            var path = Path.GetDirectoryName(fileName);
+            return FindSvndir(path);
+        }
+
+        private static string FindSvndir(string path)
+        {
+            var di = new DirectoryInfo(path);
+            if (di.GetDirectories().Any(d => d.Name.Equals(".svn")))
+            {
+                return di.FullName;
+            }
+            return di.Parent != null ? FindSvndir(di.Parent.FullName) : string.Empty;
         }
 
         #region Button Commands
