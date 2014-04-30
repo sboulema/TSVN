@@ -31,5 +31,7 @@
         public const uint PropertiesCommand = 0x0607;
         public const uint UpdateFileCommand = 0x0608;
         public const uint CommitFileCommand = 0x0609;
+        public const uint DiffPreviousCommand = 0x0610;
+        public const uint RevertFileCommand = 0x0611;
     };
 }
