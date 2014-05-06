@@ -101,6 +101,7 @@ namespace FundaRealEstateBV.TSVN
         private void UpdateCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
+            _dte.Documents.SaveAll();
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
@@ -108,12 +109,14 @@ namespace FundaRealEstateBV.TSVN
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
+            _dte.ActiveDocument.Save();
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void UpdateToRevisionCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
+            _dte.Documents.SaveAll();
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
@@ -121,6 +124,7 @@ namespace FundaRealEstateBV.TSVN
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
+            _dte.ActiveDocument.Save();
             Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
         }
 
