@@ -91,18 +91,30 @@ namespace FundaRealEstateBV.TSVN
             return di.Parent != null ? FindSvndir(di.Parent.FullName) : string.Empty;
         }
 
+        private static void StartProcess(string application, string args)
+        {
+            try
+            {
+                Process.Start(application, args);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }          
+        }
+
         #region Button Commands
         private void ShowChangesCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:repostatus /path:\"{0}\" /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:repostatus /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void UpdateCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
-            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void UpdateFileCommand(object sender, EventArgs e)
@@ -110,14 +122,14 @@ namespace FundaRealEstateBV.TSVN
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             _dte.ActiveDocument.Save();
-            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void UpdateToRevisionCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
-            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
         private void UpdateToRevisionFileCommand(object sender, EventArgs e)
@@ -125,21 +137,21 @@ namespace FundaRealEstateBV.TSVN
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             _dte.ActiveDocument.Save();
-            Process.Start("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
         }
 
         private void PropertiesCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:properties /path:\"{0}\" /closeonend:0", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:properties /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void CommitCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
-            Process.Start("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void CommitFileCommand(object sender, EventArgs e)
@@ -147,20 +159,20 @@ namespace FundaRealEstateBV.TSVN
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             _dte.ActiveDocument.Save();
-            Process.Start("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void ShowLogCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void ShowLogFileCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void CreatePatchCommand(object sender, EventArgs e)
@@ -182,13 +194,13 @@ namespace FundaRealEstateBV.TSVN
             DialogResult result = openFileDialog.ShowDialog();
             if (result != DialogResult.OK) return;
 
-            Process.Start("TortoiseMerge.exe", string.Format("/diff:\"{0}\" /patchpath:\"{1}\"", openFileDialog.FileName, _solutionDir));
+            StartProcess("TortoiseMerge.exe", string.Format("/diff:\"{0}\" /patchpath:\"{1}\"", openFileDialog.FileName, _solutionDir));
         }
 
         private void RevertCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void RevertFileCommand(object sender, EventArgs e)
@@ -207,65 +219,65 @@ namespace FundaRealEstateBV.TSVN
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("explorer.exe", _currentFilePath);
+            StartProcess("explorer.exe", _currentFilePath);
         }
 
         private void RepoBrowserCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _solutionDir));
         }
 
         private void RepoBrowserFileCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _currentFilePath));
         }
 
         private void BranchCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:copy /path:\"{0}\"", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:copy /path:\"{0}\"", _solutionDir));
         }
 
         private void SwitchCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:switch /path:\"{0}\"", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:switch /path:\"{0}\"", _solutionDir));
         }
 
         private void MergeCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
         }
 
         private void MergeFileCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _currentFilePath));
         }
 
         private void CleanupCommand(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:cleanup /path:\"{0}\"", _solutionDir));
+            StartProcess("TortoiseProc.exe", string.Format("/command:cleanup /path:\"{0}\"", _solutionDir));
         }
 
         private void DifferencesCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
         }
 
         private void DiffPreviousCommand(object sender, EventArgs e)
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:prevdiff /path:\"{0}\"", _currentFilePath));
+            StartProcess("TortoiseProc.exe", string.Format("/command:prevdiff /path:\"{0}\"", _currentFilePath));
         }
 
         private void BlameCommand(object sender, EventArgs e)
@@ -273,7 +285,7 @@ namespace FundaRealEstateBV.TSVN
             _currentFilePath = _dte.ActiveDocument.FullName;
             _currentLineIndex = ((TextDocument)_dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;  
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("TortoiseProc.exe", string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
+            StartProcess("TortoiseProc.exe", string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
         }
         #endregion
     }
