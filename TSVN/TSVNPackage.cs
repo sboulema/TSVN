@@ -103,6 +103,18 @@ namespace FundaRealEstateBV.TSVN
             return di.Parent != null ? FindSvndir(di.Parent.FullName) : string.Empty;
         }
 
+        private static void StartProcess(string application, string args)
+        {
+            try
+            {
+                Process.Start(application, args);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }          
+        }
+
         #region Button Commands
         private void ShowChangesCommand(object sender, EventArgs e)
         {
@@ -219,7 +231,7 @@ namespace FundaRealEstateBV.TSVN
         {
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Process.Start("explorer.exe", _currentFilePath);
+            StartProcess("explorer.exe", _currentFilePath);
         }
 
         private void RepoBrowserCommand(object sender, EventArgs e)
