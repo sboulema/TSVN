@@ -252,6 +252,14 @@
         </Strings>
       </Button>
 
+      <Button guid="guidTSVNCmdSet" id="addFileCommand" priority="0x0310" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="add" />
+        <Strings>
+          <ButtonText>Add</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidTSVNCmdSet" id="differencesCommand" priority="0x0400" type="Button">
         <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
         <Icon guid="guidImages" id="differences" />
@@ -270,7 +278,7 @@
     </Buttons>
    
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="showChanges, update, commit, showLog, revert, branch, merge, differences, blame, properties"/>     
+      <Bitmap guid="guidImages" href="Resources\Images.png" usedList="showChanges, update, commit, showLog, revert, branch, merge, differences, blame, properties, add"/>     
     </Bitmaps>
   </Commands>
 
@@ -330,6 +338,7 @@
       <IDSymbol name="commitFileCommand" value="0x0609" />
       <IDSymbol name="diffPreviousCommand" value="0x0610" />
       <IDSymbol name="revertFileCommand" value="0x0611" />
+      <IDSymbol name="addFileCommand" value="0x0612" />
     </GuidSymbol>  
 
     <GuidSymbol name="guidImages" value="{fec49b6d-c04a-42bd-b021-b8b2e5cfb291}" >
@@ -343,6 +352,7 @@
       <IDSymbol name="differences" value="8" />
       <IDSymbol name="blame" value="9" />
       <IDSymbol name="properties" value="10" />
+      <IDSymbol name="add" value="11" />
     </GuidSymbol>
   </Symbols>
 

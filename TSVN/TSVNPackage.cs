@@ -63,6 +63,7 @@ namespace FundaRealEstateBV.TSVN
             mcs.AddCommand(CreateCommand(CommitFileCommand, PkgCmdIdList.CommitFileCommand));
             mcs.AddCommand(CreateCommand(DiffPreviousCommand, PkgCmdIdList.DiffPreviousCommand));
             mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
+            mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
         }
         #endregion
 
@@ -101,18 +102,6 @@ namespace FundaRealEstateBV.TSVN
                 return di.FullName;
             }
             return di.Parent != null ? FindSvndir(di.Parent.FullName) : string.Empty;
-        }
-
-        private static void StartProcess(string application, string args)
-        {
-            try
-            {
-                Process.Start(application, args);
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message, "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }          
         }
 
         #region Button Commands
@@ -220,6 +209,14 @@ namespace FundaRealEstateBV.TSVN
             _currentFilePath = _dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _currentFilePath));
+        }
+
+        private void AddFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = _dte.ActiveDocument.FullName;
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            _dte.ActiveDocument.Save();
+            StartProcess("TortoiseProc.exe", string.Format("/command:add /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void DiskBrowserCommand(object sender, EventArgs e)

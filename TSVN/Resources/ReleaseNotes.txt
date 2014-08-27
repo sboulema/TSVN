@@ -1,0 +1,26 @@
+1.8
+- Added Add to file context menu
+
+1.7.3
+- Fixed support for Visual Studio 2013
+
+1.7.2
+- Fixed support for Visual Studio 2013
+
+1.7.1
+- Fixed "More information link"
+
+1.7
+- Better error handling when TortoiseSVN is not installed or not in the path
+- Support for Visual Studio "14" CTP
+
+1.6
+- Files are now automatically saved before updating
+
+1.5
+- Added revert to file context menu
+- Added Diff with previous revision to file context menu
+- Files are now automatically saved before committing
+
+1.4
+- First public version
