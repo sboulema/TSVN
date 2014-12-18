@@ -11,7 +11,7 @@ using Process = System.Diagnostics.Process;
 namespace FundaRealEstateBV.TSVN
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [InstalledProductRegistration("#110", "#112", "1.5", IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     public sealed class TSVNPackage : Package
@@ -30,8 +30,7 @@ namespace FundaRealEstateBV.TSVN
         {
             base.Initialize();
 
-            _dte = (DTE)GetService(typeof(DTE));
-            _solutionDir = GetSolutionDir();       
+            _dte = (DTE)GetService(typeof(DTE));  
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -89,30 +88,51 @@ namespace FundaRealEstateBV.TSVN
         private string GetSolutionDir()
         {
             string fileName = _dte.Solution.FullName;
-            if (string.IsNullOrEmpty(fileName)) return string.Empty;
-            var path = Path.GetDirectoryName(fileName);
-            return FindSvndir(path);
+            if (string.IsNullOrEmpty(fileName))
+            {
+                MessageBox.Show("Please open a solution first", "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else
+            {
+                var path = Path.GetDirectoryName(fileName);
+                return FindSvndir(path);
+            }
+            return string.Empty;
         }
 
         private static string FindSvndir(string path)
         {
-            var di = new DirectoryInfo(path);
-            if (di.GetDirectories().Any(d => d.Name.Equals(".svn")))
+            try
             {
-                return di.FullName;
+                var di = new DirectoryInfo(path);
+                if (di.GetDirectories().Any(d => d.Name.Equals(".svn")))
+                {
+                    return di.FullName;
+                }
+                if (di.Parent != null)
+                {
+                    return FindSvndir(di.Parent.FullName);
+                }
+                throw new FileNotFoundException("Unable to find .svn directory.\nIs your solution under SVN source control?");
             }
-            return di.Parent != null ? FindSvndir(di.Parent.FullName) : string.Empty;
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return string.Empty;      
         }
 
         #region Button Commands
         private void ShowChangesCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:repostatus /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void UpdateCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
@@ -128,6 +148,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void UpdateToRevisionCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
@@ -150,6 +171,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void CommitCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             _dte.Documents.SaveAll();
             StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
@@ -165,6 +187,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void ShowLogCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _solutionDir));
         }
@@ -178,12 +201,14 @@ namespace FundaRealEstateBV.TSVN
 
         private void CreatePatchCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:createpatch /path:\"{0}\" /noview /closeonend:0", _solutionDir));
         }
 
         private void ApplyPatchCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
 
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -200,6 +225,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void RevertCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _solutionDir));
         }
@@ -221,6 +247,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void DiskBrowserCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start(_solutionDir);
         }
@@ -233,6 +260,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void RepoBrowserCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _solutionDir));
         }
@@ -246,18 +274,21 @@ namespace FundaRealEstateBV.TSVN
 
         private void BranchCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:copy /path:\"{0}\"", _solutionDir));
         }
 
         private void SwitchCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:switch /path:\"{0}\"", _solutionDir));
         }
 
         private void MergeCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _solutionDir));
         }
@@ -271,6 +302,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void CleanupCommand(object sender, EventArgs e)
         {
+            _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:cleanup /path:\"{0}\"", _solutionDir));
         }

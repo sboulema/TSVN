@@ -12,14 +12,14 @@
 
   <Commands package="guidTSVNPkg">
     <Menus>
-      <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0300" type="Menu">
+      <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
         <Strings>
           <ButtonText>TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
-      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0500" type="Menu">
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
         <Strings>
           <ButtonText>TSVN</ButtonText>
@@ -44,7 +44,10 @@
       <Group guid="guidTSVNCmdSet" id="fifthMenuGroup" priority="0x0500">
         <Parent guid="guidTSVNCmdSet" id="TSVNMenu"/>
       </Group>
-      
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0904">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
       </Group>    
@@ -306,7 +309,10 @@
       <IDSymbol name="secondContextMenuGroup" value="0x1029" />
       <IDSymbol name="thirdContextMenuGroup" value="0x1030" />
       <IDSymbol name="fourthContextMenuGroup" value="0x1031" />
-      
+
+      <IDSymbol name="TSVNMainContextMenu" value="0x1038"/>
+      <IDSymbol name="contextMainMenuGroup" value="0x1039" />
+
       <IDSymbol name="showChangesCommand" value="0x0100" />
       <IDSymbol name="updateCommand" value="0x0101" />
       <IDSymbol name="commitCommand" value="0x0102" />
