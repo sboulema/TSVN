@@ -134,7 +134,7 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.Documents.SaveAll();
+            _dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
@@ -150,7 +150,7 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.Documents.SaveAll();
+            _dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
@@ -173,7 +173,7 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.Documents.SaveAll();
+            _dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 

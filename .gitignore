@@ -7,3 +7,5 @@ obj
 bin
 Backup/
 TSVN.sln.ide/
+/.vs
+/packages
