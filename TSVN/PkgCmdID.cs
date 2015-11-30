@@ -1,7 +1,10 @@
-﻿namespace FundaRealEstateBV.TSVN
+﻿namespace SamirBoulema.TSVN
 {
     static class PkgCmdIdList
     {
+        public const uint TSvnMenu = 0x1021;
+        public const uint TSvnContextMenu = 0x1027;
+
         public const uint ShowChangesCommand = 0x0100;
         public const uint UpdateCommand = 0x0101;
         public const uint CommitCommand = 0x0102;

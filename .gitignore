@@ -9,3 +9,5 @@ Backup/
 TSVN.sln.ide/
 /.vs
 /packages
+/TSVN/*.csdat
+/TSVN/*.user

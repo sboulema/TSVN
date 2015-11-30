@@ -8,7 +8,7 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Process = System.Diagnostics.Process;
 
-namespace FundaRealEstateBV.TSVN
+namespace SamirBoulema.TSVN
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
@@ -16,7 +16,7 @@ namespace FundaRealEstateBV.TSVN
     [Guid(GuidList.guidTSVNPkgString)]
     public sealed class TSVNPackage : Package
     {
-        private DTE _dte;
+        private DTE dte;
         private string _solutionDir;
         private string _currentFilePath;
         private int _currentLineIndex;
@@ -30,7 +30,7 @@ namespace FundaRealEstateBV.TSVN
         {
             base.Initialize();
 
-            _dte = (DTE)GetService(typeof(DTE));  
+            dte = (DTE)GetService(typeof(DTE));  
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -63,6 +63,23 @@ namespace FundaRealEstateBV.TSVN
             mcs.AddCommand(CreateCommand(DiffPreviousCommand, PkgCmdIdList.DiffPreviousCommand));
             mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
             mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
+
+            OleMenuCommand tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
+            OleMenuCommand tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
+            switch (dte.Version)
+            {
+                case "11.0":
+                case "12.0":
+                    tsvnMenu.Text = "TSVN";
+                    tsvnContextMenu.Text = "TSVN";
+                    break;
+                default:
+                    tsvnMenu.Text = "Tsvn";
+                    tsvnContextMenu.Text = "Tsvn";
+                    break;
+            }
+            mcs.AddCommand(tsvnMenu);
+            mcs.AddCommand(tsvnContextMenu);
         }
         #endregion
 
@@ -78,16 +95,16 @@ namespace FundaRealEstateBV.TSVN
             }
         }
 
-        private static MenuCommand CreateCommand(EventHandler handler, uint commandId)
+        private static OleMenuCommand CreateCommand(EventHandler handler, uint commandId)
         {
             CommandID menuCommandId = new CommandID(GuidList.guidTSVNCmdSet, (int)commandId);
-            MenuCommand menuItem = new MenuCommand(handler, menuCommandId);
+            OleMenuCommand menuItem = new OleMenuCommand(handler, menuCommandId);
             return menuItem;
         }
 
         private string GetSolutionDir()
         {
-            string fileName = _dte.Solution.FullName;
+            string fileName = dte.Solution.FullName;
             if (string.IsNullOrEmpty(fileName))
             {
                 MessageBox.Show("Please open a solution first", "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -134,15 +151,15 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.ExecuteCommand("File.SaveAll", string.Empty);
+            dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void UpdateFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            _dte.ActiveDocument.Save();
+            dte.ActiveDocument.Save();
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
@@ -150,21 +167,21 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.ExecuteCommand("File.SaveAll", string.Empty);
+            dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _solutionDir));
         }
 
         private void UpdateToRevisionFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            _dte.ActiveDocument.Save();
+            dte.ActiveDocument.Save();
             StartProcess("TortoiseProc.exe", string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
         }
 
         private void PropertiesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:properties /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
@@ -173,15 +190,15 @@ namespace FundaRealEstateBV.TSVN
         {
             _solutionDir = GetSolutionDir();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
-            _dte.ExecuteCommand("File.SaveAll", string.Empty);
+            dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _solutionDir));
         }
 
         private void CommitFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            _dte.ActiveDocument.Save();
+            dte.ActiveDocument.Save();
             StartProcess("TortoiseProc.exe", string.Format("/command:commit /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
@@ -194,7 +211,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void ShowLogFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
@@ -232,16 +249,16 @@ namespace FundaRealEstateBV.TSVN
 
         private void RevertFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:revert /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void AddFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            _dte.ActiveDocument.Save();
+            dte.ActiveDocument.Save();
             StartProcess("TortoiseProc.exe", string.Format("/command:add /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
@@ -253,7 +270,7 @@ namespace FundaRealEstateBV.TSVN
         }
         private void DiskBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("explorer.exe", _currentFilePath);
         }
@@ -267,7 +284,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void RepoBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:repobrowser /path:\"{0}\"", _currentFilePath));
         }
@@ -295,7 +312,7 @@ namespace FundaRealEstateBV.TSVN
 
         private void MergeFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:merge /path:\"{0}\"", _currentFilePath));
         }
@@ -309,22 +326,22 @@ namespace FundaRealEstateBV.TSVN
 
         private void DifferencesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
         }
 
         private void DiffPreviousCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
+            _currentFilePath = dte.ActiveDocument.FullName;
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:prevdiff /path:\"{0}\"", _currentFilePath));
         }
 
         private void BlameCommand(object sender, EventArgs e)
         {
-            _currentFilePath = _dte.ActiveDocument.FullName;
-            _currentLineIndex = ((TextDocument)_dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;  
+            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentLineIndex = ((TextDocument)dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;  
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("TortoiseProc.exe", string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
         }
