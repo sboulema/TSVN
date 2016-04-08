@@ -1,3 +1,6 @@
+2.3
+- Added support for Visual Studio "15"
+
 2.2
 - New icons
 - Fixed Issue #1

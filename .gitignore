@@ -11,3 +11,5 @@ TSVN.sln.ide/
 /packages
 /TSVN/*.csdat
 /TSVN/*.user
+/TSVN/*.orig
+/TSVN/*.suo
