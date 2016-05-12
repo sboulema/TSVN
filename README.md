@@ -6,3 +6,16 @@ Control TortoiseSVN from within Visual Studio
 2. Install TortoiseSVN (http://www.tortoisesvn.net)
 3. Open a solution which is in source control
 4. Enjoy! 
+
+# Features
+All the SVN functions quickly accessible from the TSVN menu:
+
+![Main Menu](http://s32.postimg.org/oy5hhyjt1/TSVN_main.png)
+
+When working on a single file you can find all SVN functions related to that file in the context menu:
+
+![Context Menu](http://s32.postimg.org/rotin4iit/tsvn_context.png)
+
+A customizable toolbar with all your favorite commands:
+
+![Toolbar](http://s32.postimg.org/oayb3p611/tsvn_toolbar.png)
