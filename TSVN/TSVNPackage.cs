@@ -95,9 +95,9 @@ namespace SamirBoulema.TSVN
             {
                 Process.Start(application, args);
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                MessageBox.Show("TortoiseSVN not found. Did you add TortoiseSVN to your path?", "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("TortoiseSVN not found. Did you install TortoiseSVN?", "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
