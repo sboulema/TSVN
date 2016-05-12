@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53" Version="2.3" Language="en-US" Publisher="Samir L. Boulema" />
+    <Identity Id="07fd7462-cd4b-433b-9ab5-8ad3ad87bc65" Version="2.4" Language="en-US" Publisher="Samir L. Boulema" />
     <DisplayName>TSVN</DisplayName>
     <Description>Control TortoiseSVN from within Visual Studio</Description>
-    <MoreInfo>http://visualstudiogallery.msdn.microsoft.com/30b3bdf0-f08b-4ed7-82b9-9c19157e954e</MoreInfo>
+    <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/64bfec35-0ac1-48bc-b9d0-921ecb803e53</MoreInfo>
     <License>Resources\License.txt</License>
     <GettingStartedGuide>Resources\GettingStartedGuide.txt</GettingStartedGuide>
     <ReleaseNotes>Resources\ReleaseNotes.txt</ReleaseNotes>

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("TSVN")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Funda Real Estate B.V.")]
+[assembly: AssemblyCompany("Samir L. Boulema")]
 [assembly: AssemblyProduct("TSVN")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
