@@ -16,9 +16,10 @@ namespace SamirBoulema.TSVN
     [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
+    [ProvideToolWindow(typeof(SamirBoulema.TSVN.TSVNToolWindow))]
     public sealed class TSVNPackage : Package
     {
-        private DTE dte;
+        public DTE dte;
         private string _solutionDir;
         private string _currentFilePath;
         private int _currentLineIndex;
@@ -86,6 +87,7 @@ namespace SamirBoulema.TSVN
             }
             mcs.AddCommand(tsvnMenu);
             mcs.AddCommand(tsvnContextMenu);
+            SamirBoulema.TSVN.TSVNToolWindowCommand.Initialize(this);
         }
         #endregion
 
@@ -148,6 +150,11 @@ namespace SamirBoulema.TSVN
         public string GetTortoiseSVNProc()
         {
             return (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
+        }
+
+        public object GetServiceHelper(Type type)
+        {
+            return GetService(type);
         }
 
         #region Button Commands
