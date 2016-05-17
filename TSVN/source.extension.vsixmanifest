@@ -7,7 +7,6 @@
     <MoreInfo>https://visualstudiogallery.msdn.microsoft.com/64bfec35-0ac1-48bc-b9d0-921ecb803e53</MoreInfo>
     <License>Resources\License.txt</License>
     <GettingStartedGuide>Resources\GettingStartedGuide.txt</GettingStartedGuide>
-    <ReleaseNotes>Resources\ReleaseNotes.txt</ReleaseNotes>
     <Icon>Resources\Package.ico</Icon>
     <PreviewImage>Resources\tortoisesvn.png</PreviewImage>
     <Tags>SVN, Source control, Tortoise, repository</Tags>
