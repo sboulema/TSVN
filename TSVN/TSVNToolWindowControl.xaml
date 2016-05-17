@@ -6,11 +6,46 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="Pending_Changes">
+    <UserControl.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                    Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="Blue" />
+                                <Setter Property="Cursor" Value="Hand" />
+                                <!-- If we don't tell the background to change on hover, it will remain the same -->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Margin="10,3">
+            <Button x:Name="commitButton" ToolTip="Commit" Click="commitButton_Click" Height="16" Width="16" Margin="0,0,5,0" BorderThickness="0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="192,0,16,16"/>
+                </Button.Background>
+            </Button>
+            <Button x:Name="revertButton" ToolTip="Revert" Click="revertButton_Click" Width="16" BorderThickness="0">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="64,0,16,16"/>
+                </Button.Background>
+            </Button>
+        </StackPanel>
         <TreeView Grid.Row="1" x:Name="treeView" Background="{x:Null}" BorderThickness="0,1,0,0" />
     </Grid>
 </UserControl>

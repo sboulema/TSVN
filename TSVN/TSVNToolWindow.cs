@@ -75,7 +75,7 @@
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "cmd.exe",
-                    Arguments = $"/c cd /D \"{fileHelper.GetSolutionDir()}\" && \"{fileHelper.GetSVNExec()}\" status -q",
+                    Arguments = $"/c cd /D \"{fileHelper.GetSolutionDir()}\" && \"{fileHelper.GetSVNExec()}\" status",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,

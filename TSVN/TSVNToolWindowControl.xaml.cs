@@ -1,15 +1,18 @@
 ﻿namespace SamirBoulema.TSVN
 {
     using EnvDTE;
+    using Helpers;
     using Models;
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Interop;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
+    using Image = System.Windows.Controls.Image;
 
     /// <summary>
     /// Interaction logic for TSVNToolWindowControl.
@@ -17,6 +20,8 @@
     public partial class TSVNToolWindowControl : UserControl
     {
         private DTE dte;
+        private CommandHelper commandHelper;
+        private ContextMenu contextMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TSVNToolWindowControl"/> class.
@@ -24,6 +29,7 @@
         public TSVNToolWindowControl()
         {
             InitializeComponent();
+            contextMenu = CreateContextMenu();
         }
 
         public void Update(List<string> pendingChanges, string solutionDir)
@@ -45,13 +51,26 @@
                 root.Items.Add(solutionDirItem);
 
                 items.Add(root);
-            }           
+
+                commitButton.IsEnabled = true;
+                revertButton.IsEnabled = true;
+            }       
+            else
+            {
+                commitButton.IsEnabled = false;
+                revertButton.IsEnabled = false;
+            }    
         }
 
         private void ProcessChange(TreeViewItem root, string solutionDir, string change)
         {
             var path = change.Substring(8);
             var pathParts = path.Split('\\');
+
+            if (change[0].Equals('?'))
+            {
+                return;
+            }
 
             for (int i = 0; i < pathParts.Length; i++)
             {
@@ -61,7 +80,7 @@
                     TreeViewItem newItem;
                     if (i == pathParts.Length - 1)
                     {
-                        newItem = CreateFileTreeViewItem(pathParts[i], solutionDir, path);
+                        newItem = CreateFileTreeViewItem(pathParts[i], solutionDir, path, change);
                     }
                     else
                     {
@@ -91,7 +110,7 @@
             return null;
         }
 
-        private TSVNTreeViewItem CreateFileTreeViewItem(string text, string solutionDir, string path)
+        private TSVNTreeViewItem CreateFileTreeViewItem(string text, string solutionDir, string path, string change)
         {
             var item = new TSVNTreeViewItem();
             item.IsExpanded = false;
@@ -118,16 +137,42 @@
             stack.Children.Add(image);
             stack.Children.Add(lbl);
 
-            //if (change[0].Equals('A'))
-            //{
-            //    Label lblChange = new Label();
-            //    lblChange.Content = "[add]";
-            //    lblChange.Foreground = new SolidColorBrush(Colors.Gray);
-            //    stack.Children.Add(lblChange);
-            //}
+            if (change[0].Equals('A'))
+            {
+                Label lblChange = new Label();
+                lblChange.Content = "[add]";
+                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                stack.Children.Add(lblChange);
+            }
+
+            if (change[0].Equals('D'))
+            {
+                Label lblChange = new Label();
+                lblChange.Content = "[del]";
+                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                stack.Children.Add(lblChange);
+            }
+
+            if (change[0].Equals('R'))
+            {
+                Label lblChange = new Label();
+                lblChange.Content = "[rep]";
+                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                stack.Children.Add(lblChange);
+            }
+
+            if (change[0].Equals('!'))
+            {
+                Label lblChange = new Label();
+                lblChange.Content = "[mis]";
+                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                stack.Children.Add(lblChange);
+            }
 
             // assign stack to header
             item.Header = stack;
+
+            item.ContextMenu = contextMenu;
 
             return item;
         }
@@ -206,6 +251,51 @@
         public void SetDTE(DTE dte)
         {
             this.dte = dte;
+            commandHelper = new CommandHelper(dte);
+        }
+
+        private void commitButton_Click(object sender, RoutedEventArgs e)
+        {
+            commandHelper.Commit();
+        }
+
+        private void revertButton_Click(object sender, RoutedEventArgs e)
+        {
+            commandHelper.Revert();
+        }
+
+        private ContextMenu CreateContextMenu()
+        {
+            var menu = new ContextMenu();
+            var commitItem = new MenuItem() { Header = "Commit" };
+            commitItem.Click += CommitItem_Click;
+            menu.Items.Add(commitItem);
+            var revertItem = new MenuItem() { Header = "Revert" };
+            revertItem.Click += RevertItem_Click;
+            menu.Items.Add(revertItem);
+            return menu;
+        }
+
+        private void CommitItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem contextMenuItem = (MenuItem)sender;
+            ContextMenu contextMenu = (ContextMenu)contextMenuItem.Parent;
+            if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
+            {
+                TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
+                commandHelper.Commit(originatingTreeViewItem.Path);
+            }
+        }
+
+        private void RevertItem_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem contextMenuItem = (MenuItem)sender;
+            ContextMenu contextMenu = (ContextMenu)contextMenuItem.Parent;
+            if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
+            {
+                TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
+                commandHelper.Revert(originatingTreeViewItem.Path);
+            }
         }
     }
 }
