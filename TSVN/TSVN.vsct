@@ -83,7 +83,10 @@
 
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
-      </Group>    
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0500">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
       <Group guid="guidTSVNCmdSet" id="firstContextMenuGroup" priority="0x0700">
         <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
       </Group>
@@ -441,15 +444,6 @@
   
     <GuidSymbol value="{fdf0dd0f-a813-4fde-a9d0-0a50dade9b94}" name="guidTSVNPackageCmdSet">
       <IDSymbol value="256" name="cmdidTSVNToolWindowCommand" />
-    </GuidSymbol>
-  
-    <GuidSymbol value="{bdf4b678-65a8-43e9-af1f-e7cd271d7abf}" name="guidImages1">
-      <IDSymbol name="bmpPic1" value="1" />
-      <IDSymbol name="bmpPic2" value="2" />
-      <IDSymbol name="bmpPicSearch" value="3" />
-      <IDSymbol name="bmpPicX" value="4" />
-      <IDSymbol name="bmpPicArrows" value="5" />
-      <IDSymbol name="bmpPicStrikethrough" value="6" />
     </GuidSymbol>
   </Symbols>
 

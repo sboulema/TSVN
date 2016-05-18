@@ -22,10 +22,8 @@ namespace SamirBoulema.TSVN.Helpers
 
         public void Commit()
         {
-            var solutionDir = GetSolutionDir();
-            if (string.IsNullOrEmpty(solutionDir)) return;
             dte.ExecuteCommand("File.SaveAll", string.Empty);
-            StartProcess(tortoiseProc, string.Format("/command:commit /path:\"{0}\" /closeonend:0", solutionDir));
+            Commit(GetSolutionDir());
         }
 
         public void Commit(string filePath)
@@ -36,9 +34,7 @@ namespace SamirBoulema.TSVN.Helpers
 
         public void Revert()
         {
-            var solutionDir = GetSolutionDir();
-            if (string.IsNullOrEmpty(solutionDir)) return;
-            StartProcess(tortoiseProc, string.Format("/command:revert /path:\"{0}\" /closeonend:0", solutionDir));
+            Revert(GetSolutionDir());
         }
 
         public void Revert(string filePath)

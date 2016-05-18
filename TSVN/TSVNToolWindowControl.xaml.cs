@@ -42,7 +42,7 @@
             {
                 var root = new TreeViewItem() { Header = new Label() { Content = $"Changes ({pendingChanges.Count})" },
                     IsExpanded = true, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,10) };
-                var solutionDirItem = CreateFolderTreeViewItem(solutionDir);
+                var solutionDirItem = CreateFolderTreeViewItem(solutionDir, "S", false);
 
                 foreach (var change in pendingChanges)
                 {
@@ -68,24 +68,19 @@
             var path = change.Substring(8);
             var pathParts = path.Split('\\');
 
-            if (change[0].Equals('?'))
-            {
-                return;
-            }
-
             for (int i = 0; i < pathParts.Length; i++)
             {
                 var item = FindItem(root, pathParts[i]);
                 if (item == null)
                 {
                     TreeViewItem newItem;
-                    if (i == pathParts.Length - 1)
+                    if (i == pathParts.Length - 1 && Directory.Exists(path))
                     {
                         newItem = CreateFileTreeViewItem(pathParts[i], solutionDir, path, change);
                     }
                     else
                     {
-                        newItem = CreateFolderTreeViewItem(pathParts[i]);
+                        newItem = CreateFolderTreeViewItem(pathParts[i], change,  i == pathParts.Length - 1);
                     }
                         
                     root.Items.Add(newItem);
@@ -141,34 +136,11 @@
             stack.Children.Add(image);
             stack.Children.Add(lbl);
 
-            if (change[0].Equals('A'))
+            var typeOfChangeShort = GetTypeOfChangeShort(change[0]);
+            if (!string.IsNullOrEmpty(typeOfChangeShort))
             {
                 Label lblChange = new Label();
-                lblChange.Content = "[add]";
-                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
-                stack.Children.Add(lblChange);
-            }
-
-            if (change[0].Equals('D'))
-            {
-                Label lblChange = new Label();
-                lblChange.Content = "[del]";
-                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
-                stack.Children.Add(lblChange);
-            }
-
-            if (change[0].Equals('R'))
-            {
-                Label lblChange = new Label();
-                lblChange.Content = "[rep]";
-                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
-                stack.Children.Add(lblChange);
-            }
-
-            if (change[0].Equals('!'))
-            {
-                Label lblChange = new Label();
-                lblChange.Content = "[mis]";
+                lblChange.Content = typeOfChangeShort;
                 lblChange.Foreground = new SolidColorBrush(Colors.Gray);
                 stack.Children.Add(lblChange);
             }
@@ -190,6 +162,20 @@
                 case 'R': return "Replaced";
                 case '!': return "Missing";
                 case 'M': return "Modified";
+                case '?': return "Unversioned";
+                default: return string.Empty;
+            }
+        }
+
+        private string GetTypeOfChangeShort(char change)
+        {
+            switch (change)
+            {
+                case 'A': return "[add]";
+                case 'D': return "[del]";
+                case 'R': return "[rep]";
+                case '!': return "[mis]";
+                case '?': return "[unv]";
                 default: return string.Empty;
             }
         }
@@ -200,7 +186,7 @@
             e.Handled = true;
         }
 
-        private TreeViewItem CreateFolderTreeViewItem(string text)
+        private TreeViewItem CreateFolderTreeViewItem(string text, string change, bool lastItem)
         {
             TreeViewItem item = new TreeViewItem();
             item.IsExpanded = true;
@@ -230,6 +216,15 @@
             // Add into stack
             stack.Children.Add(image);
             stack.Children.Add(lbl);
+
+            var typeOfChangeShort = GetTypeOfChangeShort(change[0]);
+            if (!string.IsNullOrEmpty(typeOfChangeShort) && lastItem)
+            {
+                Label lblChange = new Label();
+                lblChange.Content = typeOfChangeShort;
+                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                stack.Children.Add(lblChange);
+            }
 
             // assign stack to header
             item.Header = stack;

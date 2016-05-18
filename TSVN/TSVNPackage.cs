@@ -22,7 +22,6 @@ namespace SamirBoulema.TSVN
         public DTE dte;
         private string _solutionDir;
         private string _currentFilePath;
-        private int _currentLineIndex;
         private string tortoiseProc;
 
 
@@ -175,7 +174,7 @@ namespace SamirBoulema.TSVN
 
         private void UpdateFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             dte.ActiveDocument.Save();
             StartProcess(tortoiseProc, string.Format("/command:update /path:\"{0}\" /closeonend:0", _currentFilePath));
@@ -191,7 +190,7 @@ namespace SamirBoulema.TSVN
 
         private void UpdateToRevisionFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             dte.ActiveDocument.Save();
             StartProcess(tortoiseProc, string.Format("/command:update /path:\"{0}\" /rev /closeonend:0", _currentFilePath));
@@ -199,7 +198,7 @@ namespace SamirBoulema.TSVN
 
         private void PropertiesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:properties /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
@@ -214,7 +213,7 @@ namespace SamirBoulema.TSVN
 
         private void CommitFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             dte.ActiveDocument.Save();
             StartProcess(tortoiseProc, string.Format("/command:commit /path:\"{0}\" /closeonend:0", _currentFilePath));
@@ -229,7 +228,7 @@ namespace SamirBoulema.TSVN
 
         private void ShowLogFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:log /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
@@ -267,14 +266,14 @@ namespace SamirBoulema.TSVN
 
         private void RevertFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:revert /path:\"{0}\" /closeonend:0", _currentFilePath));
         }
 
         private void AddFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             dte.ActiveDocument.Save();
             StartProcess(tortoiseProc, string.Format("/command:add /path:\"{0}\" /closeonend:0", _currentFilePath));
@@ -288,7 +287,7 @@ namespace SamirBoulema.TSVN
         }
         private void DiskBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("explorer.exe", _currentFilePath);
         }
@@ -302,7 +301,7 @@ namespace SamirBoulema.TSVN
 
         private void RepoBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:repobrowser /path:\"{0}\"", _currentFilePath));
         }
@@ -330,7 +329,7 @@ namespace SamirBoulema.TSVN
 
         private void MergeFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:merge /path:\"{0}\"", _currentFilePath));
         }
@@ -344,24 +343,24 @@ namespace SamirBoulema.TSVN
 
         private void DifferencesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:diff /path:\"{0}\"", _currentFilePath));
         }
 
         private void DiffPreviousCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(tortoiseProc, string.Format("/command:prevdiff /path:\"{0}\"", _currentFilePath));
         }
 
         private void BlameCommand(object sender, EventArgs e)
         {
-            _currentFilePath = dte.ActiveDocument.FullName;
-            _currentLineIndex = ((TextDocument)dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine;  
+            _currentFilePath = dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            int currentLineIndex = dte.ActiveDocument != null ? ((TextDocument)dte.ActiveDocument.Object(string.Empty)).Selection.CurrentLine : 0;  
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            StartProcess(tortoiseProc, string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, _currentLineIndex));
+            StartProcess(tortoiseProc, string.Format("/command:blame /path:\"{0}\" /line:{1}", _currentFilePath, currentLineIndex));
         }
         #endregion
     }
