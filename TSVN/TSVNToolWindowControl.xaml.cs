@@ -40,7 +40,8 @@
          
             if (!string.IsNullOrEmpty(solutionDir))
             {
-                var root = new TreeViewItem() { Header = $"Changes ({pendingChanges.Count})", IsExpanded = true, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,10) };
+                var root = new TreeViewItem() { Header = new Label() { Content = $"Changes ({pendingChanges.Count})" },
+                    IsExpanded = true, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,10) };
                 var solutionDirItem = CreateFolderTreeViewItem(solutionDir);
 
                 foreach (var change in pendingChanges)
@@ -119,6 +120,9 @@
             item.MouseDoubleClick += Item_MouseDoubleClick;
             item.Padding = new Thickness(-3);
 
+            // create Tooltip
+            item.ToolTip = $"Name: {text}\nFolder: {Path.GetDirectoryName(item.Path)}\nType: {GetTypeOfChange(change[0])}";
+
             // create stack panel
             StackPanel stack = new StackPanel();
             stack.Orientation = Orientation.Horizontal;
@@ -175,6 +179,19 @@
             item.ContextMenu = contextMenu;
 
             return item;
+        }
+
+        private string GetTypeOfChange(char change)
+        {
+            switch (change)
+            {
+                case 'A': return "Add";
+                case 'D': return "Delete";
+                case 'R': return "Replaced";
+                case '!': return "Missing";
+                case 'M': return "Modified";
+                default: return string.Empty;
+            }
         }
 
         private void Item_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)

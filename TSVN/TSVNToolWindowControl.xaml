@@ -3,12 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vs_shell="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.14.0"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              x:Name="Pending_Changes">
     <UserControl.Resources>
         <Style TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource ButtonImage}"></Setter>
+            <Setter Property="Background" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -28,6 +29,129 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        </Style>
+        <Style TargetType="MenuItem">
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border Name="Border" Background="{TemplateBinding Background}" >
+                            <Grid>
+                                <ContentPresenter Margin="6,3,50,3" ContentSource="Header" RecognizesAccessKey="True" />
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="MenuItem.IsMouseOver" Value="true">
+                    <Setter Property="Background" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.CommandBarHoverOverSelectedBrushKey}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="ContextMenu">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{DynamicResource {x:Static vs_shell:EnvironmentColors.CommandBarMenuBackgroundGradientBrushKey}}" 
+                                BorderBrush="{DynamicResource {x:Static vs_shell:EnvironmentColors.CommandBarMenuBorderBrushKey}}" BorderThickness="1">
+                            <StackPanel ClipToBounds="True" Orientation="Vertical" IsItemsHost="True" Margin="2"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid x:Name="Root" Background="Transparent">
+                            <Grid HorizontalAlignment="Right" Margin="2 2 5 2">
+                                <Path x:Name="UncheckedVisual" Width="6" Height="9"  
+                                      VerticalAlignment="Center" HorizontalAlignment="Right" Data="M 0,0 L 0,9 L 5,4.5 Z" StrokeThickness="1" StrokeLineJoin="Miter">
+                                    <Path.Stroke>
+                                        <SolidColorBrush Color="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextColorKey}}" />
+                                    </Path.Stroke>
+                                </Path>
+                                <Path x:Name="CheckedVisual" Width="6" Height="6" Fill="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}" 
+                                      VerticalAlignment="Center" HorizontalAlignment="Center" Data="M 6,0 L 6,6 L 0,6 Z" StrokeLineJoin="Miter" />
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Opacity" TargetName="UncheckedVisual" Value="1"/>
+                                <Setter Property="Opacity" TargetName="CheckedVisual" Value="0"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Opacity" TargetName="UncheckedVisual" Value="0"/>
+                                <Setter Property="Opacity" TargetName="CheckedVisual" Value="1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TreeViewItem}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="19" Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <ToggleButton x:Name="Expander" ClickMode="Press" IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ExpandCollapseToggleStyle}"/>
+                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Grid.Column="1" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="PART_Header" ContentSource="Header" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                        <ItemsPresenter x:Name="ItemsHost" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsExpanded" Value="false">
+                            <Setter Property="Visibility" TargetName="ItemsHost" Value="Collapsed"/>
+                        </Trigger>
+                        <Trigger Property="HasItems" Value="false">
+                            <Setter Property="Visibility" TargetName="Expander" Value="Hidden"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.CommandBarHoverOverSelectedBrushKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                        <MultiTrigger>
+                            <MultiTrigger.Conditions>
+                                <Condition Property="IsSelected" Value="true"/>
+                                <Condition Property="IsSelectionActive" Value="false"/>
+                            </MultiTrigger.Conditions>
+                            <Setter Property="Background" TargetName="Bd" Value="{DynamicResource {x:Static vs_shell:EnvironmentColors.CommandBarHoverOverSelectedBrushKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </MultiTrigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="VirtualizingStackPanel.IsVirtualizing" Value="true">
+                <Setter Property="ItemsPanel">
+                    <Setter.Value>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel/>
+                        </ItemsPanelTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -36,14 +160,14 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="10,3">
             <Button x:Name="commitButton" ToolTip="Commit" Click="commitButton_Click" Height="16" Width="16" Margin="0,0,5,0" BorderThickness="0">
-                <Button.Background>
+                <Button.OpacityMask>
                     <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="192,0,16,16"/>
-                </Button.Background>
+                </Button.OpacityMask>
             </Button>
             <Button x:Name="revertButton" ToolTip="Revert" Click="revertButton_Click" Width="16" BorderThickness="0">
-                <Button.Background>
+                <Button.OpacityMask>
                     <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="64,0,16,16"/>
-                </Button.Background>
+                </Button.OpacityMask>
             </Button>
         </StackPanel>
         <TreeView Grid.Row="1" x:Name="treeView" Background="{x:Null}" BorderThickness="0,1,0,0" />
