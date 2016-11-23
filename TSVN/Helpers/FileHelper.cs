@@ -9,31 +9,31 @@ namespace SamirBoulema.TSVN.Helpers
 {
     public class FileHelper
     {
-        private DTE dte;
+        private readonly DTE _dte;
 
         public FileHelper(DTE dte)
         {
-            this.dte = dte;
+            _dte = dte;
         }
 
-        public string GetTortoiseSVNProc()
+        public static string GetTortoiseSvnProc()
         {
             return (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
         }
 
-        public string GetSVNExec()
+        public static string GetSvnExec()
         {
-            return GetTortoiseSVNProc().Replace("TortoiseProc.exe", "svn.exe");
+            return GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
         }
 
         public void SaveAllFiles()
         {
-            dte.ExecuteCommand("File.SaveAll");
+            _dte.ExecuteCommand("File.SaveAll");
         }
 
         public string GetSolutionDir()
         {
-            string fileName = dte.Solution.FullName;
+            var fileName = _dte.Solution.FullName;
             if (!string.IsNullOrEmpty(fileName))
             {
                 var path = Path.GetDirectoryName(fileName);

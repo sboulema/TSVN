@@ -1,88 +1,71 @@
 ﻿using EnvDTE;
-using Microsoft.Win32;
 using System;
-using System.IO;
-using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows.Forms;
+using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;
 
 namespace SamirBoulema.TSVN.Helpers
 {
     public class CommandHelper
     {
-        private DTE dte;
-        private string tortoiseProc;
-
+        private readonly DTE _dte;
+        private readonly string _tortoiseProc;
+        private readonly FileHelper _fileHelper;
 
         public CommandHelper(DTE dte)
         {
-            this.dte = dte;
-            tortoiseProc = GetTortoiseSVNProc();
+            _dte = dte;
+            _tortoiseProc = FileHelper.GetTortoiseSvnProc();
+            _fileHelper = new FileHelper(dte);
         }
 
         public void Commit()
         {
-            dte.ExecuteCommand("File.SaveAll", string.Empty);
-            Commit(GetSolutionDir());
+            _dte.ExecuteCommand("File.SaveAll", string.Empty);
+            Commit(_fileHelper.GetSolutionDir());
         }
 
         public void Commit(string filePath)
         {
             if (string.IsNullOrEmpty(filePath)) return;
-            StartProcess(tortoiseProc, string.Format("/command:commit /path:\"{0}\" /closeonend:0", filePath));
+            StartProcess(_tortoiseProc, $"/command:commit /path:\"{filePath}\" /closeonend:0");
         }
 
         public void Revert()
         {
-            Revert(GetSolutionDir());
+            Revert(_fileHelper.GetSolutionDir());
         }
 
         public void Revert(string filePath)
         {
             if (string.IsNullOrEmpty(filePath)) return;
-            StartProcess(tortoiseProc, string.Format("/command:revert /path:\"{0}\" /closeonend:0", filePath));
+            StartProcess(_tortoiseProc, $"/command:revert /path:\"{filePath}\" /closeonend:0");
         }
 
-        private string GetSolutionDir()
+        public List<string> GetPendingChanges()
         {
-            string fileName = dte.Solution.FullName;
-            if (string.IsNullOrEmpty(fileName))
+            var pendingChanges = new List<string>();
+            var proc = new Process
             {
-                MessageBox.Show("Please open a solution first", "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                var path = Path.GetDirectoryName(fileName);
-                return FindSvndir(path);
-            }
-            return string.Empty;
-        }
-
-        private static string FindSvndir(string path)
-        {
-            try
-            {
-                var di = new DirectoryInfo(path);
-                if (di.GetDirectories().Any(d => d.Name.Equals(".svn")))
+                StartInfo = new ProcessStartInfo
                 {
-                    return di.FullName;
+                    FileName = "cmd.exe",
+                    Arguments = $"/c cd /D \"{_fileHelper.GetSolutionDir()}\" && \"{FileHelper.GetSvnExec()}\" status" + (Settings.Default.HideUnversioned ? " -q" : string.Empty),
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
                 }
-                if (di.Parent != null)
-                {
-                    return FindSvndir(di.Parent.FullName);
-                }
-                throw new FileNotFoundException("Unable to find .svn directory.\nIs your solution under SVN source control?");
-            }
-            catch (Exception e)
+            };
+            proc.Start();
+            while (!proc.StandardOutput.EndOfStream)
             {
-                MessageBox.Show(e.Message, "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                pendingChanges.Add(proc.StandardOutput.ReadLine());
             }
-            return string.Empty;
-        }
 
-        private string GetTortoiseSVNProc()
-        {
-            return (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
+            return pendingChanges;
         }
 
         private static void StartProcess(string application, string args)

@@ -1,4 +1,6 @@
-﻿namespace SamirBoulema.TSVN
+﻿using SamirBoulema.TSVN.Properties;
+
+namespace SamirBoulema.TSVN
 {
     using EnvDTE;
     using Helpers;
@@ -17,11 +19,12 @@
     /// <summary>
     /// Interaction logic for TSVNToolWindowControl.
     /// </summary>
-    public partial class TSVNToolWindowControl : UserControl
+    public partial class TSVNToolWindowControl
     {
-        private DTE dte;
-        private CommandHelper commandHelper;
-        private ContextMenu contextMenu;
+        private DTE _dte;
+        private CommandHelper _commandHelper;
+        private FileHelper _fileHelper;
+        private readonly ContextMenu _contextMenu;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TSVNToolWindowControl"/> class.
@@ -29,7 +32,7 @@
         public TSVNToolWindowControl()
         {
             InitializeComponent();
-            contextMenu = CreateContextMenu();
+            _contextMenu = CreateContextMenu();
         }
 
         public void Update(List<string> pendingChanges, string solutionDir)
@@ -148,7 +151,7 @@
             // assign stack to header
             item.Header = stack;
 
-            item.ContextMenu = contextMenu;
+            item.ContextMenu = _contextMenu;
 
             return item;
         }
@@ -182,7 +185,7 @@
 
         private void Item_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            dte.ExecuteCommand("File.OpenFile", ((TSVNTreeViewItem)sender).Path);
+            _dte.ExecuteCommand("File.OpenFile", ((TSVNTreeViewItem)sender).Path);
             e.Handled = true;
         }
 
@@ -250,7 +253,7 @@
             e.Handled = true;
         }
 
-        private ImageSource ToImageSource(System.Drawing.Icon icon)
+        private static ImageSource ToImageSource(Icon icon)
         {
             ImageSource imageSource = Imaging.CreateBitmapSourceFromHIcon(
                 icon.Handle,
@@ -262,18 +265,19 @@
 
         public void SetDTE(DTE dte)
         {
-            this.dte = dte;
-            commandHelper = new CommandHelper(dte);
+            _dte = dte;
+            _commandHelper = new CommandHelper(dte);
+            _fileHelper = new FileHelper(dte);
         }
 
         private void commitButton_Click(object sender, RoutedEventArgs e)
         {
-            commandHelper.Commit();
+            _commandHelper.Commit();
         }
 
         private void revertButton_Click(object sender, RoutedEventArgs e)
         {
-            commandHelper.Revert();
+            _commandHelper.Revert();
         }
 
         private ContextMenu CreateContextMenu()
@@ -295,19 +299,35 @@
             if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
             {
                 TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
-                commandHelper.Commit(originatingTreeViewItem.Path);
+                _commandHelper.Commit(originatingTreeViewItem.Path);
             }
         }
 
         private void RevertItem_Click(object sender, RoutedEventArgs e)
         {
-            MenuItem contextMenuItem = (MenuItem)sender;
-            ContextMenu contextMenu = (ContextMenu)contextMenuItem.Parent;
+            var contextMenuItem = (MenuItem)sender;
+            var contextMenu = (ContextMenu)contextMenuItem.Parent;
             if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
             {
                 TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
-                commandHelper.Revert(originatingTreeViewItem.Path);
+                _commandHelper.Revert(originatingTreeViewItem.Path);
             }
+        }
+
+        private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HideUnversioned = true;
+            Settings.Default.Save();
+            Update(_commandHelper.GetPendingChanges(), _fileHelper.GetSolutionDir());
+            HideUnversionedButtonBorder.BorderThickness = new Thickness(1);
+        }
+
+        private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e)
+        {
+            Settings.Default.HideUnversioned = false;
+            Settings.Default.Save();
+            Update(_commandHelper.GetPendingChanges(), _fileHelper.GetSolutionDir());
+            HideUnversionedButtonBorder.BorderThickness = new Thickness(0);
         }
     }
 }
