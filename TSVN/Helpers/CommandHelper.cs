@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;

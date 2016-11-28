@@ -43,7 +43,7 @@ namespace SamirBoulema.TSVN
          
             if (!string.IsNullOrEmpty(solutionDir))
             {
-                var root = new TreeViewItem() { Header = new Label() { Content = $"Changes ({pendingChanges.Count})" },
+                var root = new TreeViewItem { Header = new Label { Content = $"Changes ({pendingChanges.Count})" },
                     IsExpanded = true, FontWeight = FontWeights.Bold, Margin = new Thickness(0,0,0,10) };
                 var solutionDirItem = CreateFolderTreeViewItem(solutionDir, "S", false);
 
@@ -126,10 +126,15 @@ namespace SamirBoulema.TSVN
             stack.Orientation = Orientation.Horizontal;
 
             // create Image
-            Image image = new Image();
-            image.Source = ToImageSource(System.Drawing.Icon.ExtractAssociatedIcon(item.Path));
-            image.Width = 16;
-            image.Height = 16;
+            var image = new Image
+            {
+                Source =
+                    File.Exists(item.Path)
+                        ? ToImageSource(Icon.ExtractAssociatedIcon(item.Path))
+                        : new BitmapImage(new Uri("Resources\\Document_16x.png", UriKind.Relative)),
+                Width = 16,
+                Height = 16
+            };
 
             // Label
             Label lbl = new Label();

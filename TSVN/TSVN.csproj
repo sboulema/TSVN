@@ -235,6 +235,7 @@
   <ItemGroup>
     <Resource Include="Resources\FolderOpen_16x.png" />
     <Resource Include="Resources\Folder_16x.png" />
+    <Resource Include="Resources\Document_16x.png" />
     <Content Include="Resources\GettingStartedGuide.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
