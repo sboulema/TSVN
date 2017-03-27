@@ -1,5 +1,0 @@
-Getting Started Guide
-
-1. Install TortoiseSVN (http://www.tortoisesvn.net) with "command line client tools"
-2. Install the TSVN extension
-3. Enjoy! 

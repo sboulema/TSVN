@@ -7,14 +7,9 @@ using System.Windows.Forms;
 
 namespace SamirBoulema.TSVN.Helpers
 {
-    public class FileHelper
+    public static class FileHelper
     {
-        private readonly DTE _dte;
-
-        public FileHelper(DTE dte)
-        {
-            _dte = dte;
-        }
+        public static DTE Dte;
 
         public static string GetTortoiseSvnProc()
         {
@@ -26,23 +21,32 @@ namespace SamirBoulema.TSVN.Helpers
             return GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
         }
 
-        public void SaveAllFiles()
+        public static void SaveAllFiles()
         {
-            _dte.ExecuteCommand("File.SaveAll");
+            Dte.ExecuteCommand("File.SaveAll");
         }
 
-        public string GetSolutionDir()
+        public static string GetSolutionDir()
         {
-            var fileName = _dte.Solution.FullName;
-            if (!string.IsNullOrEmpty(fileName))
+            var dir = GetSolutionDir(Dte.Solution.FullName);
+            if (string.IsNullOrEmpty(dir))
             {
-                var path = Path.GetDirectoryName(fileName);
-                return FindSVNdir(path);
+                dir = GetSolutionDir(Dte.ActiveDocument.ActiveWindow.Project.FullName);
+            }
+            return dir;
+        }
+
+        private static string GetSolutionDir(string filename)
+        {     
+            if (!string.IsNullOrEmpty(filename))
+            {
+                var path = Path.GetDirectoryName(filename);
+                return FindSvndir(path);
             }
             return string.Empty;
         }
 
-        private static string FindSVNdir(string path)
+        private static string FindSvndir(string path)
         {
             try
             {
@@ -53,12 +57,12 @@ namespace SamirBoulema.TSVN.Helpers
                 }
                 if (di.Parent != null)
                 {
-                    return FindSVNdir(di.Parent.FullName);
+                    return FindSvndir(di.Parent.FullName);
                 }
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "TGIT error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Message, "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return string.Empty;
         }

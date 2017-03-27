@@ -19,6 +19,7 @@
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
         <CommandFlag>TextChanges</CommandFlag>
+        <Icon guid="guidImages" id="pull" />
         <Strings>
           <ButtonText>TSVN</ButtonText>
           <CommandName>TSVN</CommandName>

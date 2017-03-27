@@ -23,7 +23,6 @@ namespace SamirBoulema.TSVN
     {
         private DTE _dte;
         private CommandHelper _commandHelper;
-        private FileHelper _fileHelper;
         private readonly ContextMenu _contextMenu;
 
         /// <summary>
@@ -272,7 +271,6 @@ namespace SamirBoulema.TSVN
         {
             _dte = dte;
             _commandHelper = new CommandHelper(dte);
-            _fileHelper = new FileHelper(dte);
         }
 
         private void commitButton_Click(object sender, RoutedEventArgs e)
@@ -323,7 +321,7 @@ namespace SamirBoulema.TSVN
         {
             Settings.Default.HideUnversioned = true;
             Settings.Default.Save();
-            Update(_commandHelper.GetPendingChanges(), _fileHelper.GetSolutionDir());
+            Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
             HideUnversionedButtonBorder.BorderThickness = new Thickness(1);
         }
 
@@ -331,7 +329,7 @@ namespace SamirBoulema.TSVN
         {
             Settings.Default.HideUnversioned = false;
             Settings.Default.Save();
-            Update(_commandHelper.GetPendingChanges(), _fileHelper.GetSolutionDir());
+            Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
             HideUnversionedButtonBorder.BorderThickness = new Thickness(0);
         }
     }
