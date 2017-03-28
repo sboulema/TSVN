@@ -22,7 +22,6 @@ namespace SamirBoulema.TSVN
     public partial class TSVNToolWindowControl
     {
         private DTE _dte;
-        private CommandHelper _commandHelper;
         private readonly ContextMenu _contextMenu;
 
         /// <summary>
@@ -110,19 +109,20 @@ namespace SamirBoulema.TSVN
 
         private TSVNTreeViewItem CreateFileTreeViewItem(string text, string solutionDir, string path, string change)
         {
-            var item = new TSVNTreeViewItem();
-            item.IsExpanded = false;
-            item.FontWeight = FontWeights.Normal;
-            item.Path = Path.Combine(solutionDir, path);
+            var item = new TSVNTreeViewItem
+            {
+                IsExpanded = false,
+                FontWeight = FontWeights.Normal,
+                Path = Path.Combine(solutionDir, path),
+                Padding = new Thickness(-3)
+            };
             item.MouseDoubleClick += Item_MouseDoubleClick;
-            item.Padding = new Thickness(-3);
 
             // create Tooltip
             item.ToolTip = $"Name: {text}\nFolder: {Path.GetDirectoryName(item.Path)}\nType: {GetTypeOfChange(change[0])}";
 
             // create stack panel
-            StackPanel stack = new StackPanel();
-            stack.Orientation = Orientation.Horizontal;
+            var stack = new StackPanel { Orientation = Orientation.Horizontal };
 
             // create Image
             var image = new Image
@@ -136,8 +136,7 @@ namespace SamirBoulema.TSVN
             };
 
             // Label
-            Label lbl = new Label();
-            lbl.Content = text;
+            var lbl = new Label { Content = text };
 
             // Add into stack
             stack.Children.Add(image);
@@ -146,9 +145,11 @@ namespace SamirBoulema.TSVN
             var typeOfChangeShort = GetTypeOfChangeShort(change[0]);
             if (!string.IsNullOrEmpty(typeOfChangeShort))
             {
-                Label lblChange = new Label();
-                lblChange.Content = typeOfChangeShort;
-                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                var lblChange = new Label
+                {
+                    Content = typeOfChangeShort,
+                    Foreground = new SolidColorBrush(Colors.Gray)
+                };
                 stack.Children.Add(lblChange);
             }
 
@@ -195,30 +196,35 @@ namespace SamirBoulema.TSVN
 
         private TreeViewItem CreateFolderTreeViewItem(string text, string change, bool lastItem)
         {
-            TreeViewItem item = new TreeViewItem();
-            item.IsExpanded = true;
-            item.FontWeight = FontWeights.Normal;
-            item.Uid = text;
-            item.Padding = new Thickness(-3);
+            var item = new TreeViewItem
+            {
+                IsExpanded = true,
+                FontWeight = FontWeights.Normal,
+                Uid = text,
+                Padding = new Thickness(-3)
+            };
 
             // Events
             item.Collapsed += Item_Collapsed;
             item.Expanded += Item_Expanded;
 
             // create stack panel
-            StackPanel stack = new StackPanel();
-            stack.Orientation = Orientation.Horizontal;
+            var stack = new StackPanel {Orientation = Orientation.Horizontal};
 
             // create Image
-            Image image = new Image();
-            image.Source = new BitmapImage(new Uri("Resources\\FolderOpen_16x.png", UriKind.Relative));
-            image.Width = 16;
-            image.Height = 16;
+            var image = new Image
+            {
+                Source = new BitmapImage(new Uri("Resources\\FolderOpen_16x.png", UriKind.Relative)),
+                Width = 16,
+                Height = 16
+            };
 
             // Label
-            Label lbl = new Label();
-            lbl.Content = text;
-            lbl.Foreground = new SolidColorBrush(Colors.Gray);
+            var lbl = new Label
+            {
+                Content = text,
+                Foreground = new SolidColorBrush(Colors.Gray)
+            };
 
             // Add into stack
             stack.Children.Add(image);
@@ -227,9 +233,11 @@ namespace SamirBoulema.TSVN
             var typeOfChangeShort = GetTypeOfChangeShort(change[0]);
             if (!string.IsNullOrEmpty(typeOfChangeShort) && lastItem)
             {
-                Label lblChange = new Label();
-                lblChange.Content = typeOfChangeShort;
-                lblChange.Foreground = new SolidColorBrush(Colors.Gray);
+                var lblChange = new Label
+                {
+                    Content = typeOfChangeShort,
+                    Foreground = new SolidColorBrush(Colors.Gray)
+                };
                 stack.Children.Add(lblChange);
             }
 
@@ -239,19 +247,19 @@ namespace SamirBoulema.TSVN
             return item;
         }
 
-        private void Item_Collapsed(object sender, RoutedEventArgs e)
+        private static void Item_Collapsed(object sender, RoutedEventArgs e)
         {
             var folderItem = sender as TreeViewItem;
-            var folderItemImage = ((Image)((StackPanel)folderItem.Header).Children[0]);
+            var folderItemImage = (Image)((StackPanel)folderItem.Header).Children[0];
 
             folderItemImage.Source = new BitmapImage(new Uri("Resources\\Folder_16x.png", UriKind.Relative));
             e.Handled = true;
         }
 
-        private void Item_Expanded(object sender, RoutedEventArgs e)
+        private static void Item_Expanded(object sender, RoutedEventArgs e)
         {
             var folderItem = sender as TreeViewItem;
-            var folderItemImage = ((Image)((StackPanel)folderItem.Header).Children[0]);
+            var folderItemImage = (Image)((StackPanel)folderItem.Header).Children[0];
 
             folderItemImage.Source = new BitmapImage(new Uri("Resources\\FolderOpen_16x.png", UriKind.Relative));
             e.Handled = true;
@@ -270,26 +278,25 @@ namespace SamirBoulema.TSVN
         public void SetDTE(DTE dte)
         {
             _dte = dte;
-            _commandHelper = new CommandHelper(dte);
         }
 
         private void commitButton_Click(object sender, RoutedEventArgs e)
         {
-            _commandHelper.Commit();
+            CommandHelper.Commit();
         }
 
         private void revertButton_Click(object sender, RoutedEventArgs e)
         {
-            _commandHelper.Revert();
+            CommandHelper.Revert();
         }
 
         private ContextMenu CreateContextMenu()
         {
             var menu = new ContextMenu();
-            var commitItem = new MenuItem() { Header = "Commit" };
+            var commitItem = new MenuItem { Header = "Commit" };
             commitItem.Click += CommitItem_Click;
             menu.Items.Add(commitItem);
-            var revertItem = new MenuItem() { Header = "Revert" };
+            var revertItem = new MenuItem { Header = "Revert" };
             revertItem.Click += RevertItem_Click;
             menu.Items.Add(revertItem);
             return menu;
@@ -297,12 +304,12 @@ namespace SamirBoulema.TSVN
 
         private void CommitItem_Click(object sender, RoutedEventArgs e)
         {
-            MenuItem contextMenuItem = (MenuItem)sender;
-            ContextMenu contextMenu = (ContextMenu)contextMenuItem.Parent;
+            var contextMenuItem = (MenuItem)sender;
+            var contextMenu = (ContextMenu)contextMenuItem.Parent;
             if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
             {
-                TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
-                _commandHelper.Commit(originatingTreeViewItem.Path);
+                var originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
+                CommandHelper.Commit(originatingTreeViewItem.Path);
             }
         }
 
@@ -312,8 +319,8 @@ namespace SamirBoulema.TSVN
             var contextMenu = (ContextMenu)contextMenuItem.Parent;
             if (contextMenu.PlacementTarget.GetType() == typeof(TSVNTreeViewItem))
             {
-                TSVNTreeViewItem originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
-                _commandHelper.Revert(originatingTreeViewItem.Path);
+                var originatingTreeViewItem = (TSVNTreeViewItem)contextMenu.PlacementTarget;
+                CommandHelper.Revert(originatingTreeViewItem.Path);
             }
         }
 
@@ -321,7 +328,7 @@ namespace SamirBoulema.TSVN
         {
             Settings.Default.HideUnversioned = true;
             Settings.Default.Save();
-            Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
+            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
             HideUnversionedButtonBorder.BorderThickness = new Thickness(1);
         }
 
@@ -329,7 +336,7 @@ namespace SamirBoulema.TSVN
         {
             Settings.Default.HideUnversioned = false;
             Settings.Default.Save();
-            Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
+            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
             HideUnversionedButtonBorder.BorderThickness = new Thickness(0);
         }
     }

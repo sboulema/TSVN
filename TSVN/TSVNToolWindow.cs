@@ -13,7 +13,6 @@ namespace SamirBoulema.TSVN
         private DocumentEvents _documentEvents;
         private SolutionEvents _solutionEvents;
         private readonly TSVNToolWindowControl _tsvnToolWindowControl;
-        private CommandHelper _commandHelper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TSVNToolWindow"/> class.
@@ -32,7 +31,6 @@ namespace SamirBoulema.TSVN
             var tsvnPackage = Package as TsvnPackage;
             var dte = (DTE)tsvnPackage.GetServiceHelper(typeof(DTE));
             _tsvnToolWindowControl.SetDTE(dte);
-            _commandHelper = new CommandHelper(dte);
 
             _documentEvents = dte.Events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
@@ -44,16 +42,13 @@ namespace SamirBoulema.TSVN
 
             _tsvnToolWindowControl.HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
 
-            _tsvnToolWindowControl.Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
+            _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
         }
 
         private void _tsvnToolWindowControl_GotFocus(object sender, System.Windows.RoutedEventArgs e) => Update();
         private void SolutionEvents_Opened() => Update();
         private void DocumentEvents_DocumentSaved(Document document) => Update();
 
-        private void Update()
-        {
-            _tsvnToolWindowControl.Update(_commandHelper.GetPendingChanges(), FileHelper.GetSolutionDir());
-        }
+        private void Update() => _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
     }
 }

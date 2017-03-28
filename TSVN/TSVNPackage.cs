@@ -5,7 +5,6 @@ using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Process = System.Diagnostics.Process;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
-using Microsoft.Win32;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
 // ReSharper disable LocalizableElement
@@ -36,11 +35,12 @@ namespace SamirBoulema.TSVN
             Dte = (DTE)GetService(typeof(DTE));
 
             FileHelper.Dte = Dte;
+            CommandHelper.Dte = Dte;
 
-            _tortoiseProc = GetTortoiseSvnProc();
+            _tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (null == mcs) return;
 
             mcs.AddCommand(CreateCommand(ShowChangesCommand, PkgCmdIdList.ShowChangesCommand));
@@ -71,8 +71,8 @@ namespace SamirBoulema.TSVN
             mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
             mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
 
-            OleMenuCommand tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
-            OleMenuCommand tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
+            var tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
+            var tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
             switch (Dte.Version)
             {
                 case "11.0":
@@ -110,23 +110,6 @@ namespace SamirBoulema.TSVN
             return menuItem;
         }
 
-        private static string GetSolutionDir()
-        {
-            var dir = FileHelper.GetSolutionDir();
-
-            if (string.IsNullOrEmpty(dir))
-            {
-                MessageBox.Show("Please open a solution first", "TSVN error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            return dir;
-        }
-
-        public string GetTortoiseSvnProc()
-        {
-            return (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
-        }
-
         public object GetServiceHelper(Type type)
         {
             return GetService(type);
@@ -135,14 +118,14 @@ namespace SamirBoulema.TSVN
         #region Button Commands
         private void ShowChangesCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:repostatus /path:\"{_solutionDir}\" /closeonend:0");
         }
 
         private void UpdateCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /closeonend:0");
@@ -152,13 +135,13 @@ namespace SamirBoulema.TSVN
         {
             _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Dte.ActiveDocument.Save();
+            Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /closeonend:0");
         }
 
         private void UpdateToRevisionCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /rev /closeonend:0");
@@ -168,7 +151,7 @@ namespace SamirBoulema.TSVN
         {
             _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Dte.ActiveDocument.Save();
+            Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /rev /closeonend:0");
         }
 
@@ -180,8 +163,8 @@ namespace SamirBoulema.TSVN
         }
 
         private void CommitCommand(object sender, EventArgs e)
-        {
-            _solutionDir = GetSolutionDir();  
+        {  
+            _solutionDir = CommandHelper.GetRepositoryRoot();
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
             StartProcess(_tortoiseProc, $"/command:commit /path:\"{_solutionDir}\" /closeonend:0");
@@ -191,13 +174,13 @@ namespace SamirBoulema.TSVN
         {
             _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Dte.ActiveDocument.Save();
+            Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:commit /path:\"{_currentFilePath}\" /closeonend:0");
         }
 
         private void ShowLogCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:log /path:\"{_solutionDir}\" /closeonend:0");
         }
@@ -211,23 +194,23 @@ namespace SamirBoulema.TSVN
 
         private void CreatePatchCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:createpatch /path:\"{_solutionDir}\" /noview /closeonend:0");
         }
 
         private void ApplyPatchCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
 
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Filter = Resources.PatchFileFilterString,
                 FilterIndex = 1,
                 Multiselect = false
             };
-            DialogResult result = openFileDialog.ShowDialog();
+            var result = openFileDialog.ShowDialog();
             if (result != DialogResult.OK) return;
 
             StartProcess("TortoiseMerge.exe", $"/diff:\"{openFileDialog.FileName}\" /patchpath:\"{_solutionDir}\"");
@@ -235,7 +218,7 @@ namespace SamirBoulema.TSVN
 
         private void RevertCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:revert /path:\"{_solutionDir}\" /closeonend:0");
         }
@@ -251,13 +234,13 @@ namespace SamirBoulema.TSVN
         {
             _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             if (string.IsNullOrEmpty(_currentFilePath)) return;
-            Dte.ActiveDocument.Save();
+            Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:add /path:\"{_currentFilePath}\" /closeonend:0");
         }
 
         private void DiskBrowserCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             Process.Start(_solutionDir);
         }
@@ -270,7 +253,7 @@ namespace SamirBoulema.TSVN
 
         private void RepoBrowserCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:repobrowser /path:\"{_solutionDir}\"");
         }
@@ -284,21 +267,21 @@ namespace SamirBoulema.TSVN
 
         private void BranchCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:copy /path:\"{_solutionDir}\"");
         }
 
         private void SwitchCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:switch /path:\"{_solutionDir}\"");
         }
 
         private void MergeCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:merge /path:\"{_solutionDir}\"");
         }
@@ -312,7 +295,7 @@ namespace SamirBoulema.TSVN
 
         private void CleanupCommand(object sender, EventArgs e)
         {
-            _solutionDir = GetSolutionDir();  
+            _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             StartProcess(_tortoiseProc, $"/command:cleanup /path:\"{_solutionDir}\"");
         }

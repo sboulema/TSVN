@@ -13,7 +13,7 @@ Control TortoiseSVN from within Visual Studio
 
 [Github Releases](https://github.com/sboulema/TSVN/releases)
 
-Open VSIX Gallery
+[Open VSIX Gallery](http://vsixgallery.com/extension/07fd7462-cd4b-433b-9ab5-8ad3ad87bc65/)
 
 [AppVeyor](https://ci.appveyor.com/project/sboulema/tsvn) [![Build status](https://ci.appveyor.com/api/projects/status/43qr71taxix0llbs?svg=true)](https://ci.appveyor.com/project/sboulema/tsvn)
 

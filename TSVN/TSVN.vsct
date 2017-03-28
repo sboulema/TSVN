@@ -19,13 +19,22 @@
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
         <CommandFlag>TextChanges</CommandFlag>
-        <Icon guid="guidImages" id="pull" />
         <Strings>
           <ButtonText>TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
 
+      <!--Solution Explorer Context Menu-->
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>TSVN</ButtonText>
+          <CommandName>TSVN</CommandName>
+        </Strings>
+      </Menu>
+      
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
         <Strings>
