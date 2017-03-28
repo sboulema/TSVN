@@ -133,7 +133,7 @@ namespace SamirBoulema.TSVN
 
         private void UpdateFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /closeonend:0");
@@ -149,7 +149,7 @@ namespace SamirBoulema.TSVN
 
         private void UpdateToRevisionFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /rev /closeonend:0");
@@ -157,7 +157,7 @@ namespace SamirBoulema.TSVN
 
         private void PropertiesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:properties /path:\"{_currentFilePath}\" /closeonend:0");
         }
@@ -172,7 +172,7 @@ namespace SamirBoulema.TSVN
 
         private void CommitFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:commit /path:\"{_currentFilePath}\" /closeonend:0");
@@ -187,7 +187,7 @@ namespace SamirBoulema.TSVN
 
         private void ShowLogFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:log /path:\"{_currentFilePath}\" /closeonend:0");
         }
@@ -225,14 +225,14 @@ namespace SamirBoulema.TSVN
 
         private void RevertFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:revert /path:\"{_currentFilePath}\" /closeonend:0");
         }
 
         private void AddFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Dte.ActiveDocument?.Save();
             StartProcess(_tortoiseProc, $"/command:add /path:\"{_currentFilePath}\" /closeonend:0");
@@ -246,7 +246,7 @@ namespace SamirBoulema.TSVN
         }
         private void DiskBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess("explorer.exe", _currentFilePath);
         }
@@ -260,7 +260,7 @@ namespace SamirBoulema.TSVN
 
         private void RepoBrowserFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:repobrowser /path:\"{_currentFilePath}\"");
         }
@@ -288,7 +288,7 @@ namespace SamirBoulema.TSVN
 
         private void MergeFileCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:merge /path:\"{_currentFilePath}\"");
         }
@@ -302,21 +302,21 @@ namespace SamirBoulema.TSVN
 
         private void DifferencesCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:diff /path:\"{_currentFilePath}\"");
         }
 
         private void DiffPreviousCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:prevdiff /path:\"{_currentFilePath}\"");
         }
 
         private void BlameCommand(object sender, EventArgs e)
         {
-            _currentFilePath = Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            _currentFilePath = FileHelper.GetPath();
             var currentLineIndex = ((TextDocument) Dte.ActiveDocument?.Object(string.Empty))?.Selection.CurrentLine ?? 0;  
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             StartProcess(_tortoiseProc, $"/command:blame /path:\"{_currentFilePath}\" /line:{currentLineIndex}");

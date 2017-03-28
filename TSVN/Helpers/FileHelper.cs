@@ -1,4 +1,5 @@
-﻿using EnvDTE;
+﻿using System.IO;
+using EnvDTE;
 using Microsoft.Win32;
 
 namespace SamirBoulema.TSVN.Helpers
@@ -20,6 +21,13 @@ namespace SamirBoulema.TSVN.Helpers
         public static void SaveAllFiles()
         {
             Dte.ExecuteCommand("File.SaveAll");
+        }
+
+        public static string GetPath()
+        {
+            return Dte.SelectedItems.Item(1).ProjectItem == null
+                ? Path.GetDirectoryName(Dte.SelectedItems.Item(1).Project.FullName)
+                : Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
         }
     }
 }

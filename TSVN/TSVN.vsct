@@ -34,6 +34,14 @@
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>TSVN</ButtonText>
+          <CommandName>TSVN</CommandName>
+        </Strings>
+      </Menu>
       
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
