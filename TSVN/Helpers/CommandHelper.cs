@@ -60,9 +60,17 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static string GetRepositoryRoot(string path = "")
         {
+            // Try to found the current working folder, either by open document or by open solution
             if (string.IsNullOrEmpty(path))
             {
-                path = Path.GetDirectoryName(Dte.ActiveDocument != null ? Dte.ActiveDocument.FullName : Dte.Solution.FullName);
+                if (Dte.ActiveDocument != null)
+                {
+                    path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
+                }
+                else if (!string.IsNullOrEmpty(Dte.Solution.FileName))
+                {
+                    path = Path.GetDirectoryName(Dte.Solution.FullName);
+                }
             }
 
             var proc = new Process
