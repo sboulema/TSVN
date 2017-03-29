@@ -63,13 +63,13 @@ namespace SamirBoulema.TSVN.Helpers
             // Try to found the current working folder, either by open document or by open solution
             if (string.IsNullOrEmpty(path))
             {
-                if (Dte.ActiveDocument != null)
-                {
-                    path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
-                }
-                else if (!string.IsNullOrEmpty(Dte.Solution.FileName))
+                if (!string.IsNullOrEmpty(Dte.Solution.FileName))
                 {
                     path = Path.GetDirectoryName(Dte.Solution.FullName);
+                }
+                else if (Dte.ActiveDocument != null)
+                {
+                    path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
                 }
             }
 
@@ -86,16 +86,24 @@ namespace SamirBoulema.TSVN.Helpers
                 }
             };
             proc.Start();
+
+            var workingCopyRootPath = string.Empty;
+            var relativeUrl = string.Empty;
+
             while (!proc.StandardOutput.EndOfStream)
             {
                 var line = proc.StandardOutput.ReadLine();
-                if (line?.StartsWith("Repository Root:") ?? false)
+                if (line?.StartsWith("Working Copy Root Path:") ?? false)
                 {
-                    return new Uri(line.Substring(17)).LocalPath;
+                    workingCopyRootPath = line.Substring(24);
+                }
+                else if (line?.StartsWith("Relative URL:") ?? false)
+                {
+                    relativeUrl = line.Substring(14);
                 }
             }
 
-            return string.Empty;
+            return Path.Combine(workingCopyRootPath, relativeUrl.Substring(2));
         }
 
         private static void StartProcess(string application, string args)
