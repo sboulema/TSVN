@@ -87,23 +87,16 @@ namespace SamirBoulema.TSVN.Helpers
             };
             proc.Start();
 
-            var workingCopyRootPath = string.Empty;
-            var relativeUrl = string.Empty;
-
             while (!proc.StandardOutput.EndOfStream)
             {
                 var line = proc.StandardOutput.ReadLine();
                 if (line?.StartsWith("Working Copy Root Path:") ?? false)
                 {
-                    workingCopyRootPath = line.Substring(24);
-                }
-                else if (line?.StartsWith("Relative URL:") ?? false)
-                {
-                    relativeUrl = line.Substring(14);
+                    return line.Substring(24);
                 }
             }
 
-            return Path.Combine(workingCopyRootPath, relativeUrl.Substring(2));
+            return string.Empty;
         }
 
         private static void StartProcess(string application, string args)
