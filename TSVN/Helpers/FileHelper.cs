@@ -10,12 +10,16 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static string GetTortoiseSvnProc()
         {
-            return (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
+            var path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
+            LogHelper.Log($"TortoiseSvnProc: {path}");
+            return path;
         }
 
         public static string GetSvnExec()
         {
-            return GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
+            var path = GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
+            LogHelper.Log($"SvnExec: {path}, exists: {File.Exists(path)}");
+            return path;
         }
 
         public static void SaveAllFiles()
@@ -23,11 +27,21 @@ namespace SamirBoulema.TSVN.Helpers
             Dte.ExecuteCommand("File.SaveAll");
         }
 
+        /// <summary>
+        /// Get the path of the file on which to act upon. 
+        /// This can be different depending on where the TSVN context menu was used
+        /// </summary>
+        /// <returns>File path</returns>
         public static string GetPath()
         {
-            return Dte.SelectedItems.Item(1).ProjectItem == null
-                ? Path.GetDirectoryName(Dte.SelectedItems.Item(1).Project.FullName)
-                : Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            if (Dte.SelectedItems.Item(1).ProjectItem != null)
+            {
+                // Context menu in the Solution Explorer
+                return Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+            }
+
+            // Context menu in the Code Editor
+            return Path.GetDirectoryName(Dte.SelectedItems.Item(1).Project.FullName);
         }
     }
 }

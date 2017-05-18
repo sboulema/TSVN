@@ -90,16 +90,23 @@ namespace SamirBoulema.TSVN.Helpers
             while (!proc.StandardOutput.EndOfStream)
             {
                 var line = proc.StandardOutput.ReadLine();
+                LogHelper.Log($"SvnInfo: {line}");
                 if (line?.StartsWith("Working Copy Root Path:") ?? false)
                 {
                     return line.Substring(24);
                 }
             }
 
+            while (!proc.StandardError.EndOfStream)
+            {
+                var line = proc.StandardError.ReadLine();
+                LogHelper.Log($"SvnInfo: {line}");
+            }
+
             return string.Empty;
         }
 
-        private static void StartProcess(string application, string args)
+        public static void StartProcess(string application, string args)
         {
             try
             {
