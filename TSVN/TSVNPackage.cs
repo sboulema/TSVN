@@ -39,7 +39,7 @@ namespace SamirBoulema.TSVN
 
             _tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
-            LogHelper.Initialize(this, "TSVN");
+            Logger.Initialize(this, "TSVN");
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -72,6 +72,7 @@ namespace SamirBoulema.TSVN
             mcs.AddCommand(CreateCommand(DiffPreviousCommand, PkgCmdIdList.DiffPreviousCommand));
             mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
             mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
+            mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
 
             var tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
             var tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
@@ -310,6 +311,13 @@ namespace SamirBoulema.TSVN
             var currentLineIndex = ((TextDocument) Dte.ActiveDocument?.Object(string.Empty))?.Selection.CurrentLine ?? 0;  
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:blame /path:\"{_currentFilePath}\" /line:{currentLineIndex}");
+        }
+
+        private void DeleteFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = FileHelper.GetPath();
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{_currentFilePath}\"");
         }
         #endregion
     }

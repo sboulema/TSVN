@@ -37,5 +37,6 @@
         public const uint DiffPreviousCommand = 0x0610;
         public const uint RevertFileCommand = 0x0611;
         public const uint AddFileCommand = 0x0612;
+        public const uint DeleteFileCommand = 0x0613;
     };
 }

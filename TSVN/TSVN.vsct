@@ -351,6 +351,14 @@
         </Strings>
       </Button>
 
+      <Button guid="guidTSVNCmdSet" id="deleteFileCommand" priority="0x0600" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="delete" />
+        <Strings>
+          <ButtonText>Delete</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidTSVNPackageCmdSet" id="cmdidTSVNToolWindowCommand" priority="0x0100" type="Button">
         <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" />
         <Icon guid="guidImages" id="showChanges" />
@@ -362,7 +370,7 @@
 
     <!--Menu icons-->
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties" />
+      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete" />
     </Bitmaps>
   </Commands>
 
@@ -388,6 +396,7 @@
       <IDSymbol name="fetch" value="18" />
       <IDSymbol name="add" value="19" />
       <IDSymbol name="properties" value="20" />
+      <IDSymbol name="delete" value="21" />
     </GuidSymbol>
 
     <GuidSymbol name="guidTSVNPkg" value="{f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53}" />
@@ -452,6 +461,7 @@
       <IDSymbol name="diffPreviousCommand" value="0x0610" />
       <IDSymbol name="revertFileCommand" value="0x0611" />
       <IDSymbol name="addFileCommand" value="0x0612" />
+      <IDSymbol name="deleteFileCommand" value="0x0613" />
 
       <!--Windows Menu-->
       <IDSymbol name="TSVNWindowMenu" value="0x2000"/>

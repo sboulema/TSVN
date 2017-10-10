@@ -60,47 +60,60 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static string GetRepositoryRoot(string path = "")
         {
-            // Try to found the current working folder, either by open document or by open solution
-            if (string.IsNullOrEmpty(path))
+            var svnInfo = string.Empty;
+
+            try
             {
-                if (!string.IsNullOrEmpty(Dte.Solution.FileName))
+                // Try to found the current working folder, either by open document or by open solution
+                if (string.IsNullOrEmpty(path))
                 {
-                    path = Path.GetDirectoryName(Dte.Solution.FullName);
+                    if (!string.IsNullOrEmpty(Dte.Solution.FileName))
+                    {
+                        path = Path.GetDirectoryName(Dte.Solution.FullName);
+                    }
+                    else if (Dte.ActiveDocument != null)
+                    {
+                        path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
+                    }
                 }
-                else if (Dte.ActiveDocument != null)
+
+                var proc = new Process
                 {
-                    path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = $"/c cd /D \"{path}\" && \"{FileHelper.GetSvnExec()}\" info",
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+                proc.Start();
+
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    var line = proc.StandardOutput.ReadLine();
+                    LogHelper.Log($"SvnInfo: {line}");
+                    svnInfo += line;
+                    if (line?.StartsWith("Working Copy Root Path:") ?? false)
+                    {
+                        return line.Substring(24);
+                    }
                 }
+
+                while (!proc.StandardError.EndOfStream)
+                {
+                    var line = proc.StandardError.ReadLine();
+                    svnInfo += line;
+                    LogHelper.Log($"SvnInfo: {line}");
+                }
+
+                return string.Empty;
             }
-
-            var proc = new Process
+            catch (Exception e)
             {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c cd /D \"{path}\" && \"{FileHelper.GetSvnExec()}\" info",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
-                }
-            };
-            proc.Start();
-
-            while (!proc.StandardOutput.EndOfStream)
-            {
-                var line = proc.StandardOutput.ReadLine();
-                LogHelper.Log($"SvnInfo: {line}");
-                if (line?.StartsWith("Working Copy Root Path:") ?? false)
-                {
-                    return line.Substring(24);
-                }
-            }
-
-            while (!proc.StandardError.EndOfStream)
-            {
-                var line = proc.StandardError.ReadLine();
-                LogHelper.Log($"SvnInfo: {line}");
+                LogHelper.Log(svnInfo, e);
             }
 
             return string.Empty;
