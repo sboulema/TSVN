@@ -37,22 +37,30 @@ namespace SamirBoulema.TSVN.Helpers
         public static List<string> GetPendingChanges()
         {
             var pendingChanges = new List<string>();
-            var proc = new Process
+
+            try
             {
-                StartInfo = new ProcessStartInfo
+                var proc = new Process
                 {
-                    FileName = "cmd.exe",
-                    Arguments = $"/c cd /D \"{GetRepositoryRoot()}\" && \"{FileHelper.GetSvnExec()}\" status" + (Settings.Default.HideUnversioned ? " -q" : string.Empty),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "cmd.exe",
+                        Arguments = $"/c cd /D \"{GetRepositoryRoot()}\" && \"{FileHelper.GetSvnExec()}\" status" + (Settings.Default.HideUnversioned ? " -q" : string.Empty),
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                };
+                proc.Start();
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    pendingChanges.Add(proc.StandardOutput.ReadLine());
                 }
-            };
-            proc.Start();
-            while (!proc.StandardOutput.EndOfStream)
+            }
+            catch (Exception e)
             {
-                pendingChanges.Add(proc.StandardOutput.ReadLine());
+                LogHelper.Log("GetPendingChanges", e);
             }
 
             return pendingChanges;

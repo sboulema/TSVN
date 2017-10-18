@@ -12,6 +12,12 @@ namespace SamirBoulema.TSVN.Helpers
         {
             var path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
             LogHelper.Log($"TortoiseSvnProc: {path}");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                path = @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe";
+            }
+
             return path;
         }
 
