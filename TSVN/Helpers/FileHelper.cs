@@ -40,14 +40,15 @@ namespace SamirBoulema.TSVN.Helpers
         /// <returns>File path</returns>
         public static string GetPath()
         {
-            if (Dte.SelectedItems.Item(1).ProjectItem != null)
+            if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer && 
+                Dte.SelectedItems.Item(1).ProjectItem != null)
             {
                 // Context menu in the Solution Explorer
                 return Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
             }
 
             // Context menu in the Code Editor
-            return Path.GetDirectoryName(Dte.SelectedItems.Item(1).Project.FullName);
+            return Dte.ActiveDocument.FullName;
         }
     }
 }
