@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;
-// ReSharper disable LocalizableElement
+using SamirBoulema.TSVN.Options;
 
 namespace SamirBoulema.TSVN.Helpers
 {
@@ -72,6 +72,14 @@ namespace SamirBoulema.TSVN.Helpers
 
             try
             {
+                // Override any logic with the solution specific Root Folder setting
+                OptionsHelper.Dte = Dte;
+                var rootFolder = OptionsHelper.GetOptions().RootFolder;
+                if (!string.IsNullOrEmpty(rootFolder))
+                {
+                    return rootFolder;
+                }
+
                 // Try to found the current working folder, either by open document or by open solution
                 if (string.IsNullOrEmpty(path))
                 {

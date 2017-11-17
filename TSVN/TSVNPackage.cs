@@ -7,6 +7,7 @@ using Process = System.Diagnostics.Process;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
+using SamirBoulema.TSVN.Options;
 // ReSharper disable LocalizableElement
 
 namespace SamirBoulema.TSVN
@@ -73,6 +74,8 @@ namespace SamirBoulema.TSVN
             mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
             mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
             mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
+
+            mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
 
             var tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
             var tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
@@ -318,6 +321,11 @@ namespace SamirBoulema.TSVN
             _currentFilePath = FileHelper.GetPath();
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{_currentFilePath}\"");
+        }
+
+        private void ShowOptionsDialogCommand(object sender, EventArgs e)
+        {
+            new OptionsDialog(Dte).ShowDialog();
         }
         #endregion
     }

@@ -366,6 +366,14 @@
           <ButtonText>Pending Changes</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidTSVNCmdSet" id="showOptionsDialogCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" />
+        <Icon guid="guidImages" id="properties" />
+        <Strings>
+          <ButtonText>Options</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--Menu icons-->
@@ -462,6 +470,8 @@
       <IDSymbol name="revertFileCommand" value="0x0611" />
       <IDSymbol name="addFileCommand" value="0x0612" />
       <IDSymbol name="deleteFileCommand" value="0x0613" />
+
+      <IDSymbol name="showOptionsDialogCommand" value="0x0614"/>
 
       <!--Windows Menu-->
       <IDSymbol name="TSVNWindowMenu" value="0x2000"/>

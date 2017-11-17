@@ -38,5 +38,7 @@
         public const uint RevertFileCommand = 0x0611;
         public const uint AddFileCommand = 0x0612;
         public const uint DeleteFileCommand = 0x0613;
+
+        public const uint ShowOptionsDialogCommand = 0x0614;
     };
 }
