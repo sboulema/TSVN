@@ -1,5 +1,6 @@
 ﻿using EnvDTE;
 using System;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SamirBoulema.TSVN.Options
@@ -12,8 +13,18 @@ namespace SamirBoulema.TSVN.Options
         {
             InitializeComponent();
             OptionsHelper.Dte = dte;
-            options = OptionsHelper.GetOptions();
-            rootFolderTextBox.Text = options.RootFolder;
+
+            if (File.Exists(dte.Solution.FileName))
+            {
+                options = OptionsHelper.GetOptions();
+                rootFolderTextBox.Text = options.RootFolder;
+            }
+            else
+            {
+                rootFolderTextBox.Enabled = false;
+                okButton.Enabled = false;
+                browseButton.Enabled = false;
+            }
         }
 
         private void cancelButton_Click(object sender, EventArgs e)

@@ -10,7 +10,11 @@ namespace SamirBoulema.TSVN.Options
 
         public static Options GetOptions()
         {
-            var solutionFolder = Path.GetDirectoryName(Dte.Solution.FileName);
+            var solutionFilePath = Dte.Solution.FileName;
+
+            if (!File.Exists(solutionFilePath)) return new Options();
+
+            var solutionFolder = Path.GetDirectoryName(solutionFilePath);
             var settingFilePath = Path.Combine(solutionFolder, "TSVN.json");
 
             if (File.Exists(settingFilePath))
@@ -26,7 +30,11 @@ namespace SamirBoulema.TSVN.Options
         {
             var json = JsonConvert.SerializeObject(options);
 
-            var solutionFolder = Path.GetDirectoryName(Dte.Solution.FileName);
+            var solutionFilePath = Dte.Solution.FileName;
+
+            if (!File.Exists(solutionFilePath)) return;
+
+            var solutionFolder = Path.GetDirectoryName(solutionFilePath);
             File.WriteAllText(Path.Combine(solutionFolder, "TSVN.json"), json);
         }
     }

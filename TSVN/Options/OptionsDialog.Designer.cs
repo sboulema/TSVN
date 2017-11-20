@@ -48,14 +48,17 @@
             // 
             // rootFolderTextBox
             // 
+            this.rootFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.rootFolderTextBox.Location = new System.Drawing.Point(15, 29);
             this.rootFolderTextBox.Name = "rootFolderTextBox";
-            this.rootFolderTextBox.Size = new System.Drawing.Size(176, 20);
+            this.rootFolderTextBox.Size = new System.Drawing.Size(181, 20);
             this.rootFolderTextBox.TabIndex = 1;
             // 
             // browseButton
             // 
-            this.browseButton.Location = new System.Drawing.Point(197, 27);
+            this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browseButton.Location = new System.Drawing.Point(202, 27);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 2;
@@ -65,7 +68,8 @@
             // 
             // okButton
             // 
-            this.okButton.Location = new System.Drawing.Point(116, 89);
+            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.okButton.Location = new System.Drawing.Point(121, 93);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -75,7 +79,8 @@
             // 
             // cancelButton
             // 
-            this.cancelButton.Location = new System.Drawing.Point(197, 89);
+            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelButton.Location = new System.Drawing.Point(202, 93);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 4;
@@ -87,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 128);
+            this.ClientSize = new System.Drawing.Size(289, 132);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.browseButton);
@@ -95,7 +100,7 @@
             this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsDialog";
-            this.Text = "OptionsDialog";
+            this.Text = "Options";
             this.ResumeLayout(false);
             this.PerformLayout();
 
