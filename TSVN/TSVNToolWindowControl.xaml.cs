@@ -75,7 +75,7 @@ namespace SamirBoulema.TSVN
                 if (item == null)
                 {
                     TreeViewItem newItem;
-                    if (i == pathParts.Length - 1 && Directory.Exists(path))
+                    if (i == pathParts.Length - 1 && File.Exists(Path.Combine(solutionDir, path)))
                     {
                         newItem = CreateFileTreeViewItem(pathParts[i], solutionDir, path, change);
                     }
