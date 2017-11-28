@@ -3,5 +3,6 @@
     public class Options
     {
         public string RootFolder;
+        public bool OnItemAddedAddToSVN;
     }
 }

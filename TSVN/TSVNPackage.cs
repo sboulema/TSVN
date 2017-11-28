@@ -9,8 +9,6 @@ using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
 using EnvDTE80;
-using System.IO;
-// ReSharper disable LocalizableElement
 
 namespace SamirBoulema.TSVN
 {
@@ -25,6 +23,7 @@ namespace SamirBoulema.TSVN
         private string _solutionDir;
         private string _currentFilePath;
         private string _tortoiseProc;
+        private ProjectItemsEvents _projectItemsEvents;
 
         #region Package Members
         /// <summary>
@@ -37,8 +36,12 @@ namespace SamirBoulema.TSVN
 
             Dte = (DTE)GetService(typeof(DTE));
 
+            _projectItemsEvents = (Dte.Events as Events2).ProjectItemsEvents;
+            _projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+
             FileHelper.Dte = Dte;
             CommandHelper.Dte = Dte;
+            OptionsHelper.Dte = Dte;
 
             _tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
@@ -99,6 +102,16 @@ namespace SamirBoulema.TSVN
         }
 
         #endregion
+
+        private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
+        {
+            if (OptionsHelper.GetOptions().OnItemAddedAddToSVN)
+            {
+                var filePath = projectItem.Properties.Item("FullPath").Value;
+                if (string.IsNullOrEmpty(filePath)) return;
+                CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:0");
+            }           
+        }
 
         private static OleMenuCommand CreateCommand(EventHandler handler, uint commandId)
         {

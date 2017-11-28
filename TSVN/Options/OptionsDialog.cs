@@ -18,10 +18,12 @@ namespace SamirBoulema.TSVN.Options
             {
                 options = OptionsHelper.GetOptions();
                 rootFolderTextBox.Text = options.RootFolder;
+                onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
             }
             else
             {
                 rootFolderTextBox.Enabled = false;
+                onItemAddedAddToSVNCheckBox.Checked = false;
                 okButton.Enabled = false;
                 browseButton.Enabled = false;
             }
@@ -35,6 +37,7 @@ namespace SamirBoulema.TSVN.Options
         private void okButton_Click(object sender, EventArgs e)
         {
             options.RootFolder = rootFolderTextBox.Text;
+            options.OnItemAddedAddToSVN = onItemAddedAddToSVNCheckBox.Checked;
             OptionsHelper.SaveOptions(options);
             Close();
         }

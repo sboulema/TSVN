@@ -35,6 +35,7 @@
             this.okButton = new System.Windows.Forms.Button();
             this.cancelButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.onItemAddedAddToSVNCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -88,11 +89,22 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
+            // onItemAddedAddToSVNCheckBox
+            // 
+            this.onItemAddedAddToSVNCheckBox.AutoSize = true;
+            this.onItemAddedAddToSVNCheckBox.Location = new System.Drawing.Point(15, 64);
+            this.onItemAddedAddToSVNCheckBox.Name = "onItemAddedAddToSVNCheckBox";
+            this.onItemAddedAddToSVNCheckBox.Size = new System.Drawing.Size(238, 17);
+            this.onItemAddedAddToSVNCheckBox.TabIndex = 5;
+            this.onItemAddedAddToSVNCheckBox.Text = "Automatically add new files to source control ";
+            this.onItemAddedAddToSVNCheckBox.UseVisualStyleBackColor = true;
+            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(289, 132);
+            this.Controls.Add(this.onItemAddedAddToSVNCheckBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
             this.Controls.Add(this.browseButton);
@@ -114,5 +126,6 @@
         private System.Windows.Forms.Button okButton;
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.CheckBox onItemAddedAddToSVNCheckBox;
     }
 }
