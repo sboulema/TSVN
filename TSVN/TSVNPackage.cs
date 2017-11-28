@@ -8,6 +8,8 @@ using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
+using EnvDTE80;
+using System.IO;
 // ReSharper disable LocalizableElement
 
 namespace SamirBoulema.TSVN
@@ -95,6 +97,7 @@ namespace SamirBoulema.TSVN
             mcs.AddCommand(tsvnContextMenu);
             TSVNToolWindowCommand.Initialize(this);
         }
+
         #endregion
 
         private static OleMenuCommand CreateCommand(EventHandler handler, uint commandId)

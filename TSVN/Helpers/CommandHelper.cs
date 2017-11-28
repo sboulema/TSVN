@@ -34,6 +34,12 @@ namespace SamirBoulema.TSVN.Helpers
             StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:0");
         }
 
+        public static void ShowDifferences(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return;
+            CommandHelper.StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
+        }
+
         public static List<string> GetPendingChanges()
         {
             var pendingChanges = new List<string>();

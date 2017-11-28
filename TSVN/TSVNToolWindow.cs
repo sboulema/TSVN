@@ -30,7 +30,6 @@ namespace SamirBoulema.TSVN
         {
             var tsvnPackage = Package as TsvnPackage;
             var dte = (DTE)tsvnPackage.GetServiceHelper(typeof(DTE));
-            _tsvnToolWindowControl.SetDTE(dte);
 
             _documentEvents = dte.Events.DocumentEvents;
             _documentEvents.DocumentSaved += DocumentEvents_DocumentSaved;
@@ -38,14 +37,11 @@ namespace SamirBoulema.TSVN
             _solutionEvents = dte.Events.SolutionEvents;
             _solutionEvents.Opened += SolutionEvents_Opened;
 
-            _tsvnToolWindowControl.GotFocus += _tsvnToolWindowControl_GotFocus;
-
             _tsvnToolWindowControl.HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
 
             _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
         }
 
-        private void _tsvnToolWindowControl_GotFocus(object sender, System.Windows.RoutedEventArgs e) => Update();
         private void SolutionEvents_Opened() => Update();
         private void DocumentEvents_DocumentSaved(Document document) => Update();
 

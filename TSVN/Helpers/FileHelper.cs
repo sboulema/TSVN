@@ -33,6 +33,11 @@ namespace SamirBoulema.TSVN.Helpers
             Dte.ExecuteCommand("File.SaveAll");
         }
 
+        public static void OpenFile(string filePath)
+        {
+            Dte.ExecuteCommand("File.OpenFile", filePath);
+        }
+
         /// <summary>
         /// Get the path of the file on which to act upon. 
         /// This can be different depending on where the TSVN context menu was used
