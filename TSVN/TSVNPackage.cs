@@ -9,11 +9,13 @@ using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SamirBoulema.TSVN
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     [ProvideToolWindow(typeof(TSVNToolWindow))]
@@ -107,7 +109,7 @@ namespace SamirBoulema.TSVN
         {
             if (OptionsHelper.GetOptions().OnItemAddedAddToSVN)
             {
-                var filePath = projectItem.Properties.Item("FullPath").Value;
+                var filePath = projectItem.Properties?.Item("FullPath").Value;
                 if (string.IsNullOrEmpty(filePath)) return;
                 CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:0");
             }           
