@@ -91,7 +91,7 @@
                                 <ContextMenu>
                                     <MenuItem Header="Commit..." Click="Commit_Click">
                                         <MenuItem.Icon>
-                                            <Rectangle Width="16" Height="16" Fill="AliceBlue">
+                                            <Rectangle Width="16" Height="16" Fill="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}">
                                                 <Rectangle.OpacityMask>
                                                     <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="192,0,16,16" />
                                                 </Rectangle.OpacityMask>
@@ -100,7 +100,7 @@
                                     </MenuItem>
                                     <MenuItem Header="Revert..." Click="Revert_Click">
                                         <MenuItem.Icon>
-                                            <Rectangle Width="16" Height="16" Fill="AliceBlue">
+                                            <Rectangle Width="16" Height="16" Fill="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}">
                                                 <Rectangle.OpacityMask>
                                                     <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="64,0,16,16" />
                                                 </Rectangle.OpacityMask>
@@ -109,7 +109,7 @@
                                     </MenuItem>
                                     <MenuItem Header="Show Differences..." Click="ShowDifferences_Click">
                                         <MenuItem.Icon>
-                                            <Rectangle Width="16" Height="16" Fill="AliceBlue">
+                                            <Rectangle Width="16" Height="16" Fill="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}">
                                                 <Rectangle.OpacityMask>
                                                     <ImageBrush ImageSource="Resources/octicons.png" ViewboxUnits="Absolute" Viewbox="112,0,16,16" />
                                                 </Rectangle.OpacityMask>
