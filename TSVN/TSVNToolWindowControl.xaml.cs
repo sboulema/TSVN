@@ -76,7 +76,7 @@ namespace SamirBoulema.TSVN
             var path = change.Substring(8);
             var pathParts = path.Split('\\');
 
-            for (int i = 0; i < pathParts.Length; i++)
+            for (var i = 0; i < pathParts.Length; i++)
             {
                 var item = FindItem(root, pathParts[i]);
                 if (item == null)
@@ -93,9 +93,9 @@ namespace SamirBoulema.TSVN
                         
                     root.Items.Add(newItem);
                 }
-                else
+                else if (item is TSVNTreeViewFolderItem folderItem)
                 {
-                    root = (TSVNTreeViewFolderItem)item;
+                    root = folderItem;
                 }
             }
         }
