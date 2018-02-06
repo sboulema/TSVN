@@ -36,6 +36,8 @@
             this.cancelButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.onItemAddedAddToSVNCheckBox = new System.Windows.Forms.CheckBox();
+            this.onItemRenamedRenameInSVNCheckBox = new System.Windows.Forms.CheckBox();
+            this.onItemRemovedRemoveFromSVNCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -70,7 +72,7 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(121, 93);
+            this.okButton.Location = new System.Drawing.Point(121, 156);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -81,7 +83,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(202, 93);
+            this.cancelButton.Location = new System.Drawing.Point(202, 156);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 4;
@@ -99,11 +101,33 @@
             this.onItemAddedAddToSVNCheckBox.Text = "Automatically add new files to source control ";
             this.onItemAddedAddToSVNCheckBox.UseVisualStyleBackColor = true;
             // 
+            // onItemRenamedRenameInSVNCheckBox
+            // 
+            this.onItemRenamedRenameInSVNCheckBox.AutoSize = true;
+            this.onItemRenamedRenameInSVNCheckBox.Location = new System.Drawing.Point(15, 87);
+            this.onItemRenamedRenameInSVNCheckBox.Name = "onItemRenamedRenameInSVNCheckBox";
+            this.onItemRenamedRenameInSVNCheckBox.Size = new System.Drawing.Size(259, 17);
+            this.onItemRenamedRenameInSVNCheckBox.TabIndex = 6;
+            this.onItemRenamedRenameInSVNCheckBox.Text = "Automatically move/rename files in source control";
+            this.onItemRenamedRenameInSVNCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // onItemRemovedRemoveFromSVNCheckBox
+            // 
+            this.onItemRemovedRemoveFromSVNCheckBox.AutoSize = true;
+            this.onItemRemovedRemoveFromSVNCheckBox.Location = new System.Drawing.Point(15, 110);
+            this.onItemRemovedRemoveFromSVNCheckBox.Name = "onItemRemovedRemoveFromSVNCheckBox";
+            this.onItemRemovedRemoveFromSVNCheckBox.Size = new System.Drawing.Size(240, 17);
+            this.onItemRemovedRemoveFromSVNCheckBox.TabIndex = 7;
+            this.onItemRemovedRemoveFromSVNCheckBox.Text = "Automatically remove files from source control";
+            this.onItemRemovedRemoveFromSVNCheckBox.UseVisualStyleBackColor = true;
+            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 132);
+            this.ClientSize = new System.Drawing.Size(289, 195);
+            this.Controls.Add(this.onItemRemovedRemoveFromSVNCheckBox);
+            this.Controls.Add(this.onItemRenamedRenameInSVNCheckBox);
             this.Controls.Add(this.onItemAddedAddToSVNCheckBox);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
@@ -127,5 +151,7 @@
         private System.Windows.Forms.Button cancelButton;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.CheckBox onItemAddedAddToSVNCheckBox;
+        private System.Windows.Forms.CheckBox onItemRenamedRenameInSVNCheckBox;
+        private System.Windows.Forms.CheckBox onItemRemovedRemoveFromSVNCheckBox;
     }
 }

@@ -10,6 +10,7 @@ using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
+using System.IO;
 
 namespace SamirBoulema.TSVN
 {
@@ -40,6 +41,8 @@ namespace SamirBoulema.TSVN
 
             _projectItemsEvents = (Dte.Events as Events2).ProjectItemsEvents;
             _projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
+            _projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
+            _projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
 
             FileHelper.Dte = Dte;
             CommandHelper.Dte = Dte;
@@ -105,6 +108,23 @@ namespace SamirBoulema.TSVN
 
         #endregion
 
+        #region Events
+        private void ProjectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
+        {
+            if (OptionsHelper.GetOptions().OnItemRenamedRenameInSVN)
+            {
+                var newFilePath = projectItem.Properties?.Item("FullPath").Value;
+                if (string.IsNullOrEmpty(newFilePath)) return;
+                var oldFilePath = Path.Combine(Path.GetDirectoryName(newFilePath), oldName);
+
+                // Temporarily rename the new file to the old file 
+                File.Move(newFilePath, oldFilePath);
+                
+                // So that we can svn rename it properly
+                CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePath} {newFilePath}");
+            }
+        }
+
         private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
             if (OptionsHelper.GetOptions().OnItemAddedAddToSVN)
@@ -114,6 +134,18 @@ namespace SamirBoulema.TSVN
                 CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:0");
             }           
         }
+
+        private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
+        {
+            if (OptionsHelper.GetOptions().OnItemRemovedRemoveFromSVN)
+            {
+                var filePath = projectItem.Properties?.Item("FullPath").Value;
+                if (string.IsNullOrEmpty(filePath)) return;
+                CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{filePath}\" /closeonend:0");
+            }
+        }
+
+        #endregion
 
         private static OleMenuCommand CreateCommand(EventHandler handler, uint commandId)
         {
