@@ -273,6 +273,10 @@
     <Resource Include="Resources\Folder_16x.png" />
     <Resource Include="Resources\Document_16x.png" />
     <Resource Include="Resources\octicons.png" />
+    <Resource Include="Resources\Screenshots\pendingchanges.png" />
+    <Resource Include="Resources\Screenshots\tsvn-context.png" />
+    <Resource Include="Resources\Screenshots\TSVN-main.png" />
+    <Resource Include="Resources\Screenshots\tsvn-toolbar.png" />
     <Content Include="Resources\tortoisesvn.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
