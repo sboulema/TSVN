@@ -11,22 +11,26 @@ using SamirBoulema.TSVN.Options;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.IO;
+using SamirBoulema.TSVN.Helpers.AsyncPackageHelpers;
+using ProvideAutoLoad = SamirBoulema.TSVN.Helpers.AsyncPackageHelpers.ProvideAutoLoadAttribute;
 
 namespace SamirBoulema.TSVN
 {
-    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
-    [ProvideAutoLoad(UIContextGuids80.SolutionExists)]
+    [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     [ProvideToolWindow(typeof(TSVNToolWindow))]
-    public sealed class TsvnPackage : Package
+    public sealed class TsvnPackage : Package, IAsyncLoadablePackageInitialize
     {
         public DTE Dte;
         private string _solutionDir;
         private string _currentFilePath;
         private string _tortoiseProc;
         private ProjectItemsEvents _projectItemsEvents;
+        private bool isAsyncLoadSupported;
+        private OleMenuCommandService _mcs;
 
         #region Package Members
         /// <summary>
@@ -37,6 +41,46 @@ namespace SamirBoulema.TSVN
         {
             base.Initialize();
 
+            isAsyncLoadSupported = this.IsAsyncPackageSupported();
+
+            // Only perform initialization if async package framework is not supported
+            if (!isAsyncLoadSupported)
+            {
+                BackgroundThreadInitialization();
+                MainThreadInitialization();
+            }
+        }
+
+        /// <summary>
+        /// Performs the asynchronous initialization for the package in cases where IDE supports AsyncPackage.
+        /// 
+        /// This method is always called from background thread initially.
+        /// </summary>
+        /// <param name="asyncServiceProvider">Async service provider instance to query services asynchronously</param>
+        /// <param name="pProfferService">Async service proffer instance</param>
+        /// <param name="IAsyncProgressCallback">Progress callback instance</param>
+        /// <returns></returns>
+        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.IAsyncServiceProvider asyncServiceProvider,
+            IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
+        {
+            if (!isAsyncLoadSupported)
+            {
+                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
+            }
+
+            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
+            {
+                BackgroundThreadInitialization();
+
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+                MainThreadInitialization();
+                return null;
+            }).AsVsTask();
+        }
+
+        private void BackgroundThreadInitialization()
+        {
             Dte = (DTE)GetService(typeof(DTE));
 
             _projectItemsEvents = (Dte.Events as Events2).ProjectItemsEvents;
@@ -53,39 +97,45 @@ namespace SamirBoulema.TSVN
             Logger.Initialize(this, "TSVN");
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
-            var mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-            if (null == mcs) return;
+            _mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
-            mcs.AddCommand(CreateCommand(ShowChangesCommand, PkgCmdIdList.ShowChangesCommand));
-            mcs.AddCommand(CreateCommand(UpdateCommand, PkgCmdIdList.UpdateCommand));
-            mcs.AddCommand(CreateCommand(UpdateToRevisionCommand, PkgCmdIdList.UpdateToRevisionCommand));
-            mcs.AddCommand(CreateCommand(CommitCommand, PkgCmdIdList.CommitCommand));
-            mcs.AddCommand(CreateCommand(ShowLogCommand, PkgCmdIdList.ShowLogCommand));
-            mcs.AddCommand(CreateCommand(CreatePatchCommand, PkgCmdIdList.CreatePatchCommand));
-            mcs.AddCommand(CreateCommand(ApplyPatchCommand, PkgCmdIdList.ApplyPatchCommand));
-            mcs.AddCommand(CreateCommand(RevertCommand, PkgCmdIdList.RevertCommand));
-            mcs.AddCommand(CreateCommand(DiskBrowserCommand, PkgCmdIdList.DiskBrowser));
-            mcs.AddCommand(CreateCommand(RepoBrowserCommand, PkgCmdIdList.RepoBrowser));
-            mcs.AddCommand(CreateCommand(BranchCommand, PkgCmdIdList.BranchCommand));
-            mcs.AddCommand(CreateCommand(SwitchCommand, PkgCmdIdList.SwitchCommand));
-            mcs.AddCommand(CreateCommand(MergeCommand, PkgCmdIdList.MergeCommand));
-            mcs.AddCommand(CreateCommand(DifferencesCommand, PkgCmdIdList.DifferencesCommand));
-            mcs.AddCommand(CreateCommand(BlameCommand, PkgCmdIdList.BlameCommand));
-            mcs.AddCommand(CreateCommand(ShowLogFileCommand, PkgCmdIdList.ShowLogFileCommand));
-            mcs.AddCommand(CreateCommand(CleanupCommand, PkgCmdIdList.CleanupCommand));
-            mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
-            mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
-            mcs.AddCommand(CreateCommand(MergeFileCommand, PkgCmdIdList.MergeFileCommand));
-            mcs.AddCommand(CreateCommand(UpdateToRevisionFileCommand, PkgCmdIdList.UpdateToRevisionFileCommand));
-            mcs.AddCommand(CreateCommand(PropertiesCommand, PkgCmdIdList.PropertiesCommand));
-            mcs.AddCommand(CreateCommand(UpdateFileCommand, PkgCmdIdList.UpdateFileCommand));
-            mcs.AddCommand(CreateCommand(CommitFileCommand, PkgCmdIdList.CommitFileCommand));
-            mcs.AddCommand(CreateCommand(DiffPreviousCommand, PkgCmdIdList.DiffPreviousCommand));
-            mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
-            mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
-            mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
+            TSVNToolWindowCommand.Initialize(this);
+        }
 
-            mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
+        private void MainThreadInitialization()
+        {
+            if (null == _mcs) return;
+
+            _mcs.AddCommand(CreateCommand(ShowChangesCommand, PkgCmdIdList.ShowChangesCommand));
+            _mcs.AddCommand(CreateCommand(UpdateCommand, PkgCmdIdList.UpdateCommand));
+            _mcs.AddCommand(CreateCommand(UpdateToRevisionCommand, PkgCmdIdList.UpdateToRevisionCommand));
+            _mcs.AddCommand(CreateCommand(CommitCommand, PkgCmdIdList.CommitCommand));
+            _mcs.AddCommand(CreateCommand(ShowLogCommand, PkgCmdIdList.ShowLogCommand));
+            _mcs.AddCommand(CreateCommand(CreatePatchCommand, PkgCmdIdList.CreatePatchCommand));
+            _mcs.AddCommand(CreateCommand(ApplyPatchCommand, PkgCmdIdList.ApplyPatchCommand));
+            _mcs.AddCommand(CreateCommand(RevertCommand, PkgCmdIdList.RevertCommand));
+            _mcs.AddCommand(CreateCommand(DiskBrowserCommand, PkgCmdIdList.DiskBrowser));
+            _mcs.AddCommand(CreateCommand(RepoBrowserCommand, PkgCmdIdList.RepoBrowser));
+            _mcs.AddCommand(CreateCommand(BranchCommand, PkgCmdIdList.BranchCommand));
+            _mcs.AddCommand(CreateCommand(SwitchCommand, PkgCmdIdList.SwitchCommand));
+            _mcs.AddCommand(CreateCommand(MergeCommand, PkgCmdIdList.MergeCommand));
+            _mcs.AddCommand(CreateCommand(DifferencesCommand, PkgCmdIdList.DifferencesCommand));
+            _mcs.AddCommand(CreateCommand(BlameCommand, PkgCmdIdList.BlameCommand));
+            _mcs.AddCommand(CreateCommand(ShowLogFileCommand, PkgCmdIdList.ShowLogFileCommand));
+            _mcs.AddCommand(CreateCommand(CleanupCommand, PkgCmdIdList.CleanupCommand));
+            _mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
+            _mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
+            _mcs.AddCommand(CreateCommand(MergeFileCommand, PkgCmdIdList.MergeFileCommand));
+            _mcs.AddCommand(CreateCommand(UpdateToRevisionFileCommand, PkgCmdIdList.UpdateToRevisionFileCommand));
+            _mcs.AddCommand(CreateCommand(PropertiesCommand, PkgCmdIdList.PropertiesCommand));
+            _mcs.AddCommand(CreateCommand(UpdateFileCommand, PkgCmdIdList.UpdateFileCommand));
+            _mcs.AddCommand(CreateCommand(CommitFileCommand, PkgCmdIdList.CommitFileCommand));
+            _mcs.AddCommand(CreateCommand(DiffPreviousCommand, PkgCmdIdList.DiffPreviousCommand));
+            _mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
+            _mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
+            _mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
+
+            _mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
 
             var tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
             var tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
@@ -101,9 +151,8 @@ namespace SamirBoulema.TSVN
                     tsvnContextMenu.Text = "Tsvn";
                     break;
             }
-            mcs.AddCommand(tsvnMenu);
-            mcs.AddCommand(tsvnContextMenu);
-            TSVNToolWindowCommand.Initialize(this);
+            _mcs.AddCommand(tsvnMenu);
+            _mcs.AddCommand(tsvnContextMenu);
         }
 
         #endregion
