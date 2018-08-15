@@ -37,7 +37,7 @@ namespace SamirBoulema.TSVN.Helpers
         public static void ShowDifferences(string filePath)
         {
             if (string.IsNullOrEmpty(filePath)) return;
-            CommandHelper.StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
+            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
         }
 
         public static List<string> GetPendingChanges()

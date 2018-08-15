@@ -73,6 +73,8 @@ namespace SamirBoulema.TSVN
 
         private void ProcessChange(TSVNTreeViewFolderItem root, string solutionDir, string change)
         {
+            if (change.Length <= 8) return;
+
             var path = change.Substring(8);
             var pathParts = path.Split('\\');
 
