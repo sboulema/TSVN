@@ -45,11 +45,24 @@ namespace SamirBoulema.TSVN.Helpers
         /// <returns>File path</returns>
         public static string GetPath()
         {
-            if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer && 
-                Dte.SelectedItems.Item(1).ProjectItem != null)
+            // Context menu in the Solution Explorer
+            if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer)
             {
-                // Context menu in the Solution Explorer
-                return Dte.SelectedItems.Item(1).ProjectItem.FileNames[0];
+                var selectedItem = Dte.SelectedItems.Item(1);
+
+                if (selectedItem == null) return string.Empty;
+
+                // File belonging to a project
+                if (selectedItem.ProjectItem != null)
+                {
+                    return selectedItem.ProjectItem.FileNames[0];
+                }
+
+                // Project belonging to the solution
+                if (selectedItem.Project != null)
+                {
+                    return Path.GetDirectoryName(selectedItem.Project.FileName);
+                }
             }
 
             // Context menu in the Code Editor
