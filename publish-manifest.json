@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json.schemastore.org/vsix-publish",
+  "categories": [ "source control" ],
+  "identity": {
+    "internalName": "TSVN"
+  },
+  "overview": "readme.md",
+  "priceCategory": "free",
+  "publisher": "SamirBoulema",
+  "private": false,
+  "qna": true,
+  "repo": "https://github.com/sboulema/TSVN"
+}

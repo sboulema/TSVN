@@ -1,0 +1,71 @@
+# .NET Desktop
+# Build and run tests for .NET Desktop or Windows classic desktop solutions.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/vsts/pipelines/apps/windows/dot-net
+
+pool:
+  vmImage: 'VS2017-Win2016'
+
+variables:
+  patch: $[counter('versioncounter', 33)]
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+name: 4.4.$(patch)
+
+steps:
+- task: NuGetToolInstaller@0
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-Task@1
+  displayName: 'Update Assembly Version'
+  inputs:
+    VersionNumber: '$(Build.BuildNumber)'
+    FileVersionNumber: '$(Build.BuildNumber)'
+    InformationalVersion: '$(Build.BuildNumber)'
+
+- task: VsixToolsUpdateVersion@1
+  displayName: 'Update Vsix Version'
+  inputs:
+    FileName: $(Build.SourcesDirectory)\$(system.teamProject)\source.extension.vsixmanifest
+    VersionNumber: '$(Build.BuildNumber)'
+
+- task: VSBuild@1
+  displayName: 'Build Vsix'
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  displayName: 'Run Tests'
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: CopyFiles@2
+  displayName: 'Copy Artifacts to Staging'
+  inputs: 
+    contents: '**\?(*.vsix|publish-manifest.json|readme.md)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+
+- task: PowerShell@2
+  displayName: 'Rename Build Artifacts'
+  inputs:
+    targetType: 'inline'
+    script: 'Get-ChildItem ./*.vsix -Recurse | Rename-Item -NewName {$_.basename + "_" + $env:BUILD_BUILDNUMBER + $_.extension }'
+    workingDirectory: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts'
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: '$(system.teamProject)'
+
+- task: VsixToolsUploadVsix@1
+  displayName: 'Upload Vsix to Open Gallery'
