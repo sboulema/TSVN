@@ -94,8 +94,6 @@ namespace SamirBoulema.TSVN
 
             _tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
-            Logger.Initialize(this, "TSVN");
-
             // Add our command handlers for menu (commands must exist in the .vsct file)
             _mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 
