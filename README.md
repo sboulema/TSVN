@@ -1,7 +1,8 @@
 # TSVN
 Control TortoiseSVN from within Visual Studio
 
-[![Beerpay](https://beerpay.io/sboulema/TSVN/badge.svg?style=flat)](https://beerpay.io/sboulema/TSVN)
+[![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/sboulema.TSVN)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=1)
+[![Beerpay](https://img.shields.io/beerpay/sboulema/TSVN.svg?style=flat)](https://beerpay.io/sboulema/TSVN)
 
 # Getting started
 1. Install [TortoiseSVN](http://www.tortoisesvn.net) with "command line client tools"
@@ -15,9 +16,7 @@ Control TortoiseSVN from within Visual Studio
 
 [Open VSIX Gallery](http://vsixgallery.com/extension/07fd7462-cd4b-433b-9ab5-8ad3ad87bc65/)
 
-[AppVeyor](https://ci.appveyor.com/project/sboulema/tsvn) [![Build status](https://ci.appveyor.com/api/projects/status/43qr71taxix0llbs?svg=true)](https://ci.appveyor.com/project/sboulema/tsvn)
-
-# Features
+# Featuresc
 All the SVN functions quickly accessible from the TSVN menu:
 
 ![Main Menu](https://samirboulema.gallerycdn.vsassets.io/extensions/samirboulema/tsvn/4.4.28/1517926252071/212964/1/TSVN-main.png)
