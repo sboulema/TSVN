@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using SamirBoulema.TSVN.Helpers;
 using System;
 using System.IO;
 using System.Windows.Forms;
@@ -30,6 +31,11 @@ namespace SamirBoulema.TSVN.Options
                 onItemRemovedRemoveFromSVNCheckBox.Checked = false;
                 okButton.Enabled = false;
                 browseButton.Enabled = false;
+            }
+
+            if (string.IsNullOrEmpty(rootFolderTextBox.Text))
+            {
+                rootFolderTextBox.Text = CommandHelper.GetRepositoryRoot();
             }
         }
 

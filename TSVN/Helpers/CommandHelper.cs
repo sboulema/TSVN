@@ -120,7 +120,7 @@ namespace SamirBoulema.TSVN.Helpers
                     svnInfo += line;
                     if (line?.StartsWith("Working Copy Root Path:") ?? false)
                     {
-                        return line.Substring(24);
+                        rootFolder = line.Substring(24);
                     }
                 }
 
@@ -131,14 +131,31 @@ namespace SamirBoulema.TSVN.Helpers
                     LogHelper.Log($"SvnInfo: {line}");
                 }
 
-                return string.Empty;
+                var options = OptionsHelper.GetOptions();
+                options.RootFolder = rootFolder;
+                OptionsHelper.SaveOptions(options);
+
+                if (string.IsNullOrEmpty(rootFolder))
+                {
+                    ShowMissingSolutionDirMessage();
+                }
+
+                return rootFolder;
             }
             catch (Exception e)
             {
                 LogHelper.Log(svnInfo, e);
             }
 
+            ShowMissingSolutionDirMessage();
+
             return string.Empty;
+        }
+
+        private static void ShowMissingSolutionDirMessage()
+        {
+            MessageBox.Show("Unable to determine the solution directory location. Please manually set the directory location in the settings.",
+                "Missing Solution Directory Location", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static void StartProcess(string application, string args)

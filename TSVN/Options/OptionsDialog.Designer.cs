@@ -38,30 +38,32 @@
             this.onItemAddedAddToSVNCheckBox = new System.Windows.Forms.CheckBox();
             this.onItemRenamedRenameInSVNCheckBox = new System.Windows.Forms.CheckBox();
             this.onItemRemovedRemoveFromSVNCheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Location = new System.Drawing.Point(6, 26);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(110, 13);
+            this.label1.Size = new System.Drawing.Size(126, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Repository root folder:";
+            this.label1.Text = "Working copy root folder:";
             // 
             // rootFolderTextBox
             // 
             this.rootFolderTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rootFolderTextBox.Location = new System.Drawing.Point(15, 29);
+            this.rootFolderTextBox.Location = new System.Drawing.Point(9, 46);
             this.rootFolderTextBox.Name = "rootFolderTextBox";
-            this.rootFolderTextBox.Size = new System.Drawing.Size(181, 20);
+            this.rootFolderTextBox.Size = new System.Drawing.Size(270, 20);
             this.rootFolderTextBox.TabIndex = 1;
             // 
             // browseButton
             // 
             this.browseButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.browseButton.Location = new System.Drawing.Point(202, 27);
+            this.browseButton.Location = new System.Drawing.Point(285, 44);
             this.browseButton.Name = "browseButton";
             this.browseButton.Size = new System.Drawing.Size(75, 23);
             this.browseButton.TabIndex = 2;
@@ -72,7 +74,7 @@
             // okButton
             // 
             this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.Location = new System.Drawing.Point(121, 156);
+            this.okButton.Location = new System.Drawing.Point(228, 195);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 3;
@@ -83,7 +85,7 @@
             // cancelButton
             // 
             this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.Location = new System.Drawing.Point(202, 156);
+            this.cancelButton.Location = new System.Drawing.Point(309, 195);
             this.cancelButton.Name = "cancelButton";
             this.cancelButton.Size = new System.Drawing.Size(75, 23);
             this.cancelButton.TabIndex = 4;
@@ -94,7 +96,7 @@
             // onItemAddedAddToSVNCheckBox
             // 
             this.onItemAddedAddToSVNCheckBox.AutoSize = true;
-            this.onItemAddedAddToSVNCheckBox.Location = new System.Drawing.Point(15, 64);
+            this.onItemAddedAddToSVNCheckBox.Location = new System.Drawing.Point(9, 81);
             this.onItemAddedAddToSVNCheckBox.Name = "onItemAddedAddToSVNCheckBox";
             this.onItemAddedAddToSVNCheckBox.Size = new System.Drawing.Size(238, 17);
             this.onItemAddedAddToSVNCheckBox.TabIndex = 5;
@@ -104,7 +106,7 @@
             // onItemRenamedRenameInSVNCheckBox
             // 
             this.onItemRenamedRenameInSVNCheckBox.AutoSize = true;
-            this.onItemRenamedRenameInSVNCheckBox.Location = new System.Drawing.Point(15, 87);
+            this.onItemRenamedRenameInSVNCheckBox.Location = new System.Drawing.Point(9, 104);
             this.onItemRenamedRenameInSVNCheckBox.Name = "onItemRenamedRenameInSVNCheckBox";
             this.onItemRenamedRenameInSVNCheckBox.Size = new System.Drawing.Size(259, 17);
             this.onItemRenamedRenameInSVNCheckBox.TabIndex = 6;
@@ -114,31 +116,42 @@
             // onItemRemovedRemoveFromSVNCheckBox
             // 
             this.onItemRemovedRemoveFromSVNCheckBox.AutoSize = true;
-            this.onItemRemovedRemoveFromSVNCheckBox.Location = new System.Drawing.Point(15, 110);
+            this.onItemRemovedRemoveFromSVNCheckBox.Location = new System.Drawing.Point(9, 127);
             this.onItemRemovedRemoveFromSVNCheckBox.Name = "onItemRemovedRemoveFromSVNCheckBox";
             this.onItemRemovedRemoveFromSVNCheckBox.Size = new System.Drawing.Size(240, 17);
             this.onItemRemovedRemoveFromSVNCheckBox.TabIndex = 7;
             this.onItemRemovedRemoveFromSVNCheckBox.Text = "Automatically remove files from source control";
             this.onItemRemovedRemoveFromSVNCheckBox.UseVisualStyleBackColor = true;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.onItemRemovedRemoveFromSVNCheckBox);
+            this.groupBox1.Controls.Add(this.rootFolderTextBox);
+            this.groupBox1.Controls.Add(this.onItemRenamedRenameInSVNCheckBox);
+            this.groupBox1.Controls.Add(this.browseButton);
+            this.groupBox1.Controls.Add(this.onItemAddedAddToSVNCheckBox);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(372, 165);
+            this.groupBox1.TabIndex = 9;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Solution-specific Options";
+            // 
             // OptionsDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(289, 195);
-            this.Controls.Add(this.onItemRemovedRemoveFromSVNCheckBox);
-            this.Controls.Add(this.onItemRenamedRenameInSVNCheckBox);
-            this.Controls.Add(this.onItemAddedAddToSVNCheckBox);
+            this.ClientSize = new System.Drawing.Size(396, 234);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.okButton);
-            this.Controls.Add(this.browseButton);
-            this.Controls.Add(this.rootFolderTextBox);
-            this.Controls.Add(this.label1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OptionsDialog";
             this.Text = "Options";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -153,5 +166,6 @@
         private System.Windows.Forms.CheckBox onItemAddedAddToSVNCheckBox;
         private System.Windows.Forms.CheckBox onItemRenamedRenameInSVNCheckBox;
         private System.Windows.Forms.CheckBox onItemRemovedRemoveFromSVNCheckBox;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

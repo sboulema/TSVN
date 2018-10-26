@@ -11,7 +11,6 @@ namespace SamirBoulema.TSVN.Helpers
         public static string GetTortoiseSvnProc()
         {
             var path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
-            LogHelper.Log($"TortoiseSvnProc: {path}");
 
             if (string.IsNullOrEmpty(path))
             {
@@ -21,12 +20,8 @@ namespace SamirBoulema.TSVN.Helpers
             return path;
         }
 
-        public static string GetSvnExec()
-        {
-            var path = GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
-            LogHelper.Log($"SvnExec: {path}, exists: {File.Exists(path)}");
-            return path;
-        }
+        public static string GetSvnExec() 
+            => GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
 
         public static void SaveAllFiles()
         {
