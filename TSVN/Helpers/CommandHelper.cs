@@ -155,7 +155,7 @@ namespace SamirBoulema.TSVN.Helpers
         private static void ShowMissingSolutionDirMessage()
         {
             MessageBox.Show("Unable to determine the solution directory location. Please manually set the directory location in the settings.",
-                "Missing Solution Directory Location", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                "Missing Working Copy Root Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         public static void StartProcess(string application, string args)

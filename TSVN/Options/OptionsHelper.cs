@@ -6,6 +6,7 @@ namespace SamirBoulema.TSVN.Options
 {
     public static class OptionsHelper
     {
+        private const string ApplicationName = "TSVN";
         public static DTE Dte;
 
         public static Options GetOptions()
@@ -15,11 +16,19 @@ namespace SamirBoulema.TSVN.Options
             if (!File.Exists(solutionFilePath)) return new Options();
 
             var solutionFolder = Path.GetDirectoryName(solutionFilePath);
-            var settingFilePath = Path.Combine(solutionFolder, "TSVN.json");
+            var settingFilePath = Path.Combine(solutionFolder, ".vs", $"{ApplicationName}.json");
+            var oldSettingFilePath = Path.Combine(solutionFolder, $"{ApplicationName}.json");
 
             if (File.Exists(settingFilePath))
             {
                 var json = File.ReadAllText(settingFilePath);
+                return JsonConvert.DeserializeObject<Options>(json);
+            }
+
+            if (File.Exists(oldSettingFilePath))
+            {
+                var json = File.ReadAllText(oldSettingFilePath);
+                File.Delete(oldSettingFilePath);
                 return JsonConvert.DeserializeObject<Options>(json);
             }
 
