@@ -15,6 +15,8 @@
 
         public const uint CreatePatchCommand = 0x0300;
         public const uint ApplyPatchCommand = 0x0301;
+        public const uint ShelveCommand = 0x0302;
+        public const uint UnshelveCommand = 0x0303;
 
         public const uint BranchCommand = 0x0400;
         public const uint SwitchCommand = 0x0401;

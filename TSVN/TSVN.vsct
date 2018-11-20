@@ -199,6 +199,22 @@
         </Strings>
       </Button>
 
+      <Button guid="guidTSVNCmdSet" id="shelveCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="shelve" />
+        <Strings>
+          <ButtonText>Shelve...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="unshelveCommand" priority="0x0400" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="shelve" />
+        <Strings>
+          <ButtonText>Unshelve...</ButtonText>
+        </Strings>
+      </Button>
+        
       <Button guid="guidTSVNCmdSet" id="branchCommand" priority="0x0100" type="Button">
         <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
         <Icon guid="guidImages" id="branch" />
@@ -246,7 +262,7 @@
           <ButtonText>Cleanup working copy...</ButtonText>
         </Strings>
       </Button>
-
+      
       <Button guid="guidTSVNCmdSet" id="showLogFileCommand" priority="0x0100" type="Button">
         <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
         <Icon guid="guidImages" id="showLog" />
@@ -378,7 +394,7 @@
 
     <!--Menu icons-->
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete" />
+      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete, shelve" />
     </Bitmaps>
   </Commands>
 
@@ -405,6 +421,7 @@
       <IDSymbol name="add" value="19" />
       <IDSymbol name="properties" value="20" />
       <IDSymbol name="delete" value="21" />
+      <IDSymbol name="shelve" value="22" />
     </GuidSymbol>
 
     <GuidSymbol name="guidTSVNPkg" value="{f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53}" />
@@ -447,7 +464,9 @@
       
       <IDSymbol name="createPatchCommand" value="0x0300" />
       <IDSymbol name="applyPatchCommand" value="0x0301" />
-
+      <IDSymbol name="shelveCommand" value="0x0302" />
+      <IDSymbol name="unshelveCommand" value="0x0303" />
+      
       <IDSymbol name="branchCommand" value="0x0400" />
       <IDSymbol name="switchCommand" value="0x0401" />
       <IDSymbol name="mergeCommand" value="0x0402" />

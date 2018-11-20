@@ -111,6 +111,8 @@ namespace SamirBoulema.TSVN
             _mcs.AddCommand(CreateCommand(ShowLogCommand, PkgCmdIdList.ShowLogCommand));
             _mcs.AddCommand(CreateCommand(CreatePatchCommand, PkgCmdIdList.CreatePatchCommand));
             _mcs.AddCommand(CreateCommand(ApplyPatchCommand, PkgCmdIdList.ApplyPatchCommand));
+            _mcs.AddCommand(CreateCommand(ShelveCommand, PkgCmdIdList.ShelveCommand));
+            _mcs.AddCommand(CreateCommand(UnshelveCommand, PkgCmdIdList.UnshelveCommand));
             _mcs.AddCommand(CreateCommand(RevertCommand, PkgCmdIdList.RevertCommand));
             _mcs.AddCommand(CreateCommand(DiskBrowserCommand, PkgCmdIdList.DiskBrowser));
             _mcs.AddCommand(CreateCommand(RepoBrowserCommand, PkgCmdIdList.RepoBrowser));
@@ -305,6 +307,20 @@ namespace SamirBoulema.TSVN
             if (result != DialogResult.OK) return;
 
             CommandHelper.StartProcess("TortoiseMerge.exe", $"/diff:\"{openFileDialog.FileName}\" /patchpath:\"{_solutionDir}\"");
+        }
+
+        private void ShelveCommand(object sender, EventArgs e)
+        {
+            _solutionDir = CommandHelper.GetRepositoryRoot();
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:shelve /path:\"{_solutionDir}\" /closeonend:0");
+        }
+
+        private void UnshelveCommand(object sender, EventArgs e)
+        {
+            _solutionDir = CommandHelper.GetRepositoryRoot();
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:unshelve /path:\"{_solutionDir}\" /closeonend:0");
         }
 
         private void RevertCommand(object sender, EventArgs e)
