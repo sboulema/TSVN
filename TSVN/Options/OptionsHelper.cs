@@ -44,7 +44,9 @@ namespace SamirBoulema.TSVN.Options
             if (!File.Exists(solutionFilePath)) return;
 
             var solutionFolder = Path.GetDirectoryName(solutionFilePath);
-            File.WriteAllText(Path.Combine(solutionFolder, "TSVN.json"), json);
+            var settingFilePath = Path.Combine(solutionFolder, ".vs", $"{ApplicationName}.json");
+
+            File.WriteAllText(settingFilePath, json);
         }
     }
 }
