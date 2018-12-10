@@ -206,12 +206,16 @@ namespace SamirBoulema.TSVN
             CommandHelper.Revert();
         }
 
+        private void refreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
+        }
+
         private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e)
         {
             Settings.Default.HideUnversioned = true;
             Settings.Default.Save();
             Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
-            HideUnversionedButtonBorder.BorderThickness = new Thickness(1);
         }
 
         private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e)
@@ -219,7 +223,6 @@ namespace SamirBoulema.TSVN
             Settings.Default.HideUnversioned = false;
             Settings.Default.Save();
             Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
-            HideUnversionedButtonBorder.BorderThickness = new Thickness(0);
         }
 
         private void TreeView_Collapsed(object sender, RoutedEventArgs e)

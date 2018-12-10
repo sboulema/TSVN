@@ -278,6 +278,7 @@
     <Resource Include="Resources\git-commit.png" />
     <Resource Include="Resources\git-revert.png" />
     <Resource Include="Resources\git-diff.png" />
+    <Resource Include="Resources\git-refresh.png" />
     <Content Include="Resources\tortoisesvn.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

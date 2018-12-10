@@ -53,21 +53,59 @@
         
         <StackPanel Orientation="Horizontal" Margin="10,3">
             <Button x:Name="commitButton" ToolTip="Commit" Click="commitButton_Click" 
-                    Height="16" Width="16" Margin="0,0,5,0" BorderThickness="0" Background="Transparent">
-                <Image Source="Resources/git-commit.png"></Image>
+                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/git-commit.png" Stretch="Fill" TileMode="None" />
+                </Button.Background>
             </Button>
             <Button x:Name="revertButton" ToolTip="Revert" Click="revertButton_Click" 
-                    Width="16" Margin="0,0,5,0" BorderThickness="0" Background="Transparent">
-                <Image Source="Resources/git-revert.png"></Image>
+                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/git-revert.png" Stretch="Fill" TileMode="None" />
+                </Button.Background>
             </Button>
-            <Border x:Name="HideUnversionedButtonBorder" BorderThickness="1" BorderBrush="Gray" Height="17">
-                <ToggleButton x:Name="HideUnversionedButton" ToolTip="Hide unversioned files and folders" 
+            <ToggleButton x:Name="HideUnversionedButton" ToolTip="Hide unversioned files and folders" 
                           Checked="HideUnversionedButton_OnChecked" Unchecked="HideUnversionedButton_OnUnchecked" 
-                          Height="16" Width="16" BorderThickness="0" Background="Transparent">
-                    <Image Source="Resources/git-diff.png"></Image>
-                </ToggleButton>
-            </Border>
-
+                          Height="16" Width="16" Margin="0,0,5,0">
+                <ToggleButton.Style>
+                    <Style TargetType="{x:Type ToggleButton}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                                Background="{TemplateBinding Background}"
+                                                BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter HorizontalAlignment="Center"                  
+                                              VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Background">
+                                    <Setter.Value>
+                                        <ImageBrush ImageSource="Resources/git-diff.png" Stretch="Fill" TileMode="None" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+                <ToggleButton.Background>
+                    <ImageBrush ImageSource="Resources/git-diff.png" Stretch="Fill" TileMode="None" />
+                </ToggleButton.Background>
+            </ToggleButton>
+            <Button x:Name="refreshButton" ToolTip="Refresh" Click="refreshButton_Click" 
+                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
+                <Button.Background>
+                    <ImageBrush ImageSource="Resources/git-refresh.png" Stretch="Fill" TileMode="None" />
+                </Button.Background>
+            </Button>
         </StackPanel>
         
         <TreeView Grid.Row="1" Background="{x:Null}" ItemsSource="{Binding Root}"
