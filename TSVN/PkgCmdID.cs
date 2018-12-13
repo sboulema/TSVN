@@ -25,6 +25,8 @@
         public const uint RevertCommand = 0x0500;
         public const uint UpdateToRevisionCommand = 0x0501;
         public const uint CleanupCommand = 0x0502;
+        public const uint LockCommand = 0x0503;
+        public const uint UnlockCommand = 0x0504;
 
         public const uint ShowLogFileCommand = 0x0600;       
         public const uint BlameCommand = 0x0601;
@@ -40,6 +42,8 @@
         public const uint RevertFileCommand = 0x0611;
         public const uint AddFileCommand = 0x0612;
         public const uint DeleteFileCommand = 0x0613;
+        public const uint LockFileCommand = 0x0615;
+        public const uint UnlockFileCommand = 0x0616;
 
         public const uint ShowOptionsDialogCommand = 0x0614;
     };

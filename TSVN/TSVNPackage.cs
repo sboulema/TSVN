@@ -123,6 +123,9 @@ namespace SamirBoulema.TSVN
             _mcs.AddCommand(CreateCommand(BlameCommand, PkgCmdIdList.BlameCommand));
             _mcs.AddCommand(CreateCommand(ShowLogFileCommand, PkgCmdIdList.ShowLogFileCommand));
             _mcs.AddCommand(CreateCommand(CleanupCommand, PkgCmdIdList.CleanupCommand));
+            _mcs.AddCommand(CreateCommand(LockCommand, PkgCmdIdList.LockCommand));
+            _mcs.AddCommand(CreateCommand(UnlockCommand, PkgCmdIdList.UnlockCommand));
+
             _mcs.AddCommand(CreateCommand(DiskBrowserFileCommand, PkgCmdIdList.DiskBrowserFileCommand));
             _mcs.AddCommand(CreateCommand(RepoBrowserFileCommand, PkgCmdIdList.RepoBrowserFileCommand));
             _mcs.AddCommand(CreateCommand(MergeFileCommand, PkgCmdIdList.MergeFileCommand));
@@ -134,6 +137,8 @@ namespace SamirBoulema.TSVN
             _mcs.AddCommand(CreateCommand(RevertFileCommand, PkgCmdIdList.RevertFileCommand));
             _mcs.AddCommand(CreateCommand(AddFileCommand, PkgCmdIdList.AddFileCommand));
             _mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
+            _mcs.AddCommand(CreateCommand(LockFileCommand, PkgCmdIdList.LockFileCommand));
+            _mcs.AddCommand(CreateCommand(UnlockFileCommand, PkgCmdIdList.UnlockFileCommand));
 
             _mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
 
@@ -405,6 +410,34 @@ namespace SamirBoulema.TSVN
             _solutionDir = CommandHelper.GetRepositoryRoot();  
             if (string.IsNullOrEmpty(_solutionDir)) return;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:cleanup /path:\"{_solutionDir}\"");
+        }
+
+        private void LockCommand(object sender, EventArgs e)
+        {
+            _solutionDir = CommandHelper.GetRepositoryRoot();
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:lock /path:\"{_solutionDir}\"");
+        }
+
+        private void UnlockCommand(object sender, EventArgs e)
+        {
+            _solutionDir = CommandHelper.GetRepositoryRoot();
+            if (string.IsNullOrEmpty(_solutionDir)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:unlock /path:\"{_solutionDir}\"");
+        }
+
+        private void LockFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = FileHelper.GetPath();
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:lock /path:\"{_currentFilePath}\"");
+        }
+
+        private void UnlockFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = FileHelper.GetPath();
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:unlock /path:\"{_currentFilePath}\"");
         }
 
         private void DifferencesCommand(object sender, EventArgs e)

@@ -262,6 +262,22 @@
           <ButtonText>Cleanup working copy...</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidTSVNCmdSet" id="lockCommand" priority="0x0400" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="lock" />
+        <Strings>
+          <ButtonText>Get lock...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="unlockCommand" priority="0x0500" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="unlock" />
+        <Strings>
+          <ButtonText>Release lock...</ButtonText>
+        </Strings>
+      </Button>
       
       <Button guid="guidTSVNCmdSet" id="showLogFileCommand" priority="0x0100" type="Button">
         <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
@@ -375,6 +391,22 @@
         </Strings>
       </Button>
 
+      <Button guid="guidTSVNCmdSet" id="lockFileCommand" priority="0x0700" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="lock" />
+        <Strings>
+          <ButtonText>Get Lock</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="unlockFileCommand" priority="0x0800" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="unlock" />
+        <Strings>
+          <ButtonText>Release Lock</ButtonText>
+        </Strings>
+      </Button>
+
       <Button guid="guidTSVNPackageCmdSet" id="cmdidTSVNToolWindowCommand" priority="0x0100" type="Button">
         <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" />
         <Icon guid="guidImages" id="showChanges" />
@@ -394,7 +426,7 @@
 
     <!--Menu icons-->
     <Bitmaps>
-      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete, shelve" />
+      <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete, shelve, lock, unlock" />
     </Bitmaps>
   </Commands>
 
@@ -422,6 +454,8 @@
       <IDSymbol name="properties" value="20" />
       <IDSymbol name="delete" value="21" />
       <IDSymbol name="shelve" value="22" />
+      <IDSymbol name="lock" value="23" />
+      <IDSymbol name="unlock" value="24" />
     </GuidSymbol>
 
     <GuidSymbol name="guidTSVNPkg" value="{f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53}" />
@@ -474,7 +508,9 @@
       <IDSymbol name="revertCommand" value="0x0500" />
       <IDSymbol name="updateToRevisionCommand" value="0x0501" />
       <IDSymbol name="cleanupCommand" value="0x0502" />
-      
+      <IDSymbol name="lockCommand" value="0x0503" />
+      <IDSymbol name="unlockCommand" value="0x0504" />
+
       <IDSymbol name="showLogFileCommand" value="0x0600" />   
       <IDSymbol name="blameCommand" value="0x0601" />
       <IDSymbol name="differencesCommand" value="0x0602" />  
@@ -489,6 +525,8 @@
       <IDSymbol name="revertFileCommand" value="0x0611" />
       <IDSymbol name="addFileCommand" value="0x0612" />
       <IDSymbol name="deleteFileCommand" value="0x0613" />
+      <IDSymbol name="lockFileCommand" value="0x0615" />
+      <IDSymbol name="unlockFileCommand" value="0x0616" />
 
       <IDSymbol name="showOptionsDialogCommand" value="0x0614"/>
 
