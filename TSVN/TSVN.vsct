@@ -27,7 +27,7 @@
 
       <!--Solution Explorer Context Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_SCC" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
           <ButtonText>TSVN</ButtonText>
@@ -35,14 +35,22 @@
         </Strings>
       </Menu>
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_SCC" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
           <ButtonText>TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
-      
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_ITEM_SCC" />
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>TSVN</ButtonText>
+          <CommandName>TSVN</CommandName>
+        </Strings>
+      </Menu>   
+
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
         <Strings>
@@ -102,9 +110,12 @@
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
       </Group>
-      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0500">
-        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      
+      <!--Solution Explorer - Folder View - Context Menu-->
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
+        <Parent guid="guidWorkspaceExplorerToolWindowCmdSet" id="idmWSE_ContextMenu" />
       </Group>
+        
       <Group guid="guidTSVNCmdSet" id="firstContextMenuGroup" priority="0x0700">
         <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
       </Group>
@@ -539,6 +550,11 @@
   
     <GuidSymbol value="{fdf0dd0f-a813-4fde-a9d0-0a50dade9b94}" name="guidTSVNPackageCmdSet">
       <IDSymbol value="256" name="cmdidTSVNToolWindowCommand" />
+    </GuidSymbol>
+  
+    <!-- Solution Explorer folder mode GUIDs and IDs. -->
+    <GuidSymbol name="guidWorkspaceExplorerToolWindowCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
+      <IDSymbol name="idmWSE_ContextMenu" value="0x0002" />
     </GuidSymbol>
   </Symbols>
 
