@@ -44,6 +44,7 @@
         public const uint DeleteFileCommand = 0x0613;
         public const uint LockFileCommand = 0x0615;
         public const uint UnlockFileCommand = 0x0616;
+        public const uint RenameFileCommand = 0x0617;
 
         public const uint ShowOptionsDialogCommand = 0x0614;
     };

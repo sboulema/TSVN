@@ -139,6 +139,7 @@ namespace SamirBoulema.TSVN
             _mcs.AddCommand(CreateCommand(DeleteFileCommand, PkgCmdIdList.DeleteFileCommand));
             _mcs.AddCommand(CreateCommand(LockFileCommand, PkgCmdIdList.LockFileCommand));
             _mcs.AddCommand(CreateCommand(UnlockFileCommand, PkgCmdIdList.UnlockFileCommand));
+            _mcs.AddCommand(CreateCommand(RenameFileCommand, PkgCmdIdList.RenameFileCommand));
 
             _mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
 
@@ -235,6 +236,14 @@ namespace SamirBoulema.TSVN
             if (string.IsNullOrEmpty(_currentFilePath)) return;
             Dte.ActiveDocument?.Save();
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /closeonend:0");
+        }
+
+        private void RenameFileCommand(object sender, EventArgs e)
+        {
+            _currentFilePath = FileHelper.GetPath();
+            if (string.IsNullOrEmpty(_currentFilePath)) return;
+            Dte.ActiveDocument?.Save();
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:rename /path:\"{_currentFilePath}\" /closeonend:0");
         }
 
         private void UpdateToRevisionCommand(object sender, EventArgs e)
