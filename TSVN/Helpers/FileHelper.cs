@@ -1,12 +1,13 @@
 ﻿using System.IO;
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.Win32;
 
 namespace SamirBoulema.TSVN.Helpers
 {
     public static class FileHelper
     {
-        public static DTE Dte;
+        public static DTE2 Dte;
 
         public static string GetTortoiseSvnProc()
         {
@@ -43,20 +44,17 @@ namespace SamirBoulema.TSVN.Helpers
             // Context menu in the Solution Explorer
             if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer)
             {
-                var selectedItem = Dte.SelectedItems.Item(1);
+                var selectedItem = ((object[])Dte.ToolWindows.SolutionExplorer.SelectedItems)[0] as UIHierarchyItem;
 
                 if (selectedItem == null) return string.Empty;
 
-                // File belonging to a project
-                if (selectedItem.ProjectItem != null)
+                if (selectedItem.Object is Project || selectedItem.Object is Solution)
                 {
-                    return selectedItem.ProjectItem.FileNames[0];
+                    return Path.GetDirectoryName(selectedItem.Object.FileName);
                 }
-
-                // Project belonging to the solution
-                if (selectedItem.Project != null)
+                else if (selectedItem.Object is ProjectItem)
                 {
-                    return Path.GetDirectoryName(selectedItem.Project.FileName);
+                    return (selectedItem.Object as ProjectItem).FileNames[0];
                 }
             }
 

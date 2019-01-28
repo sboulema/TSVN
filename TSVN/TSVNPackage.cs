@@ -88,7 +88,7 @@ namespace SamirBoulema.TSVN
             _projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
             _projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
 
-            FileHelper.Dte = Dte;
+            FileHelper.Dte = (DTE2)GetService(typeof(SDTE));
             CommandHelper.Dte = Dte;
             OptionsHelper.Dte = Dte;
 

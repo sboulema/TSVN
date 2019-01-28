@@ -19,19 +19,19 @@ Control TortoiseSVN from within Visual Studio
 # Features
 All the SVN functions quickly accessible from the TSVN menu:
 
-![Main Menu](https://samirboulema.gallerycdn.vsassets.io/extensions/samirboulema/tsvn/4.4.28/1517926252071/212964/1/TSVN-main.png)
+![Main Menu](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/TSVN-main.png)
 
 When working on a single file you can find all SVN functions related to that file in the context menu:
 
-![Context Menu](https://samirboulema.gallerycdn.vsassets.io/extensions/samirboulema/tsvn/4.4.28/1517926252071/212965/1/tsvn-context.png)
+![Context Menu](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/tsvn-context.png)
 
 A customizable toolbar with all your favorite commands:
 
-![Toolbar](https://samirboulema.gallerycdn.vsassets.io/extensions/samirboulema/tsvn/4.4.28/1517926252071/212966/1/tsvn-toolbar.png)
+![Toolbar](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/tsvn-toolbar.png)
 
 A pending changes window with the most important commands:
 
-![Pending Changes](https://samirboulema.gallerycdn.vsassets.io/extensions/samirboulema/tsvn/4.4.28/1517926252071/213541/1/pendingchanges.png)
+![Pending Changes](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/pendingchanges.png)
 
 ---
 
