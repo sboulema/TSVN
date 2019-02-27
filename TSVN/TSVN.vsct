@@ -8,7 +8,7 @@
       <!--Main Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
-        <CommandFlag>TextChanges</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>    
         <Strings>
           <ButtonText>TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
@@ -448,6 +448,25 @@
       <Bitmap guid="guidImages" href="Resources\octicons.png" usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switch, cleanup, stash, fetch, add, properties, delete, shelve, lock, unlock, rename" />
     </Bitmaps>
   </Commands>
+
+  <KeyBindings>
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="C" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="commitCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="W" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="showChangesCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="U" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="updateCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="L" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="showLogCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="A" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="createPatchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="H" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="applyPatchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="S" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="switchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="M" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="mergeCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="R" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="revertCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="N" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="cleanupCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="B" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="blameCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="D" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="differencesCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="E" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="shelveCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="P" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="unshelveCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="O" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="lockCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="K" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="unlockCommand" />
+  </KeyBindings>
 
   <Symbols>
     <GuidSymbol name="guidImages" value="{1a3d6932-4781-4605-861f-47dbe78e262b}">

@@ -33,6 +33,25 @@ A pending changes window with the most important commands:
 
 ![Pending Changes](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/pendingchanges.png)
 
+## Keyboard shortcuts
+
+* `(S)VN (C)ommit` - Ctrl+Shift+Alt+S, C
+* `(S)VN Sho(w) Changes` - Ctrl+Shift+Alt+S, W
+* `(S)VN (U)pdate` - Ctrl+Shift+Alt+S, U
+* `(S)VN (L)og` - Ctrl+Shift+Alt+S, L
+* `(S)VN Create P(a)tch` - Ctrl+Shift+Alt+S, A
+* `(S)VN Apply Patc(h)` - Ctrl+Shift+Alt+S, H
+* `(S)VN (S)witch` - Ctrl+Shift+Alt+S, S
+* `(S)VN (M)erge` - Ctrl+Shift+Alt+S, M
+* `(S)VN (R)evert` - Ctrl+Shift+Alt+S, R
+* `(S)VN Clea(n)up` - Ctrl+Shift+Alt+S, N
+* `(S)VN File (B)lame` - Ctrl+Shift+Alt+S, B
+* `(S)VN File (D)iff` - Ctrl+Shift+Alt+S, D
+* `(S)VN Sh(e)lve` - Ctrl+Shift+Alt+S, E
+* `(S)VN Unshelve` - Ctrl+Shift+Alt+S, P
+* `(S)VN L(o)ck` - Ctrl+Shift+Alt+S, O
+* `(S)VN Unloc(k)` - Ctrl+Shift+Alt+S, K
+
 ---
 
 ![VS2017 Partner](http://i.imgur.com/wlgwRF1.png)
