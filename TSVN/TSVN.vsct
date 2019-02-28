@@ -150,7 +150,7 @@
         <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
         <Icon guid="guidImages" id="showChanges" />
         <Strings>
-          <ButtonText>Show Changes</ButtonText>
+          <ButtonText>Sho&amp;w Changes</ButtonText>
         </Strings>
       </Button>
 
@@ -158,7 +158,7 @@
         <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
         <Icon guid="guidImages" id="pull" />
         <Strings>
-          <ButtonText>Update</ButtonText>
+          <ButtonText>&amp;Update</ButtonText>
         </Strings>
       </Button>
 
@@ -166,7 +166,7 @@
         <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
         <Icon guid="guidImages" id="commit" />
         <Strings>
-          <ButtonText>Commit...</ButtonText>
+          <ButtonText>&amp;Commit...</ButtonText>
         </Strings>
       </Button>
 
@@ -174,7 +174,7 @@
         <Parent guid="guidTSVNCmdSet" id="secondMenuGroup" />
         <Icon guid="guidImages" id="showLog" />
         <Strings>
-          <ButtonText>Show Log...</ButtonText>
+          <ButtonText>Show &amp;Log...</ButtonText>
         </Strings>
       </Button>
 
@@ -198,7 +198,7 @@
         <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
         <Icon guid="guidImages" id="stash" />
         <Strings>
-          <ButtonText>Create Patch...</ButtonText>
+          <ButtonText>Create P&amp;atch...</ButtonText>
         </Strings>
       </Button>
 
@@ -206,7 +206,7 @@
         <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
         <Icon guid="guidImages" id="stash" />
         <Strings>
-          <ButtonText>Apply Patch...</ButtonText>
+          <ButtonText>Apply Patc&amp;h...</ButtonText>
         </Strings>
       </Button>
 
@@ -214,7 +214,7 @@
         <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
         <Icon guid="guidImages" id="shelve" />
         <Strings>
-          <ButtonText>Shelve...</ButtonText>
+          <ButtonText>Sh&amp;elve...</ButtonText>
         </Strings>
       </Button>
       
@@ -238,7 +238,7 @@
         <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
         <Icon guid="guidImages" id="switch" />
         <Strings>
-          <ButtonText>Switch...</ButtonText>
+          <ButtonText>&amp;Switch...</ButtonText>
         </Strings>
       </Button>
 
@@ -246,7 +246,7 @@
         <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
         <Icon guid="guidImages" id="merge" />
         <Strings>
-          <ButtonText>Merge...</ButtonText>
+          <ButtonText>&amp;Merge...</ButtonText>
         </Strings>
       </Button>
 
@@ -254,7 +254,7 @@
         <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
         <Icon guid="guidImages" id="revert" />
         <Strings>
-          <ButtonText>Revert Changes...</ButtonText>
+          <ButtonText>&amp;Revert Changes...</ButtonText>
         </Strings>
       </Button>
       
@@ -270,7 +270,7 @@
         <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
         <Icon guid="guidImages" id="cleanup" />
         <Strings>
-          <ButtonText>Cleanup working copy...</ButtonText>
+          <ButtonText>Clea&amp;nup working copy...</ButtonText>
         </Strings>
       </Button>
 
@@ -278,7 +278,7 @@
         <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
         <Icon guid="guidImages" id="lock" />
         <Strings>
-          <ButtonText>Get lock...</ButtonText>
+          <ButtonText>Get l&amp;ock...</ButtonText>
         </Strings>
       </Button>
 
@@ -286,7 +286,7 @@
         <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
         <Icon guid="guidImages" id="unlock" />
         <Strings>
-          <ButtonText>Release lock...</ButtonText>
+          <ButtonText>Release loc&amp;k...</ButtonText>
         </Strings>
       </Button>
       
@@ -318,7 +318,7 @@
         <Parent guid="guidTSVNCmdSet" id="secondContextMenuGroup" />
         <Icon guid="guidImages" id="blame" />
         <Strings>
-          <ButtonText>Blame...</ButtonText>
+          <ButtonText>&amp;Blame...</ButtonText>
         </Strings>
       </Button>
     
@@ -382,7 +382,7 @@
         <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
         <Icon guid="guidImages" id="differences" />
         <Strings>
-          <ButtonText>Show Differences</ButtonText>
+          <ButtonText>Show &amp;Differences</ButtonText>
         </Strings>
       </Button>
 
