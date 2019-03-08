@@ -10,7 +10,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
         <CommandFlag>TextChanges</CommandFlag>    
         <Strings>
-          <ButtonText>TSVN</ButtonText>
+          <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
@@ -20,7 +20,7 @@
         <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>TSVN</ButtonText>
+          <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
@@ -30,7 +30,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_SOLUTION_SCC" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>TSVN</ButtonText>
+          <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
@@ -38,7 +38,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_SCC" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>TSVN</ButtonText>
+          <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
@@ -46,7 +46,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_ITEM_SCC" />
         <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>TSVN</ButtonText>
+          <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>   
