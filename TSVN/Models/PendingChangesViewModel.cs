@@ -1,5 +1,6 @@
 ﻿using Caliburn.Micro;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Media;
 
 namespace SamirBoulema.TSVN.Models
@@ -29,6 +30,36 @@ namespace SamirBoulema.TSVN.Models
     public class TSVNTreeViewFileItem : TSVNTreeViewItem
     {
         public string Tooltip { get; set; }
+
+        private ImageSource _fileIconSource;
+        public ImageSource FileIconSource
+        {
+            get
+            {
+                return _fileIconSource;
+            }
+            set
+            {
+                _fileIconSource = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private string _pendingIconSource;
+        public string PendingIconSource
+        {
+            get
+            {
+                return _pendingIconSource;
+            }
+            set
+            {
+                _pendingIconSource = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public string PendingTooltip { get; set; }
     }
 
     public class TSVNTreeViewFolderItem : TSVNTreeViewItem
@@ -51,8 +82,6 @@ namespace SamirBoulema.TSVN.Models
                 NotifyOfPropertyChange();
             }
         }
-
-        public bool IsExpanded { get; set; }
     }
 
     public class TSVNTreeViewItem : PropertyChangedBase
@@ -62,16 +91,58 @@ namespace SamirBoulema.TSVN.Models
         public SolidColorBrush Foreground { get; set; }
         public string ChangeType { get; set; }
 
-        private ImageSource _imageSource;
-        public ImageSource ImageSource
+        private string _iconSource;
+        public string IconSource
         {
             get
             {
-                return _imageSource;
+                return _iconSource;
             }
             set
             {
-                _imageSource = value;
+                _iconSource = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private Visibility _fileIconVisibility;
+        public Visibility FileIconVisibility
+        {
+            get
+            {
+                return _fileIconVisibility;
+            }
+            set
+            {
+                _fileIconVisibility = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private Visibility _iconVisibility;
+        public Visibility IconVisibility
+        {
+            get
+            {
+                return _iconVisibility;
+            }
+            set
+            {
+                _iconVisibility = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private bool _isExpanded;
+        public bool IsExpanded
+        {
+            get
+            {
+                return _isExpanded;
+            }
+            set
+            {
+                _isExpanded = value;
                 NotifyOfPropertyChange();
             }
         }

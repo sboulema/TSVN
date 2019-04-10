@@ -31,6 +31,7 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static void OpenFile(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath)) return;
             Dte.ExecuteCommand("File.OpenFile", filePath);
         }
 

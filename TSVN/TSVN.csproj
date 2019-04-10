@@ -269,18 +269,11 @@
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\FolderOpen_16x.png" />
-    <Resource Include="Resources\Folder_16x.png" />
-    <Resource Include="Resources\Document_16x.png" />
     <Resource Include="Resources\octicons.png" />
     <Resource Include="Resources\Screenshots\pendingchanges.png" />
     <Resource Include="Resources\Screenshots\tsvn-context.png" />
     <Resource Include="Resources\Screenshots\TSVN-main.png" />
     <Resource Include="Resources\Screenshots\tsvn-toolbar.png" />
-    <Resource Include="Resources\git-commit.png" />
-    <Resource Include="Resources\git-revert.png" />
-    <Resource Include="Resources\git-diff.png" />
-    <Resource Include="Resources\git-refresh.png" />
     <Content Include="Resources\tortoisesvn.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -314,6 +307,50 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\XAML\Commit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Page Include="Resources\XAML\CheckedIn.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\XAML\PendingDelete.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\XAML\PendingEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\XAML\Differences.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Resource Include="Resources\XAML\Document_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Resources\XAML\FolderOpen_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Resource Include="Resources\XAML\Folder_16x.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Page Include="Resources\XAML\PendingAdd.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\XAML\Revert.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\XAML\Sync.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TSVNToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

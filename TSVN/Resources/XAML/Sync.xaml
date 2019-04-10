@@ -1,0 +1,15 @@
+﻿<Viewbox xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:vs_shell="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.12.0">
+    <Rectangle Width="16" Height="16">
+        <Rectangle.Fill>
+            <DrawingBrush Stretch="None">
+                <DrawingBrush.Drawing>
+                    <DrawingGroup>
+                        <GeometryDrawing Brush="{DynamicResource {x:Static vs_shell:EnvironmentColors.ToolWindowTextBrushKey}}" Geometry="F1 M12,16z M0,0z M10.24,7.4A4.15,4.15,0,0,1,9.04,11A4.346,4.346,0,0,1,3.63,11.54L4.8,10.4 0.5,9.8 1.1,14 2.41,12.74C4.77,14.48,8.11,14.31,10.25,12.2A5.876,5.876,0,0,0,11.99,7.74L10.24,7.4z M2.96,5A4.346,4.346,0,0,1,8.37,4.46L7.2,5.6 11.5,6.2 10.9,2 9.59,3.26C7.23,1.52 3.89,1.69 1.74,3.8 0.5,5.03 -0.06,6.65 0.01,8.26L1.76,8.61A4.17,4.17,0,0,1,2.96,5z" />
+                    </DrawingGroup>
+                </DrawingBrush.Drawing>
+            </DrawingBrush>
+        </Rectangle.Fill>
+    </Rectangle>
+</Viewbox>

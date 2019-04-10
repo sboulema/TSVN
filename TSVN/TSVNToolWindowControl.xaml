@@ -44,7 +44,7 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -53,19 +53,22 @@
         
         <StackPanel Orientation="Horizontal" Margin="10,3">
             <Button x:Name="commitButton" ToolTip="Commit" Click="commitButton_Click" 
-                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/git-commit.png" Stretch="Fill" TileMode="None" />
-                </Button.Background>
+                    Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
+                <Viewbox>
+                    <Frame Source="Resources/XAML/Commit.xaml" />
+                </Viewbox>
             </Button>
+
             <Button x:Name="revertButton" ToolTip="Revert" Click="revertButton_Click" 
-                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/git-revert.png" Stretch="Fill" TileMode="None" />
-                </Button.Background>
+                    Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
+                <Viewbox>
+                    <Frame Source="Resources/XAML/Revert.xaml" />
+                </Viewbox>
             </Button>
+            
             <ToggleButton x:Name="HideUnversionedButton" ToolTip="Hide unversioned files and folders" 
-                          Checked="HideUnversionedButton_OnChecked" Unchecked="HideUnversionedButton_OnUnchecked" 
+                          Checked="HideUnversionedButton_OnChecked" Unchecked="HideUnversionedButton_OnUnchecked"
+                          Background="Transparent"
                           Height="16" Width="16" Margin="0,0,5,0">
                 <ToggleButton.Style>
                     <Style TargetType="{x:Type ToggleButton}">
@@ -83,11 +86,6 @@
                         </Setter>
                         <Style.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background">
-                                    <Setter.Value>
-                                        <ImageBrush ImageSource="Resources/git-diff.png" Stretch="Fill" TileMode="None" />
-                                    </Setter.Value>
-                                </Setter>
                                 <Setter Property="BorderThickness" Value="1"/>
                             </Trigger>
                             <Trigger Property="IsChecked" Value="False">
@@ -96,15 +94,16 @@
                         </Style.Triggers>
                     </Style>
                 </ToggleButton.Style>
-                <ToggleButton.Background>
-                    <ImageBrush ImageSource="Resources/git-diff.png" Stretch="Fill" TileMode="None" />
-                </ToggleButton.Background>
+                <Viewbox>
+                    <Frame Source="Resources/XAML/Differences.xaml" />
+                </Viewbox>
             </ToggleButton>
+            
             <Button x:Name="refreshButton" ToolTip="Refresh" Click="refreshButton_Click" 
-                    Margin="0,0,5,0" BorderThickness="0" Height="16" Width="16">
-                <Button.Background>
-                    <ImageBrush ImageSource="Resources/git-refresh.png" Stretch="Fill" TileMode="None" />
-                </Button.Background>
+                    Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
+                <Viewbox>
+                    <Frame Source="Resources/XAML/Sync.xaml" />
+                </Viewbox>
             </Button>
         </StackPanel>
         
@@ -114,29 +113,37 @@
                 <Style TargetType="{x:Type TreeViewItem}">
                     <EventSetter Event="MouseDoubleClick" Handler="TreeViewItem_MouseDoubleClick" />
                     <Setter Property="Padding" Value="0 3 0 3" />
-                    <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                    <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Style>
             </TreeView.ItemContainerStyle>
             <TreeView.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type models:TSVNTreeViewItem}" ItemsSource="{Binding Path=Items}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{Binding ImageSource}" Stretch="Uniform" Height="16" Margin="0,0,5,0" />
-                        <TextBlock Text="{Binding Path=Label}" Foreground="{Binding Foreground}" Margin="0,0,5,0">
+                        <Frame Source="{Binding PendingIconSource}" ToolTip="{Binding PendingTooltip}" Height="8" />
+                        <Image Source="{Binding FileIconSource}" Visibility="{Binding FileIconVisibility}" Stretch="Uniform" Height="16" />
+                        <Frame Source="{Binding IconSource}" Visibility="{Binding IconVisibility}" NavigationUIVisibility="Hidden" />
+                        <TextBlock Text="{Binding Path=Label}" Foreground="{Binding Foreground}" Margin="5,0,5,0">
                             <TextBlock.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Header="Commit..." Click="Commit_Click">
                                         <MenuItem.Icon>
-                                            <Image Source="Resources/git-commit.png"></Image>
+                                            <Viewbox>
+                                                <Frame Source="Resources/XAML/Commit.xaml" />
+                                            </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Revert..." Click="Revert_Click">
                                         <MenuItem.Icon>
-                                            <Image Source="Resources/git-revert.png"></Image>
+                                            <Viewbox>
+                                                <Frame Source="Resources/XAML/Revert.xaml" />
+                                            </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem Header="Show Differences..." Click="ShowDifferences_Click">
                                         <MenuItem.Icon>
-                                            <Image Source="Resources/git-diff.png"></Image>
+                                            <Viewbox>
+                                                <Frame Source="Resources/XAML/Differences.xaml" />
+                                            </Viewbox>
                                         </MenuItem.Icon>
                                     </MenuItem>
                                 </ContextMenu>
