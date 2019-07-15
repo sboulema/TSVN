@@ -49,7 +49,7 @@
           <ButtonText>&amp;TSVN</ButtonText>
           <CommandName>TSVN</CommandName>
         </Strings>
-      </Menu>   
+      </Menu>
 
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
@@ -115,7 +115,17 @@
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
         <Parent guid="guidWorkspaceExplorerToolWindowCmdSet" id="idmWSE_ContextMenu" />
       </Group>
-        
+
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="HTMLContext" id="menu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="CSSContext" id="menu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="ASPXContext" id="menu" />
+      </Group>
+      
       <Group guid="guidTSVNCmdSet" id="firstContextMenuGroup" priority="0x0700">
         <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
       </Group>
@@ -584,6 +594,17 @@
     <!-- Solution Explorer folder mode GUIDs and IDs. -->
     <GuidSymbol name="guidWorkspaceExplorerToolWindowCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
       <IDSymbol name="idmWSE_ContextMenu" value="0x0002" />
+    </GuidSymbol>
+
+    <!--Special Context Menus-->
+    <GuidSymbol name="HTMLContext" value="{78F03954-2FB8-4087-8CE7-59D71710B3BB}">
+      <IDSymbol name="menu" value="0x0001"/>
+    </GuidSymbol>
+    <GuidSymbol name="CSSContext" value="{64DA400E-B4AD-4D67-AA92-4B7ACB01ECD5}">
+      <IDSymbol name="menu" value="0x0002"/>
+    </GuidSymbol>
+    <GuidSymbol name="ASPXContext" value="{D7E8C5E1-BDB8-11D0-9C88-0000F8040A53}">
+      <IDSymbol name="menu" value="0x0035"/>
     </GuidSymbol>
   </Symbols>
 
