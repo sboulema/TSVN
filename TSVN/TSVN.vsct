@@ -50,7 +50,7 @@
           <CommandName>TSVN</CommandName>
         </Strings>
       </Menu>
-
+   
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
         <Strings>
@@ -115,7 +115,12 @@
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
         <Parent guid="guidWorkspaceExplorerToolWindowCmdSet" id="idmWSE_ContextMenu" />
       </Group>
-
+      
+      <!--Solution Explorer - Folder View - Context Menu-->
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB" />
+      </Group>
+      
       <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
         <Parent guid="HTMLContext" id="menu" />
       </Group>
