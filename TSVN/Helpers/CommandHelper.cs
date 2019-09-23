@@ -86,7 +86,7 @@ namespace SamirBoulema.TSVN.Helpers
                     return rootFolder;
                 }
 
-                // Try to found the current working folder, either by open document or by open solution
+                // Try to find the current working folder, either by open document or by open solution
                 if (string.IsNullOrEmpty(path))
                 {
                     if (!string.IsNullOrEmpty(Dte.Solution.FileName))
@@ -97,6 +97,13 @@ namespace SamirBoulema.TSVN.Helpers
                     {
                         path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
                     }
+                }
+
+                // No solution or file open, we have no way of determining repository root.
+                // Fail silently.
+                if (string.IsNullOrEmpty(path))
+                {
+                    return string.Empty;
                 }
 
                 var proc = new Process
