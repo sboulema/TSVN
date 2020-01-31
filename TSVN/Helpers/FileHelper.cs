@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.Win32;
@@ -8,14 +9,15 @@ namespace SamirBoulema.TSVN.Helpers
     public static class FileHelper
     {
         public static DTE2 Dte;
+        private const string DEFAULT_PROC_PATH = @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe";
 
         public static string GetTortoiseSvnProc()
         {
-            var path = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\TortoiseSVN", "ProcPath", @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe");
+            var path = GetRegKeyValue();
 
             if (string.IsNullOrEmpty(path))
             {
-                path = @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe";
+                path = DEFAULT_PROC_PATH;
             }
 
             return path;
@@ -61,6 +63,17 @@ namespace SamirBoulema.TSVN.Helpers
 
             // Context menu in the Code Editor
             return Dte.ActiveDocument.FullName;
+        }
+
+        private static string GetRegKeyValue()
+        {
+            var localMachineKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine,
+                Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32);
+
+            return localMachineKey
+                .OpenSubKey(@"SOFTWARE\TortoiseSVN")
+                .GetValue("ProcPath", DEFAULT_PROC_PATH)
+                .ToString();
         }
     }
 }
