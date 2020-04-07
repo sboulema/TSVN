@@ -2,7 +2,7 @@
 Control TortoiseSVN from within Visual Studio
 
 [![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/sboulema.TSVN)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=1)
-[![Beerpay](https://img.shields.io/beerpay/sboulema/TSVN.svg?style=flat)](https://beerpay.io/sboulema/TSVN)
+[![Donate](https://img.shields.io/badge/%F0%9F%92%B0-Donate-green.svg?style=flat)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X3S369MR8JYCL&source=url)
 
 # Getting started
 1. Install [TortoiseSVN](http://www.tortoisesvn.net) with "command line client tools"
