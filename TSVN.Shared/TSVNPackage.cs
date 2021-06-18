@@ -11,98 +11,65 @@ using SamirBoulema.TSVN.Options;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.IO;
-using SamirBoulema.TSVN.Helpers.AsyncPackageHelpers;
-using ProvideAutoLoad = SamirBoulema.TSVN.Helpers.AsyncPackageHelpers.ProvideAutoLoadAttribute;
+using Task = System.Threading.Tasks.Task;
+using Microsoft;
 
 namespace SamirBoulema.TSVN
 {
-    [AsyncPackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
+    [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.9", IconResourceID = 400)]
     [ProvideAutoLoad(UIContextGuids80.SolutionExists, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     [ProvideToolWindow(typeof(TSVNToolWindow))]
-    public sealed class TsvnPackage : Package, IAsyncLoadablePackageInitialize
+    public sealed class TsvnPackage : AsyncPackage
     {
-        public DTE Dte;
+        public DTE2 Dte;
         private string _solutionDir;
         private string _currentFilePath;
         private string _tortoiseProc;
         private ProjectItemsEvents _projectItemsEvents;
-        private bool isAsyncLoadSupported;
         private OleMenuCommandService _mcs;
 
         #region Package Members
-        /// <summary>
-        /// Initialization of the package; this method is called right after the package is sited, so this is the place
-        /// where you can put all the initialization code that rely on services provided by VisualStudio.
-        /// </summary>
-        protected override void Initialize()
+        protected override async Task InitializeAsync(System.Threading.CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            base.Initialize();
+            await base.InitializeAsync(cancellationToken, progress);
 
-            isAsyncLoadSupported = this.IsAsyncPackageSupported();
+            await BackgroundThreadInitialization();
 
-            // Only perform initialization if async package framework is not supported
-            if (!isAsyncLoadSupported)
-            {
-                BackgroundThreadInitialization();
-                MainThreadInitialization();
-            }
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            await MainThreadInitialization();
+
+            return;
         }
 
-        /// <summary>
-        /// Performs the asynchronous initialization for the package in cases where IDE supports AsyncPackage.
-        /// 
-        /// This method is always called from background thread initially.
-        /// </summary>
-        /// <param name="asyncServiceProvider">Async service provider instance to query services asynchronously</param>
-        /// <param name="pProfferService">Async service proffer instance</param>
-        /// <param name="IAsyncProgressCallback">Progress callback instance</param>
-        /// <returns></returns>
-        public IVsTask Initialize(Microsoft.VisualStudio.Shell.Interop.IAsyncServiceProvider asyncServiceProvider,
-            IProfferAsyncService pProfferService, IAsyncProgressCallback pProgressCallback)
+        private async Task BackgroundThreadInitialization()
         {
-            if (!isAsyncLoadSupported)
-            {
-                throw new InvalidOperationException("Async Initialize method should not be called when async load is not supported.");
-            }
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
 
-            return ThreadHelper.JoinableTaskFactory.RunAsync<object>(async () =>
-            {
-                BackgroundThreadInitialization();
-
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-                MainThreadInitialization();
-                return null;
-            }).AsVsTask();
-        }
-
-        private void BackgroundThreadInitialization()
-        {
-            Dte = (DTE)GetService(typeof(DTE));
+            Dte = await GetServiceAsync(typeof(DTE2)) as DTE2;
+            Assumes.Present(Dte);
 
             _projectItemsEvents = (Dte.Events as Events2).ProjectItemsEvents;
             _projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
             _projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
             _projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
 
-            FileHelper.Dte = (DTE2)GetService(typeof(SDTE));
+            FileHelper.Dte = Dte;
             CommandHelper.Dte = Dte;
             OptionsHelper.Dte = Dte;
 
             _tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
-            // Add our command handlers for menu (commands must exist in the .vsct file)
-            _mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-
             TSVNToolWindowCommand.Initialize(this);
         }
 
-        private void MainThreadInitialization()
+        private async Task MainThreadInitialization()
         {
-            if (null == _mcs) return;
+            _mcs = await GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            Assumes.Present(_mcs);
 
             _mcs.AddCommand(CreateCommand(ShowChangesCommand, PkgCmdIdList.ShowChangesCommand));
             _mcs.AddCommand(CreateCommand(UpdateCommand, PkgCmdIdList.UpdateCommand));
@@ -166,25 +133,27 @@ namespace SamirBoulema.TSVN
         #region Events
         private void ProjectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
         {
-            if (OptionsHelper.GetOptions().OnItemRenamedRenameInSVN)
+            if (!OptionsHelper.GetOptions().OnItemRenamedRenameInSVN)
             {
-                var newFilePath = projectItem.Properties?.Item("FullPath").Value;
-                if (string.IsNullOrEmpty(newFilePath)) return;
-                var oldFilePath = Path.Combine(Path.GetDirectoryName(newFilePath), oldName);
-
-                // Temporarily rename the new file to the old file 
-                File.Move(newFilePath, oldFilePath);
-                
-                // So that we can svn rename it properly
-                CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePath} {newFilePath}");
+                return;
             }
+
+            var newFilePath = projectItem.Properties?.Item("FullPath").Value.ToString();
+            if (string.IsNullOrEmpty(newFilePath)) return;
+            var oldFilePath = Path.Combine(Path.GetDirectoryName(newFilePath), oldName);
+
+            // Temporarily rename the new file to the old file 
+            File.Move(newFilePath, oldFilePath);
+
+            // So that we can svn rename it properly
+            CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePath} {newFilePath}");
         }
 
         private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
         {
             if (OptionsHelper.GetOptions().OnItemAddedAddToSVN)
             {
-                var filePath = projectItem.Properties?.Item("FullPath").Value;
+                var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
                 if (string.IsNullOrEmpty(filePath)) return;
                 CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:0");
             }           
@@ -194,7 +163,7 @@ namespace SamirBoulema.TSVN
         {
             if (OptionsHelper.GetOptions().OnItemRemovedRemoveFromSVN)
             {
-                var filePath = projectItem.Properties?.Item("FullPath").Value;
+                var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
                 if (string.IsNullOrEmpty(filePath)) return;
                 CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{filePath}\" /closeonend:0");
             }

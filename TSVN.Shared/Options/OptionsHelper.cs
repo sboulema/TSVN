@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+﻿using EnvDTE80;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -7,7 +7,7 @@ namespace SamirBoulema.TSVN.Options
     public static class OptionsHelper
     {
         private const string ApplicationName = "TSVN";
-        public static DTE Dte;
+        public static DTE2 Dte;
 
         public static Options GetOptions()
         {

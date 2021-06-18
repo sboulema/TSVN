@@ -2,6 +2,7 @@
 using System.IO;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.Win32;
 
 namespace SamirBoulema.TSVN.Helpers
@@ -44,16 +45,21 @@ namespace SamirBoulema.TSVN.Helpers
         /// <returns>File path</returns>
         public static string GetPath()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             // Context menu in the Solution Explorer
             if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer)
             {
                 var selectedItem = ((object[])Dte.ToolWindows.SolutionExplorer.SelectedItems)[0] as UIHierarchyItem;
 
-                if (selectedItem == null) return string.Empty;
+                if (selectedItem == null)
+                {
+                    return string.Empty;
+                }
 
                 if (selectedItem.Object is Project || selectedItem.Object is Solution)
                 {
-                    return Path.GetDirectoryName(selectedItem.Object.FileName);
+                    return Path.GetDirectoryName((selectedItem.Object as Solution).FileName);
                 }
                 else if (selectedItem.Object is ProjectItem)
                 {

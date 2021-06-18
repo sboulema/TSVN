@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+﻿using EnvDTE80;
 using SamirBoulema.TSVN.Helpers;
 using System;
 using System.IO;
@@ -10,7 +10,7 @@ namespace SamirBoulema.TSVN.Options
     {
         private Options options;
 
-        public OptionsDialog(DTE dte)
+        public OptionsDialog(DTE2 dte)
         {
             InitializeComponent();
             OptionsHelper.Dte = dte;

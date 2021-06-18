@@ -7,12 +7,13 @@ using System.Windows.Forms;
 using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;
 using SamirBoulema.TSVN.Options;
+using EnvDTE80;
 
 namespace SamirBoulema.TSVN.Helpers
 {
     public static class CommandHelper
     {
-        public static DTE Dte;
+        public static DTE2 Dte;
 
         public static void Commit()
         {
