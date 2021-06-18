@@ -29,13 +29,13 @@ steps:
 - task: VsixToolsUpdateVersion@1
   displayName: 'Update Vsix Version (VS2019)'
   inputs:
-    FileName: $(Build.SourcesDirectory)\CodeNav.VS2019\source.extension.vsixmanifest
+    FileName: $(Build.SourcesDirectory)\TSVN.VS2019\source.extension.vsixmanifest
     VersionNumber: '$(Build.BuildNumber)'
 
 - task: VsixToolsUpdateVersion@1
   displayName: 'Update Vsix Version (VS2022)'
   inputs:
-    FileName: $(Build.SourcesDirectory)\CodeNav.VS2022\source.extension.vsixmanifest
+    FileName: $(Build.SourcesDirectory)\TSVN.VS2022\source.extension.vsixmanifest
     VersionNumber: '$(Build.BuildNumber)'
 
 - task: VSBuild@1
