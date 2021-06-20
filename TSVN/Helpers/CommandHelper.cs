@@ -1,5 +1,4 @@
-﻿using EnvDTE;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +7,9 @@ using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;
 using SamirBoulema.TSVN.Options;
 using EnvDTE80;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Shell;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN.Helpers
 {
@@ -15,10 +17,10 @@ namespace SamirBoulema.TSVN.Helpers
     {
         public static DTE2 Dte;
 
-        public static void Commit()
+        public static async Task Commit()
         {
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
-            Commit(GetRepositoryRoot());
+            Commit(await GetRepositoryRoot());
         }
 
         public static void Commit(string filePath)
@@ -27,7 +29,7 @@ namespace SamirBoulema.TSVN.Helpers
             StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:0");
         }
 
-        public static void Revert() => Revert(GetRepositoryRoot());
+        public static async Task Revert() => Revert(await GetRepositoryRoot());
 
         public static void Revert(string filePath)
         {
@@ -73,8 +75,10 @@ namespace SamirBoulema.TSVN.Helpers
             return pendingChanges;
         }
 
-        public static string GetRepositoryRoot(string path = "")
+        public static async Task<string> GetRepositoryRoot(string path = "")
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var svnInfo = string.Empty;
 
             try
@@ -123,7 +127,7 @@ namespace SamirBoulema.TSVN.Helpers
 
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    var line = proc.StandardOutput.ReadLine();
+                    var line = await proc.StandardOutput.ReadLineAsync();
                     LogHelper.Log($"SvnInfo: {line}");
                     svnInfo += line;
                     if (line?.StartsWith("Working Copy Root Path:") ?? false)
@@ -134,7 +138,7 @@ namespace SamirBoulema.TSVN.Helpers
 
                 while (!proc.StandardError.EndOfStream)
                 {
-                    var line = proc.StandardError.ReadLine();
+                    var line = await proc.StandardError.ReadLineAsync();
                     svnInfo += line;
                     LogHelper.Log($"SvnInfo: {line}");
                 }

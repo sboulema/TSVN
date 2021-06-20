@@ -1,12 +1,12 @@
 ﻿using SamirBoulema.TSVN.Properties;
+using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Shell;
+using EnvDTE;
+using SamirBoulema.TSVN.Helpers;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN
 {
-    using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio.Shell;
-    using EnvDTE;
-    using Helpers;
-
     [Guid("81a57ae8-6550-4dd0-940c-503d379550cc")]
     public class TSVNToolWindow : ToolWindowPane
     {
@@ -26,8 +26,12 @@ namespace SamirBoulema.TSVN
             _tsvnToolWindowControl = Content as TSVNToolWindowControl;
         }
 
-        public override void OnToolWindowCreated()
+        public override void OnToolWindowCreated() => _ = ToolWindowCreated();
+
+        private async Task ToolWindowCreated()
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(); await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var tsvnPackage = Package as TsvnPackage;
             var dte = (DTE)tsvnPackage.GetServiceHelper(typeof(DTE));
 
@@ -39,12 +43,12 @@ namespace SamirBoulema.TSVN
 
             _tsvnToolWindowControl.HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
 
-            _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
+            _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
         }
 
-        private void SolutionEvents_Opened() => Update();
-        private void DocumentEvents_DocumentSaved(Document document) => Update();
+        private void SolutionEvents_Opened() => _ = Update();
+        private void DocumentEvents_DocumentSaved(Document document) => _ = Update();
 
-        private void Update() => _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
+        private async Task Update() => _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
     }
 }

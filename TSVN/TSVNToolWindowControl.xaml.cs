@@ -1,22 +1,21 @@
 ﻿using SamirBoulema.TSVN.Properties;
+using SamirBoulema.TSVN.Helpers;
+using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
+using SamirBoulema.TSVN.Models;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN
 {
-    using Helpers;
-    using Microsoft.VisualStudio.PlatformUI;
-    using Microsoft.VisualStudio.Shell;
-    using Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.IO;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using System.Windows.Interop;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-
     /// <summary>
     /// Interaction logic for TSVNToolWindowControl.
     /// </summary>
@@ -224,33 +223,27 @@ namespace SamirBoulema.TSVN
             return imageSource;
         }
 
-        private void commitButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandHelper.Commit();
-        }
+        private void commitButton_Click(object sender, RoutedEventArgs e) => _ = Commit();
 
-        private void revertButton_Click(object sender, RoutedEventArgs e)
-        {
-            CommandHelper.Revert();
-        }
+        private async Task Commit() => await CommandHelper.Commit();
 
-        private void refreshButton_Click(object sender, RoutedEventArgs e)
-        {
-            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
-        }
+        private void revertButton_Click(object sender, RoutedEventArgs e) => _ = Revert();
 
-        private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e)
+        private async Task Revert() => await CommandHelper.Revert();
+
+        private void refreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh();
+
+        private async Task Refresh() => Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
+
+        private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e) => _ = ToggleUnversioned(true);
+
+        private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e) => _ = ToggleUnversioned(false);
+
+        private async Task ToggleUnversioned(bool hide)
         {
-            Settings.Default.HideUnversioned = true;
+            Settings.Default.HideUnversioned = hide;
             Settings.Default.Save();
-            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
-        }
-
-        private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e)
-        {
-            Settings.Default.HideUnversioned = false;
-            Settings.Default.Save();
-            Update(CommandHelper.GetPendingChanges(), CommandHelper.GetRepositoryRoot());
+            Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
         }
 
         private void TreeView_Collapsed(object sender, RoutedEventArgs e)

@@ -90,21 +90,50 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Guids.cs" />
+    <Compile Include="Helpers\CommandHelper.cs" />
+    <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\LogHelper.cs" />
+    <Compile Include="Models\PendingChangesViewModel.cs" />
+    <Compile Include="Options\Options.cs" />
+    <Compile Include="Options\OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options\OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\OptionsHelper.cs" />
+    <Compile Include="PkgCmdID.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources.Designer.cs" />
+    <Compile Include="TSVNPackage.cs" />
+    <Compile Include="TSVNToolWindow.cs" />
+    <Compile Include="TSVNToolWindowCommand.cs" />
+    <Compile Include="TSVNToolWindowControl.xaml.cs">
+      <DependentUpon>TSVNToolWindowControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
+    <Content Include="..\LICENSE">
+      <Link>Resources\LICENSE</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <None Include="app.config" />
+    <None Include="Key.snk" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="README.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -146,12 +175,26 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Resources\License.txt">
-      <Link>Resources\License.txt</Link>
+    <Content Include="Resources\Package.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\tortoisesvn.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="TSVN.vsct" />
   </ItemGroup>
-  <Import Project="..\TSVN.Shared\TSVN.Shared.projitems" Label="Shared" />
+  <ItemGroup>
+    <EmbeddedResource Include="Options\OptionsDialog.resx">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="TSVNToolWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

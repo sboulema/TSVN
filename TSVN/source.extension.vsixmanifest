@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="07fd7462-cd4b-433b-9ab5-8ad3ad87bc65" Version="4.4" Language="en-US" Publisher="Samir L. Boulema" />
+        <Identity Id="07fd7462-cd4b-433b-9ab5-8ad3ad87bc65" Version="5.0" Language="en-US" Publisher="Samir L. Boulema" />
         <DisplayName>TSVN</DisplayName>
         <Description>Control TortoiseSVN from within Visual Studio</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN</MoreInfo>
-        <License>Resources\License.txt</License>
+        <License>Resources\LICENSE</License>
         <GettingStartedGuide>https://github.com/sboulema/TSVN/blob/master/README.md</GettingStartedGuide>
         <ReleaseNotes>https://github.com/sboulema/TSVN/releases</ReleaseNotes>
         <Icon>Resources\Package.ico</Icon>
@@ -13,6 +13,9 @@
         <Tags>SVN, Source control, Tortoise, repository</Tags>
     </Metadata>
     <Installation InstalledByMsi="false">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0,17.0)" />
+        <InstallationTarget Version="[15.0,17.0)" Id="Microsoft.VisualStudio.Community" />
+        <InstallationTarget Version="[15.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
         <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>

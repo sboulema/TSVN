@@ -1,8 +1,10 @@
 ﻿using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using SamirBoulema.TSVN.Helpers;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN.Options
 {
@@ -15,7 +17,19 @@ namespace SamirBoulema.TSVN.Options
             InitializeComponent();
             OptionsHelper.Dte = dte;
 
-            if (File.Exists(dte.Solution.FileName))
+            Load += new EventHandler(OptionsDialog_Load);
+        }
+
+        private void OptionsDialog_Load(object sender, EventArgs e)
+        {
+            _ = LoadDialog();
+        }
+
+        private async Task LoadDialog()
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            if (File.Exists(OptionsHelper.Dte.Solution.FileName))
             {
                 options = OptionsHelper.GetOptions();
                 rootFolderTextBox.Text = options.RootFolder;
@@ -35,7 +49,7 @@ namespace SamirBoulema.TSVN.Options
 
             if (string.IsNullOrEmpty(rootFolderTextBox.Text))
             {
-                rootFolderTextBox.Text = CommandHelper.GetRepositoryRoot();
+                rootFolderTextBox.Text = await CommandHelper.GetRepositoryRoot();
             }
         }
 
