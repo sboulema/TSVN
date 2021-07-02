@@ -30,7 +30,7 @@ namespace SamirBoulema.TSVN.Helpers
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
             StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -43,7 +43,7 @@ namespace SamirBoulema.TSVN.Helpers
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
             StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -99,7 +99,8 @@ namespace SamirBoulema.TSVN.Helpers
             {
                 // Override any logic with the solution specific Root Folder setting
                 OptionsHelper.Dte = Dte;
-                var rootFolder = OptionsHelper.GetOptions().RootFolder;
+                var options = await OptionsHelper.GetOptions();
+                var rootFolder = options.RootFolder;
                 if (!string.IsNullOrEmpty(rootFolder))
                 {
                     return rootFolder;
@@ -157,9 +158,8 @@ namespace SamirBoulema.TSVN.Helpers
                     LogHelper.Log($"SvnInfo: {line}");
                 }
 
-                var options = OptionsHelper.GetOptions();
                 options.RootFolder = rootFolder;
-                OptionsHelper.SaveOptions(options);
+                await OptionsHelper.SaveOptions(options);
 
                 if (string.IsNullOrEmpty(rootFolder))
                 {

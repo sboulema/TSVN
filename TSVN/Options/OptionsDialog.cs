@@ -31,7 +31,7 @@ namespace SamirBoulema.TSVN.Options
 
             if (File.Exists(OptionsHelper.Dte.Solution.FileName))
             {
-                options = OptionsHelper.GetOptions();
+                options = await OptionsHelper .GetOptions();
                 rootFolderTextBox.Text = options.RootFolder;
                 onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
                 onItemRenamedRenameInSVNCheckBox.Checked = options.OnItemRenamedRenameInSVN;
@@ -55,23 +55,26 @@ namespace SamirBoulema.TSVN.Options
             }
         }
 
-        private void cancelButton_Click(object sender, EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void OkButton_Click(object sender, EventArgs e)
+            => _ = Save();
+
+        private async Task Save()
         {
             options.RootFolder = rootFolderTextBox.Text;
             options.OnItemAddedAddToSVN = onItemAddedAddToSVNCheckBox.Checked;
             options.OnItemRenamedRenameInSVN = onItemRenamedRenameInSVNCheckBox.Checked;
             options.OnItemRemovedRemoveFromSVN = onItemRemovedRemoveFromSVNCheckBox.Checked;
             options.CloseOnEnd = closeOnEndCheckBox.Checked;
-            OptionsHelper.SaveOptions(options);
+            await OptionsHelper.SaveOptions(options);
             Close();
         }
 
-        private void browseButton_Click(object sender, EventArgs e)
+        private void BrowseButton_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {

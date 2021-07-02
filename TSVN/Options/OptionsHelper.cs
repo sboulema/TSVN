@@ -1,6 +1,9 @@
 ﻿using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using System.IO;
+using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN.Options
 {
@@ -8,12 +11,23 @@ namespace SamirBoulema.TSVN.Options
     {
         private const string ApplicationName = "TSVN";
         public static DTE2 Dte;
+        public static Options Options;
 
-        public static Options GetOptions()
+        static OptionsHelper()
         {
+            Options = ThreadHelper.JoinableTaskFactory.Run(() => GetOptions());
+        }
+
+        public static async Task<Options> GetOptions()
+        {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var solutionFilePath = Dte.Solution.FileName;
 
-            if (!File.Exists(solutionFilePath)) return new Options();
+            if (!File.Exists(solutionFilePath))
+            {
+                return new Options();
+            }
 
             var solutionFolder = Path.GetDirectoryName(solutionFilePath);
             var settingFilePath = Path.Combine(solutionFolder, ".vs", $"{ApplicationName}.json");
@@ -35,13 +49,18 @@ namespace SamirBoulema.TSVN.Options
             return new Options();
         }
 
-        public static void SaveOptions(Options options)
+        public static async Task SaveOptions(Options options)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var json = JsonConvert.SerializeObject(options);
 
             var solutionFilePath = Dte.Solution.FileName;
 
-            if (!File.Exists(solutionFilePath)) return;
+            if (!File.Exists(solutionFilePath))
+            {
+                return;
+            }
 
             var solutionFolder = Path.GetDirectoryName(solutionFilePath);
             var settingFilePath = Path.Combine(solutionFolder, ".vs", $"{ApplicationName}.json");

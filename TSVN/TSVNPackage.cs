@@ -132,14 +132,22 @@ namespace SamirBoulema.TSVN
 
         #region Events
         private void ProjectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
+            => _ = ProjectItemsEvents_ItemRenamedAsync(projectItem, oldName);
+
+        private async Task ProjectItemsEvents_ItemRenamedAsync(ProjectItem projectItem, string oldName)
         {
-            if (!OptionsHelper.GetOptions().OnItemRenamedRenameInSVN)
+            var options = await OptionsHelper.GetOptions();
+
+            if (!options.OnItemRenamedRenameInSVN)
             {
                 return;
             }
 
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             var newFilePath = projectItem.Properties?.Item("FullPath").Value.ToString();
-            if (string.IsNullOrEmpty(newFilePath)) {
+            if (string.IsNullOrEmpty(newFilePath))
+            {
                 return;
             }
             var oldFilePath = Path.Combine(Path.GetDirectoryName(newFilePath), oldName);
@@ -152,11 +160,18 @@ namespace SamirBoulema.TSVN
         }
 
         private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
+            => _ = ProjectItemsEvents_ItemAdded_Async(projectItem);
+
+        private async Task ProjectItemsEvents_ItemAdded_Async(ProjectItem projectItem)
         {
-            if (!OptionsHelper.GetOptions().OnItemAddedAddToSVN)
+            var options = await OptionsHelper.GetOptions();
+
+            if (!options.OnItemAddedAddToSVN)
             {
                 return;
             }
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
 
@@ -165,16 +180,23 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
         private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
+            => _ = ProjectItemsEvents_ItemRemoved_Async(projectItem);
+
+        private async Task ProjectItemsEvents_ItemRemoved_Async(ProjectItem projectItem)
         {
-            if (!OptionsHelper.GetOptions().OnItemRemovedRemoveFromSVN)
+            var options = await OptionsHelper.GetOptions();
+
+            if (!options.OnItemRemovedRemoveFromSVN)
             {
                 return;
             }
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
 
@@ -183,7 +205,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -207,12 +229,14 @@ namespace SamirBoulema.TSVN
         private async Task ShowChanges()
         {
             _solutionDir = await CommandHelper.GetRepositoryRoot();
+
             if (string.IsNullOrEmpty(_solutionDir))
             {
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:repostatus /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
@@ -228,7 +252,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
@@ -238,7 +263,7 @@ namespace SamirBoulema.TSVN
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -246,7 +271,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ActiveDocument?.Save();
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -256,7 +282,7 @@ namespace SamirBoulema.TSVN
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -264,7 +290,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ActiveDocument?.Save();
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:rename /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -280,7 +307,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /rev /closeonend:{closeOnEnd}");
         }
 
@@ -290,7 +318,7 @@ namespace SamirBoulema.TSVN
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -298,20 +326,24 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ActiveDocument?.Save();
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /rev /closeonend:{closeOnEnd}");
         }
 
-        private void PropertiesCommand(object sender, EventArgs e)
+        private void PropertiesCommand(object sender, EventArgs e) => _ = ShowProperties();
+
+        private async Task ShowProperties()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:properties /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -327,7 +359,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ExecuteCommand("File.SaveAll", string.Empty);
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:commit /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
@@ -337,7 +370,7 @@ namespace SamirBoulema.TSVN
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -345,7 +378,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ActiveDocument?.Save();
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:commit /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -360,20 +394,24 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:log /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
-        private void ShowLogFileCommand(object sender, EventArgs e)
+        private void ShowLogFileCommand(object sender, EventArgs e) => _ = ShowLogFile();
+
+        private async Task ShowLogFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:log /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -388,7 +426,8 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:createpatch /path:\"{_solutionDir}\" /noview /closeonend:{closeOnEnd}");
         }
 
@@ -431,7 +470,8 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:shelve /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
@@ -446,7 +486,8 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:unshelve /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
@@ -461,20 +502,24 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:revert /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
         }
 
-        private void RevertFileCommand(object sender, EventArgs e)
+        private void RevertFileCommand(object sender, EventArgs e) => _ = RevertFile();
+
+        private async Task RevertFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
                 return;
             }
 
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:revert /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -484,7 +529,7 @@ namespace SamirBoulema.TSVN
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -492,7 +537,8 @@ namespace SamirBoulema.TSVN
             }
 
             Dte.ActiveDocument?.Save();
-            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
         }
 
@@ -511,8 +557,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void DiskBrowserFileCommand(object sender, EventArgs e)
+            => _ = DiskBrowserFile();
+
+        private async Task DiskBrowserFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -537,8 +586,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void RepoBrowserFileCommand(object sender, EventArgs e)
+            => _ = RepoBrowserFile();
+
+        private async Task RepoBrowserFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -576,7 +628,8 @@ namespace SamirBoulema.TSVN
             CommandHelper.StartProcess(_tortoiseProc, $"/command:switch /path:\"{_solutionDir}\"");
         }
 
-        private void MergeCommand(object sender, EventArgs e) => _ = Merge();
+        private void MergeCommand(object sender, EventArgs e)
+            => _ = Merge();
 
         private async Task Merge()
         {
@@ -591,8 +644,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void MergeFileCommand(object sender, EventArgs e)
+            => _ = MergeFile();
+
+        private async Task MergeFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -645,8 +701,12 @@ namespace SamirBoulema.TSVN
         }
 
         private void LockFileCommand(object sender, EventArgs e)
+            => _ = LockFile();
+
+        private async Task LockFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
+
             if (string.IsNullOrEmpty(_currentFilePath))
             {
                 return;
@@ -656,8 +716,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void UnlockFileCommand(object sender, EventArgs e)
+            => _ = UnlockFile();
+
+        private async Task UnlockFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -668,8 +731,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void DifferencesCommand(object sender, EventArgs e)
+            => _ = Differences();
+
+        private async Task Differences()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -680,8 +746,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void DiffPreviousCommand(object sender, EventArgs e)
+            => _ = DiffPrevious();
+
+        private async Task DiffPrevious()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
@@ -691,13 +760,14 @@ namespace SamirBoulema.TSVN
             CommandHelper.StartProcess(_tortoiseProc, $"/command:prevdiff /path:\"{_currentFilePath}\"");
         }
 
-        private void BlameCommand(object sender, EventArgs e) => _ = Blame();
+        private void BlameCommand(object sender, EventArgs e)
+            => _ = Blame();
 
         private async Task Blame()
         {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
             var currentLineIndex = ((TextDocument)Dte.ActiveDocument?.Object(string.Empty))?.Selection.CurrentLine ?? 0;
 
             if (string.IsNullOrEmpty(_currentFilePath))
@@ -709,8 +779,11 @@ namespace SamirBoulema.TSVN
         }
 
         private void DeleteFileCommand(object sender, EventArgs e)
+            => _ = DeleteFile();
+
+        private async Task DeleteFile()
         {
-            _currentFilePath = FileHelper.GetPath();
+            _currentFilePath = await FileHelper.GetPath();
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {

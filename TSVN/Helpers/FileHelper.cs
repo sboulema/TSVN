@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
@@ -34,7 +35,11 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static void OpenFile(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath)) return;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
             Dte.ExecuteCommand("File.OpenFile", filePath);
         }
 
@@ -43,16 +48,14 @@ namespace SamirBoulema.TSVN.Helpers
         /// This can be different depending on where the TSVN context menu was used
         /// </summary>
         /// <returns>File path</returns>
-        public static string GetPath()
+        public static async Task<string> GetPath()
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             // Context menu in the Solution Explorer
             if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer)
             {
-                var selectedItem = ((object[])Dte.ToolWindows.SolutionExplorer.SelectedItems)[0] as UIHierarchyItem;
-
-                if (selectedItem == null)
+                if (!(((object[])Dte.ToolWindows.SolutionExplorer.SelectedItems)[0] is UIHierarchyItem selectedItem))
                 {
                     return string.Empty;
                 }
