@@ -36,6 +36,7 @@ namespace SamirBoulema.TSVN.Options
                 onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
                 onItemRenamedRenameInSVNCheckBox.Checked = options.OnItemRenamedRenameInSVN;
                 onItemRemovedRemoveFromSVNCheckBox.Checked = options.OnItemRemovedRemoveFromSVN;
+                closeOnEndCheckBox.Checked = options.CloseOnEnd;
             }
             else
             {
@@ -43,6 +44,7 @@ namespace SamirBoulema.TSVN.Options
                 onItemAddedAddToSVNCheckBox.Checked = false;
                 onItemRenamedRenameInSVNCheckBox.Checked = false;
                 onItemRemovedRemoveFromSVNCheckBox.Checked = false;
+                closeOnEndCheckBox.Checked = false;
                 okButton.Enabled = false;
                 browseButton.Enabled = false;
             }
@@ -64,6 +66,7 @@ namespace SamirBoulema.TSVN.Options
             options.OnItemAddedAddToSVN = onItemAddedAddToSVNCheckBox.Checked;
             options.OnItemRenamedRenameInSVN = onItemRenamedRenameInSVNCheckBox.Checked;
             options.OnItemRemovedRemoveFromSVN = onItemRemovedRemoveFromSVNCheckBox.Checked;
+            options.CloseOnEnd = closeOnEndCheckBox.Checked;
             OptionsHelper.SaveOptions(options);
             Close();
         }

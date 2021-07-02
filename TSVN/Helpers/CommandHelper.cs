@@ -25,21 +25,35 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static void Commit(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath)) return;
-            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:0");
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
         public static async Task Revert() => Revert(await GetRepositoryRoot());
 
         public static void Revert(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath)) return;
-            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:0");
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            var closeOnEnd = OptionsHelper.GetOptions().CloseOnEnd ? 1 : 0;
+            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
         public static void ShowDifferences(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath)) return;
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
             StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
         }
 
