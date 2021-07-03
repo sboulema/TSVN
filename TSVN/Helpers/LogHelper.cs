@@ -21,10 +21,10 @@ namespace SamirBoulema.TSVN.Helpers
             _client.InstrumentationKey = InstrumentationKey;
             _client.Context.Component.Version = GetExecutingAssemblyVersion().ToString();
 
-            byte[] enc = Encoding.UTF8.GetBytes(Environment.UserName + Environment.MachineName);
+            var enc = Encoding.UTF8.GetBytes(Environment.UserName + Environment.MachineName);
             using (var crypto = new MD5CryptoServiceProvider())
             {
-                byte[] hash = crypto.ComputeHash(enc);
+                var hash = crypto.ComputeHash(enc);
                 _client.Context.User.Id = Convert.ToBase64String(hash);
             }
         }

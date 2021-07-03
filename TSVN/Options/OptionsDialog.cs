@@ -1,5 +1,4 @@
-﻿using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
+﻿using Community.VisualStudio.Toolkit;
 using SamirBoulema.TSVN.Helpers;
 using System;
 using System.IO;
@@ -12,10 +11,9 @@ namespace SamirBoulema.TSVN.Options
     {
         private Options options;
 
-        public OptionsDialog(DTE2 dte)
+        public OptionsDialog()
         {
             InitializeComponent();
-            OptionsHelper.Dte = dte;
 
             Load += new EventHandler(OptionsDialog_Load);
         }
@@ -27,11 +25,12 @@ namespace SamirBoulema.TSVN.Options
 
         private async Task LoadDialog()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            var solution = await VS.Solution.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FileName;
 
-            if (File.Exists(OptionsHelper.Dte.Solution.FileName))
+            if (File.Exists(solutionFilePath))
             {
-                options = await OptionsHelper .GetOptions();
+                options = await OptionsHelper.GetOptions();
                 rootFolderTextBox.Text = options.RootFolder;
                 onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
                 onItemRenamedRenameInSVNCheckBox.Checked = options.OnItemRenamedRenameInSVN;

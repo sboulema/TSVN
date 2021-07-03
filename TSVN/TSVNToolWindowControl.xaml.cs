@@ -23,9 +23,6 @@ namespace SamirBoulema.TSVN
     {
         public PendingChangesViewModel ViewModel;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TSVNToolWindowControl"/> class.
-        /// </summary>
         public TSVNToolWindowControl()
         {
             InitializeComponent();
@@ -48,7 +45,7 @@ namespace SamirBoulema.TSVN
                     IsExpanded = true
                 };
 
-                var solutionDirItem = CreateFolderTreeViewItem(solutionDir, "S", false);
+                var solutionDirItem = CreateFolderTreeViewItem(solutionDir, "S");
 
                 foreach (var change in pendingChanges)
                 {
@@ -88,7 +85,7 @@ namespace SamirBoulema.TSVN
                     }
                     else
                     {
-                        newItem = CreateFolderTreeViewItem(pathParts[i], change,  i == pathParts.Length - 1);
+                        newItem = CreateFolderTreeViewItem(pathParts[i], change);
                     }
                         
                     root.Items.Add(newItem);
@@ -189,7 +186,7 @@ namespace SamirBoulema.TSVN
             }
         }
 
-        private TSVNTreeViewFolderItem CreateFolderTreeViewItem(string text, string change, bool lastItem)
+        private TSVNTreeViewFolderItem CreateFolderTreeViewItem(string text, string change)
         {
             return new TSVNTreeViewFolderItem
             {
@@ -266,11 +263,13 @@ namespace SamirBoulema.TSVN
 
         private void TreeViewItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (e.ChangedButton == MouseButton.Left)
+            if (e.ChangedButton != MouseButton.Left)
             {
-                var filePath = ((e.OriginalSource as FrameworkElement).DataContext as TSVNTreeViewItem)?.Path;
-                FileHelper.OpenFile(filePath);
+                return;
             }
+
+            var filePath = ((e.OriginalSource as FrameworkElement).DataContext as TSVNTreeViewItem)?.Path;
+            _ = FileHelper.OpenFile(filePath);
         }
 
         private void Commit_Click(object sender, RoutedEventArgs e)

@@ -7,17 +7,16 @@ trigger:
     - master
     - feature/*
 
-variables:
-  patch: $[counter('versioncounter', 33)]
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-
-name: 5.0.$(patch)
+name: 5.0.$(Build.BuildId)
 
 steps:
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
+    feedsToUse: 'config'
+    nugetConfigPath: 'nuget.config'
 
 - task: bleddynrichards.Assembly-Info-Task.Assembly-Info-Task.Assembly-Info-NetFramework@2
   displayName: 'Update Assembly Version'
@@ -35,9 +34,9 @@ steps:
 - task: VSBuild@1
   displayName: 'Build Vsix'
   inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    solution: '**/*.sln'
+    platform: 'Any CPU'
+    configuration: 'Release'
 
 - task: CopyFiles@2
   displayName: 'Copy Artifacts to Staging'

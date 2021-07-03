@@ -2,24 +2,22 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
-using SamirBoulema.TSVN.Properties;
 using Process = System.Diagnostics.Process;
 using SamirBoulema.TSVN.Options;
-using EnvDTE80;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
+using Community.VisualStudio.Toolkit;
+using Settings = SamirBoulema.TSVN.Properties.Settings;
+using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SamirBoulema.TSVN.Helpers
 {
     public static class CommandHelper
     {
-        public static DTE2 Dte;
-
         public static async Task Commit()
         {
-            Dte.ExecuteCommand("File.SaveAll", string.Empty);
+            await VS.Commands.ExecuteAsync("File.SaveAll");
             Commit(await GetRepositoryRoot());
         }
 
@@ -98,7 +96,6 @@ namespace SamirBoulema.TSVN.Helpers
             try
             {
                 // Override any logic with the solution specific Root Folder setting
-                OptionsHelper.Dte = Dte;
                 var options = await OptionsHelper.GetOptions();
                 var rootFolder = options.RootFolder;
                 if (!string.IsNullOrEmpty(rootFolder))
@@ -109,13 +106,16 @@ namespace SamirBoulema.TSVN.Helpers
                 // Try to find the current working folder, either by open document or by open solution
                 if (string.IsNullOrEmpty(path))
                 {
-                    if (!string.IsNullOrEmpty(Dte.Solution.FileName))
+                    var solution = await VS.Solution.GetCurrentSolutionAsync();
+                    var documentView = await VS.Documents.GetActiveDocumentViewAsync();
+
+                    if (!string.IsNullOrEmpty(solution.FileName))
                     {
-                        path = Path.GetDirectoryName(Dte.Solution.FullName);
+                        path = Path.GetDirectoryName(solution.FileName);
                     }
-                    else if (Dte.ActiveDocument != null)
+                    else if (documentView != null)
                     {
-                        path = Path.GetDirectoryName(Dte.ActiveDocument.FullName);
+                        path = Path.GetDirectoryName(documentView?.Document?.FilePath);
                     }
                 }
 
@@ -180,8 +180,8 @@ namespace SamirBoulema.TSVN.Helpers
 
         private static void ShowMissingSolutionDirMessage()
         {
-            MessageBox.Show("Unable to determine the solution directory location. Please manually set the directory location in the settings.",
-                "Missing Working Copy Root Path", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            VS.MessageBox.Show("Unable to determine the solution directory location. Please manually set the directory location in the settings.",
+                "Missing Working Copy Root Path", OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK);
         }
 
         public static void StartProcess(string application, string args)
@@ -192,7 +192,8 @@ namespace SamirBoulema.TSVN.Helpers
             }
             catch (Exception)
             {
-                MessageBox.Show("TortoiseSVN not found. Did you install TortoiseSVN?", "TortoiseSVN not found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                VS.MessageBox.Show("TortoiseSVN not found. Did you install TortoiseSVN?", "TortoiseSVN not found",
+                    OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK);
             }
         }
     }

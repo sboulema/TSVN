@@ -7,21 +7,19 @@
     <Menus>
       <!--Main Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
-        <CommandFlag>TextChanges</CommandFlag>    
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />   
         <Strings>
-          <ButtonText>&amp;TSVN</ButtonText>
-          <CommandName>TSVN</CommandName>
+          <ButtonText>&amp;Tsvn</ButtonText>
+          <CommandName>Tsvn</CommandName>
         </Strings>
       </Menu>
 
       <!--Context Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
-        <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>&amp;TSVN</ButtonText>
-          <CommandName>TSVN</CommandName>
+          <ButtonText>&amp;Tsvn</ButtonText>
+          <CommandName>Tsvn</CommandName>
         </Strings>
       </Menu>
 
@@ -36,26 +34,24 @@
       </Menu>
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_SCC" />
-        <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>&amp;TSVN</ButtonText>
-          <CommandName>TSVN</CommandName>
+          <ButtonText>&amp;Tsvn</ButtonText>
+          <CommandName>Tsvn</CommandName>
         </Strings>
       </Menu>
       <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_ITEM_SCC" />
-        <CommandFlag>TextChanges</CommandFlag>
         <Strings>
-          <ButtonText>&amp;TSVN</ButtonText>
-          <CommandName>TSVN</CommandName>
+          <ButtonText>&amp;Tsvn</ButtonText>
+          <CommandName>Tsvn</CommandName>
         </Strings>
       </Menu>
    
       <!--Toolbar-->
       <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
         <Strings>
-          <ButtonText>TSVN</ButtonText>
-          <CommandName>TSVN</CommandName>
+          <ButtonText>Tsvn</ButtonText>
+          <CommandName>Tsvn</CommandName>
         </Strings>
       </Menu>
 

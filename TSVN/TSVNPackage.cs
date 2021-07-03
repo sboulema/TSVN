@@ -1,18 +1,19 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel.Design;
-using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Process = System.Diagnostics.Process;
 using OpenFileDialog = System.Windows.Forms.OpenFileDialog;
 using System.Windows.Forms;
 using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
-using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.IO;
 using Task = System.Threading.Tasks.Task;
 using Microsoft;
+using Community.VisualStudio.Toolkit;
+using Microsoft.VisualStudio;
+using System.Net;
 
 namespace SamirBoulema.TSVN
 {
@@ -22,48 +23,32 @@ namespace SamirBoulema.TSVN
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [Guid(GuidList.guidTSVNPkgString)]
     [ProvideToolWindow(typeof(TSVNToolWindow))]
-    public sealed class TsvnPackage : AsyncPackage
+    public sealed class TsvnPackage : AsyncPackage, IVsTrackProjectDocumentsEvents2
     {
-        public DTE2 Dte;
         private string _solutionDir;
         private string _currentFilePath;
         private string _tortoiseProc;
-        private ProjectItemsEvents _projectItemsEvents;
         private OleMenuCommandService _mcs;
+        private IVsTrackProjectDocuments2 projectDocTracker;
 
         #region Package Members
         protected override async Task InitializeAsync(System.Threading.CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             await base.InitializeAsync(cancellationToken, progress);
 
-            await BackgroundThreadInitialization();
+            _tortoiseProc = FileHelper.GetTortoiseSvnProc();
+
+            TSVNToolWindowCommand.Initialize(this);
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            projectDocTracker = await GetServiceAsync(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
+            Assumes.Present(projectDocTracker);
+            projectDocTracker.AdviseTrackProjectDocumentsEvents(this, out var cookie);
 
             await MainThreadInitialization();
 
             return;
-        }
-
-        private async Task BackgroundThreadInitialization()
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(DisposalToken);
-
-            Dte = await GetServiceAsync(typeof(DTE2)) as DTE2;
-            Assumes.Present(Dte);
-
-            _projectItemsEvents = (Dte.Events as Events2).ProjectItemsEvents;
-            _projectItemsEvents.ItemAdded += ProjectItemsEvents_ItemAdded;
-            _projectItemsEvents.ItemRenamed += ProjectItemsEvents_ItemRenamed;
-            _projectItemsEvents.ItemRemoved += ProjectItemsEvents_ItemRemoved;
-
-            FileHelper.Dte = Dte;
-            CommandHelper.Dte = Dte;
-            OptionsHelper.Dte = Dte;
-
-            _tortoiseProc = FileHelper.GetTortoiseSvnProc();
-
-            TSVNToolWindowCommand.Initialize(this);
         }
 
         private async Task MainThreadInitialization()
@@ -110,31 +95,14 @@ namespace SamirBoulema.TSVN
 
             _mcs.AddCommand(CreateCommand(ShowOptionsDialogCommand, PkgCmdIdList.ShowOptionsDialogCommand));
 
-            var tsvnMenu = CreateCommand(null, PkgCmdIdList.TSvnMenu);
-            var tsvnContextMenu = CreateCommand(null, PkgCmdIdList.TSvnContextMenu);
-            switch (Dte.Version)
-            {
-                case "11.0":
-                case "12.0":
-                    tsvnMenu.Text = "TSVN";
-                    tsvnContextMenu.Text = "TSVN";
-                    break;
-                default:
-                    tsvnMenu.Text = "Tsvn";
-                    tsvnContextMenu.Text = "Tsvn";
-                    break;
-            }
-            _mcs.AddCommand(tsvnMenu);
-            _mcs.AddCommand(tsvnContextMenu);
+            _mcs.AddCommand(CreateCommand(null, PkgCmdIdList.TSvnMenu));
+            _mcs.AddCommand(CreateCommand(null, PkgCmdIdList.TSvnContextMenu));
         }
 
         #endregion
 
         #region Events
-        private void ProjectItemsEvents_ItemRenamed(ProjectItem projectItem, string oldName)
-            => _ = ProjectItemsEvents_ItemRenamedAsync(projectItem, oldName);
-
-        private async Task ProjectItemsEvents_ItemRenamedAsync(ProjectItem projectItem, string oldName)
+        private async Task ProjectItemsEvents_ItemRenamedAsync(string[] oldFilePaths, string[] newFilePaths)
         {
             var options = await OptionsHelper.GetOptions();
 
@@ -143,26 +111,17 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var newFilePath = projectItem.Properties?.Item("FullPath").Value.ToString();
-            if (string.IsNullOrEmpty(newFilePath))
+            for (var i = 0; i < oldFilePaths.Length - 1; i++)
             {
-                return;
+                // Temporarily rename the new file to the old file 
+                File.Move(newFilePaths[i], oldFilePaths[i]);
+
+                // So that we can svn rename it properly
+                CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}");
             }
-            var oldFilePath = Path.Combine(Path.GetDirectoryName(newFilePath), oldName);
-
-            // Temporarily rename the new file to the old file 
-            File.Move(newFilePath, oldFilePath);
-
-            // So that we can svn rename it properly
-            CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePath} {newFilePath}");
         }
 
-        private void ProjectItemsEvents_ItemAdded(ProjectItem projectItem)
-            => _ = ProjectItemsEvents_ItemAdded_Async(projectItem);
-
-        private async Task ProjectItemsEvents_ItemAdded_Async(ProjectItem projectItem)
+        private async Task ProjectItemsEvents_ItemAdded_Async(string[] filePaths)
         {
             var options = await OptionsHelper.GetOptions();
 
@@ -171,23 +130,15 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
-
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
-            CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+
+            foreach (var filePath in filePaths)
+            {
+                CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+            }
         }
 
-        private void ProjectItemsEvents_ItemRemoved(ProjectItem projectItem)
-            => _ = ProjectItemsEvents_ItemRemoved_Async(projectItem);
-
-        private async Task ProjectItemsEvents_ItemRemoved_Async(ProjectItem projectItem)
+        private async Task ProjectItemsEvents_ItemRemoved_Async(string[] filePaths)
         {
             var options = await OptionsHelper.GetOptions();
 
@@ -196,17 +147,12 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var filePath = projectItem.Properties?.Item("FullPath").Value.ToString();
-
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
-            CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+
+            foreach (var filePath in filePaths)
+            {
+                CommandHelper.StartProcess(_tortoiseProc, $"/command:remove /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+            }
         }
 
         #endregion
@@ -251,7 +197,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ExecuteCommand("File.SaveAll", string.Empty);
+            await VS.Commands.ExecuteAsync("File.SaveAll");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
@@ -270,7 +216,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ActiveDocument?.Save();
+            await VS.Commands.ExecuteAsync("File.Save");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
@@ -289,7 +235,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ActiveDocument?.Save();
+            await VS.Commands.ExecuteAsync("File.Save");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:rename /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
@@ -306,7 +252,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ExecuteCommand("File.SaveAll", string.Empty);
+            await VS.Commands.ExecuteAsync("File.SaveAll");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_solutionDir}\" /rev /closeonend:{closeOnEnd}");
@@ -325,7 +271,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ActiveDocument?.Save();
+            await VS.Commands.ExecuteAsync("File.Save");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:update /path:\"{_currentFilePath}\" /rev /closeonend:{closeOnEnd}");
@@ -358,7 +304,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ExecuteCommand("File.SaveAll", string.Empty);
+            await VS.Commands.ExecuteAsync("File.SaveAll");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:commit /path:\"{_solutionDir}\" /closeonend:{closeOnEnd}");
@@ -377,7 +323,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ActiveDocument?.Save();
+            await VS.Commands.ExecuteAsync("File.Save");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:commit /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
@@ -536,7 +482,7 @@ namespace SamirBoulema.TSVN
                 return;
             }
 
-            Dte.ActiveDocument?.Save();
+            await VS.Commands.ExecuteAsync("File.Save");
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
             CommandHelper.StartProcess(_tortoiseProc, $"/command:add /path:\"{_currentFilePath}\" /closeonend:{closeOnEnd}");
@@ -765,17 +711,17 @@ namespace SamirBoulema.TSVN
 
         private async Task Blame()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
             _currentFilePath = await FileHelper.GetPath();
-            var currentLineIndex = ((TextDocument)Dte.ActiveDocument?.Object(string.Empty))?.Selection.CurrentLine ?? 0;
 
             if (string.IsNullOrEmpty(_currentFilePath))
             {
                 return;
             }
 
-            CommandHelper.StartProcess(_tortoiseProc, $"/command:blame /path:\"{_currentFilePath}\" /line:{currentLineIndex}");
+            var documentView = await VS.Documents.GetActiveDocumentViewAsync();
+            var lineNumber = documentView?.TextView?.Selection.ActivePoint.Position.GetContainingLine().LineNumber;
+
+            CommandHelper.StartProcess(_tortoiseProc, $"/command:blame /path:\"{_currentFilePath}\" /line:{lineNumber}");
         }
 
         private void DeleteFileCommand(object sender, EventArgs e)
@@ -795,8 +741,77 @@ namespace SamirBoulema.TSVN
 
         private void ShowOptionsDialogCommand(object sender, EventArgs e)
         {
-            new OptionsDialog(Dte).ShowDialog();
+            new OptionsDialog().ShowDialog();
         }
+
+        public int OnQueryAddFiles(IVsProject pProject, int cFiles, string[] rgpszMkDocuments, VSQUERYADDFILEFLAGS[] rgFlags, VSQUERYADDFILERESULTS[] pSummaryResult, VSQUERYADDFILERESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterAddFilesEx(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDFILEFLAGS[] rgFlags)
+        {
+            _ = ProjectItemsEvents_ItemAdded_Async(rgpszMkDocuments);
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterAddDirectoriesEx(int cProjects, int cDirectories, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDDIRECTORYFLAGS[] rgFlags)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterRemoveFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEFILEFLAGS[] rgFlags)
+        {
+            _ = ProjectItemsEvents_ItemRemoved_Async(rgpszMkDocuments);
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterRemoveDirectories(int cProjects, int cDirectories, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEDIRECTORYFLAGS[] rgFlags)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryRenameFiles(IVsProject pProject, int cFiles, string[] rgszMkOldNames, string[] rgszMkNewNames, VSQUERYRENAMEFILEFLAGS[] rgFlags, VSQUERYRENAMEFILERESULTS[] pSummaryResult, VSQUERYRENAMEFILERESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterRenameFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, VSRENAMEFILEFLAGS[] rgFlags)
+        {
+            _ = ProjectItemsEvents_ItemRenamedAsync(rgszMkOldNames, rgszMkNewNames);
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryRenameDirectories(IVsProject pProject, int cDirs, string[] rgszMkOldNames, string[] rgszMkNewNames, VSQUERYRENAMEDIRECTORYFLAGS[] rgFlags, VSQUERYRENAMEDIRECTORYRESULTS[] pSummaryResult, VSQUERYRENAMEDIRECTORYRESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterRenameDirectories(int cProjects, int cDirs, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, VSRENAMEDIRECTORYFLAGS[] rgFlags)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryAddDirectories(IVsProject pProject, int cDirectories, string[] rgpszMkDocuments, VSQUERYADDDIRECTORYFLAGS[] rgFlags, VSQUERYADDDIRECTORYRESULTS[] pSummaryResult, VSQUERYADDDIRECTORYRESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryRemoveFiles(IVsProject pProject, int cFiles, string[] rgpszMkDocuments, VSQUERYREMOVEFILEFLAGS[] rgFlags, VSQUERYREMOVEFILERESULTS[] pSummaryResult, VSQUERYREMOVEFILERESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnQueryRemoveDirectories(IVsProject pProject, int cDirectories, string[] rgpszMkDocuments, VSQUERYREMOVEDIRECTORYFLAGS[] rgFlags, VSQUERYREMOVEDIRECTORYRESULTS[] pSummaryResult, VSQUERYREMOVEDIRECTORYRESULTS[] rgResults)
+        {
+            return VSConstants.S_OK;
+        }
+
+        public int OnAfterSccStatusChanged(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, uint[] rgdwSccStatus)
+        {
+            return VSConstants.S_OK;
+        }
+
         #endregion
     }
 }

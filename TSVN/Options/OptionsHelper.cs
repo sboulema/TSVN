@@ -1,4 +1,4 @@
-﻿using EnvDTE80;
+﻿using Community.VisualStudio.Toolkit;
 using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using System.IO;
@@ -10,7 +10,6 @@ namespace SamirBoulema.TSVN.Options
     public static class OptionsHelper
     {
         private const string ApplicationName = "TSVN";
-        public static DTE2 Dte;
         public static Options Options;
 
         static OptionsHelper()
@@ -20,9 +19,8 @@ namespace SamirBoulema.TSVN.Options
 
         public static async Task<Options> GetOptions()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var solutionFilePath = Dte.Solution.FileName;
+            var solution = await VS.Solution.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FileName;
 
             if (!File.Exists(solutionFilePath))
             {
@@ -55,7 +53,8 @@ namespace SamirBoulema.TSVN.Options
 
             var json = JsonConvert.SerializeObject(options);
 
-            var solutionFilePath = Dte.Solution.FileName;
+            var solution = await VS.Solution.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FileName;
 
             if (!File.Exists(solutionFilePath))
             {

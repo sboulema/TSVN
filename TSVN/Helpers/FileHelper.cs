@@ -1,16 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using EnvDTE;
-using EnvDTE80;
+using Community.VisualStudio.Toolkit;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.Win32;
+using Task = System.Threading.Tasks.Task;
 
 namespace SamirBoulema.TSVN.Helpers
 {
     public static class FileHelper
     {
-        public static DTE2 Dte;
         private const string DEFAULT_PROC_PATH = @"C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe";
 
         public static string GetTortoiseSvnProc()
@@ -28,19 +27,14 @@ namespace SamirBoulema.TSVN.Helpers
         public static string GetSvnExec() 
             => GetTortoiseSvnProc().Replace("TortoiseProc.exe", "svn.exe");
 
-        public static void SaveAllFiles()
-        {
-            Dte.ExecuteCommand("File.SaveAll");
-        }
-
-        public static void OpenFile(string filePath)
+        public static async Task OpenFile(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 return;
             }
 
-            Dte.ExecuteCommand("File.OpenFile", filePath);
+            await VS.Commands.ExecuteAsync("File.OpenFile", filePath);
         }
 
         /// <summary>
@@ -53,25 +47,24 @@ namespace SamirBoulema.TSVN.Helpers
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             // Context menu in the Solution Explorer
-            if (Dte.ActiveWindow.Type == vsWindowType.vsWindowTypeSolutionExplorer)
-            {
-                if (!(((object[])Dte.ToolWindows.SolutionExplorer.SelectedItems)[0] is UIHierarchyItem selectedItem))
-                {
-                    return string.Empty;
-                }
+            var selectedItem = await VS.Selection.GetSelectedItemAsync();
 
-                if (selectedItem.Object is Project || selectedItem.Object is Solution)
+            if (selectedItem != null)
+            {
+                if (selectedItem.Type == NodeType.Project ||
+                    selectedItem.Type == NodeType.Solution)
                 {
-                    return Path.GetDirectoryName((selectedItem.Object as Solution).FileName);
+                    return Path.GetDirectoryName(selectedItem.FileName);
                 }
-                else if (selectedItem.Object is ProjectItem)
+                else if (selectedItem.Type == NodeType.PhysicalFile)
                 {
-                    return (selectedItem.Object as ProjectItem).FileNames[0];
+                    return selectedItem.FileName;
                 }
             }
 
             // Context menu in the Code Editor
-            return Dte.ActiveDocument.FullName;
+            var documentView = await VS.Documents.GetActiveDocumentViewAsync();
+            return documentView?.Document?.FilePath;
         }
 
         private static string GetRegKeyValue()
