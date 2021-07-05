@@ -1,5 +1,4 @@
-﻿using SamirBoulema.TSVN.Properties;
-using SamirBoulema.TSVN.Helpers;
+﻿using SamirBoulema.TSVN.Helpers;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using SamirBoulema.TSVN.Models;
@@ -13,24 +12,52 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Task = System.Threading.Tasks.Task;
+using Community.VisualStudio.Toolkit;
+using Settings = SamirBoulema.TSVN.Properties.Settings;
 
 namespace SamirBoulema.TSVN
 {
     /// <summary>
     /// Interaction logic for TSVNToolWindowControl.
     /// </summary>
-    public partial class TSVNToolWindowControl
+    public partial class TSVNToolWindowControl : UserControl
     {
         public PendingChangesViewModel ViewModel;
 
         public TSVNToolWindowControl()
         {
+            Loaded += OnLoaded;
+
             InitializeComponent();
 
             ViewModel = new PendingChangesViewModel();
 
             DataContext = ViewModel;
         }
+
+        private void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            VS.Events.DocumentEvents.Saved += DocumentEvents_Saved;
+
+            VS.Events.SolutionEvents.OnAfterOpenSolution += SolutionEvents_OnAfterOpenSolution1;
+
+            HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
+
+            _ = Update();
+        }
+
+        private void SolutionEvents_OnAfterOpenSolution1(SolutionItem obj)
+        {
+            _ = Update();
+        }
+
+        private void DocumentEvents_Saved(object sender, string e)
+        {
+            _ = Update();
+        }
+
+        private async Task Update()
+            => Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
 
         public void Update(List<string> pendingChanges, string solutionDir)
         {

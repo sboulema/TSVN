@@ -1,49 +1,34 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
-using SamirBoulema.TSVN.Helpers;
-using Task = System.Threading.Tasks.Task;
 using Community.VisualStudio.Toolkit;
-using Settings = SamirBoulema.TSVN.Properties.Settings;
+using System;
+using System.Windows;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Imaging;
 
 namespace SamirBoulema.TSVN
 {
-    [Guid("81a57ae8-6550-4dd0-940c-503d379550cc")]
-    public class TSVNToolWindow : ToolWindowPane
+    public class TSVNToolWindow : BaseToolWindow<TSVNToolWindow>
     {
-        private readonly TSVNToolWindowControl _tsvnToolWindowControl;
+        public override string GetTitle(int toolWindowId)
+            => "TSVN Pending Changes";
 
-        public TSVNToolWindow() : base(null)
+        public override Type PaneType => typeof(Pane);
+
+        public override async Task<FrameworkElement> CreateAsync(int toolWindowId, CancellationToken cancellationToken)
         {
-            Caption = "TSVN Pending Changes";
-            Content = new TSVNToolWindowControl();
-
-            _tsvnToolWindowControl = Content as TSVNToolWindowControl;
+            await Package.JoinableTaskFactory.SwitchToMainThreadAsync();
+            return new TSVNToolWindowControl();
         }
 
-        public override void OnToolWindowCreated() => _ = ToolWindowCreated();
-
-        private async Task ToolWindowCreated()
+        [Guid("81a57ae8-6550-4dd0-940c-503d379550cc")]
+        internal class Pane : ToolWindowPane
         {
-            VS.Events.DocumentEvents.Saved += DocumentEvents_Saved;
-
-            VS.Events.SolutionEvents.OnAfterOpenSolution += SolutionEvents_OnAfterOpenSolution;
-
-            _tsvnToolWindowControl.HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
-
-            _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
+            public Pane()
+            {
+                BitmapImageMoniker = KnownMonikers.StatusInformation;
+            }
         }
-
-        private void SolutionEvents_OnAfterOpenSolution(object sender, Microsoft.VisualStudio.Shell.Events.OpenSolutionEventArgs e)
-        {
-            _ = Update();
-        }
-
-        private void DocumentEvents_Saved(object sender, string e)
-        {
-            _ = Update();
-        }
-
-        private async Task Update()
-            => _tsvnToolWindowControl.Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
     }
 }

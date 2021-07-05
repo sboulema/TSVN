@@ -89,18 +89,13 @@ namespace SamirBoulema.TSVN.Helpers
 
         public static async Task<string> GetRepositoryRoot(string path = "")
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            var svnInfo = string.Empty;
-
             try
             {
                 // Override any logic with the solution specific Root Folder setting
                 var options = await OptionsHelper.GetOptions();
-                var rootFolder = options.RootFolder;
-                if (!string.IsNullOrEmpty(rootFolder))
+                if (!string.IsNullOrEmpty(options.RootFolder))
                 {
-                    return rootFolder;
+                    return options.RootFolder;
                 }
 
                 // Try to find the current working folder, either by open document or by open solution
@@ -131,7 +126,7 @@ namespace SamirBoulema.TSVN.Helpers
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = $"/c cd /D \"{path}\" && \"{FileHelper.GetSvnExec()}\" info",
+                        Arguments = $"/c cd /D \"{path}\" && \"{FileHelper.GetSvnExec()}\" info --show-item wc-root",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -142,35 +137,21 @@ namespace SamirBoulema.TSVN.Helpers
 
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    var line = await proc.StandardOutput.ReadLineAsync();
-                    LogHelper.Log($"SvnInfo: {line}");
-                    svnInfo += line;
-                    if (line?.StartsWith("Working Copy Root Path:") ?? false)
-                    {
-                        rootFolder = line.Substring(24);
-                    }
+                    options.RootFolder = await proc.StandardOutput.ReadLineAsync();
                 }
 
-                while (!proc.StandardError.EndOfStream)
-                {
-                    var line = await proc.StandardError.ReadLineAsync();
-                    svnInfo += line;
-                    LogHelper.Log($"SvnInfo: {line}");
-                }
-
-                options.RootFolder = rootFolder;
                 await OptionsHelper.SaveOptions(options);
 
-                if (string.IsNullOrEmpty(rootFolder))
+                if (string.IsNullOrEmpty(options.RootFolder))
                 {
                     ShowMissingSolutionDirMessage();
                 }
 
-                return rootFolder;
+                return options.RootFolder;
             }
             catch (Exception e)
             {
-                LogHelper.Log(svnInfo, e);
+                LogHelper.Log(e);
             }
 
             ShowMissingSolutionDirMessage();
@@ -195,6 +176,43 @@ namespace SamirBoulema.TSVN.Helpers
                 VS.MessageBox.Show("TortoiseSVN not found. Did you install TortoiseSVN?", "TortoiseSVN not found",
                     OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK);
             }
+        }
+
+        public static async Task RunTortoiseSvnCommand(string command, string args = "")
+        {
+            var solutionDir = await GetRepositoryRoot();
+
+            if (string.IsNullOrEmpty(solutionDir))
+            {
+                return;
+            }
+
+            var tortoiseProc = FileHelper.GetTortoiseSvnProc();
+
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
+
+            StartProcess(tortoiseProc, $"/command:{command} /path:\"{solutionDir}\" {args} /closeonend:{closeOnEnd}");
+        }
+
+        public static async Task RunTortoiseSvnFileCommand(string command, string args = "", string filePath = "")
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                filePath = await FileHelper.GetPath();
+            }
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            var tortoiseProc = FileHelper.GetTortoiseSvnProc();
+
+            var options = await OptionsHelper.GetOptions();
+            var closeOnEnd = options.CloseOnEnd ? 1 : 0;
+
+            StartProcess(tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}");
         }
     }
 }

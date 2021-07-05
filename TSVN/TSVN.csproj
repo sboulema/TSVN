@@ -90,8 +90,43 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Guids.cs" />
+    <Compile Include="Commands\ApplyPatchCommand.cs" />
+    <Compile Include="Commands\AddFileCommand.cs" />
+    <Compile Include="Commands\RevertFileCommand.cs" />
+    <Compile Include="Commands\DiffPreviousCommand.cs" />
+    <Compile Include="Commands\ShowOptionsDialogCommand.cs" />
+    <Compile Include="Commands\UpdateFileCommand.cs" />
+    <Compile Include="Commands\PropertiesCommand.cs" />
+    <Compile Include="Commands\UpdateToRevisionFileCommand.cs" />
+    <Compile Include="Commands\MergeFileCommand.cs" />
+    <Compile Include="Commands\RepoBrowserFileCommand.cs" />
+    <Compile Include="Commands\DiskBrowserFileCommand.cs" />
+    <Compile Include="Commands\UnlockCommand.cs" />
+    <Compile Include="Commands\LockCommand.cs" />
+    <Compile Include="Commands\CleanupCommand.cs" />
+    <Compile Include="Commands\ShowLogFileCommand.cs" />
+    <Compile Include="Commands\BlameCommand.cs" />
+    <Compile Include="Commands\DifferencesCommand.cs" />
+    <Compile Include="Commands\MergeCommand.cs" />
+    <Compile Include="Commands\SwitchCommand.cs" />
+    <Compile Include="Commands\DeleteFileCommand.cs" />
+    <Compile Include="Commands\BranchCommand.cs" />
+    <Compile Include="Commands\RepoBrowserCommand.cs" />
+    <Compile Include="Commands\LockFileCommand.cs" />
+    <Compile Include="Commands\UnlockFileCommand.cs" />
+    <Compile Include="Commands\RenameFileCommand.cs" />
+    <Compile Include="Commands\CommitFileCommand.cs" />
+    <Compile Include="Commands\DiskBrowserCommand.cs" />
+    <Compile Include="Commands\RevertCommand.cs" />
+    <Compile Include="Commands\UnshelveCommand.cs" />
+    <Compile Include="Commands\ShelveCommand.cs" />
+    <Compile Include="Commands\TSVNToolWindowCommand.cs" />
+    <Compile Include="Commands\ShowLogCommand.cs" />
+    <Compile Include="Commands\CommitCommand.cs" />
+    <Compile Include="Commands\CreatePatchCommand.cs" />
+    <Compile Include="Commands\UpdateToRevisionCommand.cs" />
+    <Compile Include="Commands\UpdateCommand.cs" />
+    <Compile Include="Commands\ShowChangesCommand.cs" />
     <Compile Include="Helpers\CommandHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\LogHelper.cs" />
@@ -104,7 +139,6 @@
       <DependentUpon>OptionsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Options\OptionsHelper.cs" />
-    <Compile Include="PkgCmdID.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -112,9 +146,13 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs" />
+    <Compile Include="TSVN.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TSVN.vsct</DependentUpon>
+    </Compile>
     <Compile Include="TSVNPackage.cs" />
     <Compile Include="TSVNToolWindow.cs" />
-    <Compile Include="TSVNToolWindowCommand.cs" />
     <Compile Include="TSVNToolWindowControl.xaml.cs">
       <DependentUpon>TSVNToolWindowControl.xaml</DependentUpon>
     </Compile>
@@ -132,10 +170,14 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="README.md" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
+    <VSCTCompile Include="TSVN.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>TSVN.cs</LastGenOutput>
+    </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -159,7 +201,12 @@
       <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.Toolkit">
-      <Version>15.0.75.165-pre</Version>
+      <Version>15.0.75.172-pre</Version>
+    </PackageReference>
+    <PackageReference Include="Community.VisualStudio.VSCT">
+      <Version>16.0.29.6</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.ApplicationInsights">
       <Version>2.17.0</Version>
@@ -180,7 +227,6 @@
     <Content Include="Resources\tortoisesvn.png">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="TSVN.vsct" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Options\OptionsDialog.resx">
