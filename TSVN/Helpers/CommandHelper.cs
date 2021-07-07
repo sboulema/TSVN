@@ -18,10 +18,10 @@ namespace SamirBoulema.TSVN.Helpers
         public static async Task Commit()
         {
             await VS.Commands.ExecuteAsync("File.SaveAll");
-            Commit(await GetRepositoryRoot());
+            await Commit(await GetRepositoryRoot());
         }
 
-        public static void Commit(string filePath)
+        public static async Task Commit(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -29,12 +29,12 @@ namespace SamirBoulema.TSVN.Helpers
             }
 
             var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
-            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
-        public static async Task Revert() => Revert(await GetRepositoryRoot());
+        public static async Task Revert() => await Revert(await GetRepositoryRoot());
 
-        public static void Revert(string filePath)
+        public static async Task Revert(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -42,17 +42,17 @@ namespace SamirBoulema.TSVN.Helpers
             }
 
             var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
-            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:{closeOnEnd}");
+            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:{closeOnEnd}");
         }
 
-        public static void ShowDifferences(string filePath)
+        public static async Task ShowDifferences(string filePath)
         {
             if (string.IsNullOrEmpty(filePath))
             {
                 return;
             }
 
-            StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
+            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
         }
 
         public static List<string> GetPendingChanges()
@@ -144,7 +144,7 @@ namespace SamirBoulema.TSVN.Helpers
 
                 if (string.IsNullOrEmpty(options.RootFolder))
                 {
-                    ShowMissingSolutionDirMessage();
+                    await ShowMissingSolutionDirMessage();
                 }
 
                 return options.RootFolder;
@@ -154,18 +154,18 @@ namespace SamirBoulema.TSVN.Helpers
                 LogHelper.Log(e);
             }
 
-            ShowMissingSolutionDirMessage();
+            await ShowMissingSolutionDirMessage();
 
             return string.Empty;
         }
 
-        private static void ShowMissingSolutionDirMessage()
+        private static async Task ShowMissingSolutionDirMessage()
         {
-            VS.MessageBox.Show("Unable to determine the solution directory location. Please manually set the directory location in the settings.",
-                "Missing Working Copy Root Path", OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK);
+            await VS.MessageBox.ShowErrorAsync("Missing Working Copy Root Path",
+                "Unable to determine the solution directory location. Please manually set the directory location in the settings.");
         }
 
-        public static void StartProcess(string application, string args)
+        public static async Task StartProcess(string application, string args)
         {
             try
             {
@@ -173,8 +173,7 @@ namespace SamirBoulema.TSVN.Helpers
             }
             catch (Exception)
             {
-                VS.MessageBox.Show("TortoiseSVN not found. Did you install TortoiseSVN?", "TortoiseSVN not found",
-                    OLEMSGICON.OLEMSGICON_CRITICAL, OLEMSGBUTTON.OLEMSGBUTTON_OK);
+                await VS.MessageBox.ShowErrorAsync("TortoiseSVN not found", "TortoiseSVN not found. Did you install TortoiseSVN?");
             }
         }
 
@@ -192,7 +191,7 @@ namespace SamirBoulema.TSVN.Helpers
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
 
-            StartProcess(tortoiseProc, $"/command:{command} /path:\"{solutionDir}\" {args} /closeonend:{closeOnEnd}");
+            await StartProcess(tortoiseProc, $"/command:{command} /path:\"{solutionDir}\" {args} /closeonend:{closeOnEnd}");
         }
 
         public static async Task RunTortoiseSvnFileCommand(string command, string args = "", string filePath = "")
@@ -212,7 +211,7 @@ namespace SamirBoulema.TSVN.Helpers
             var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
 
-            StartProcess(tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}");
+            await StartProcess (tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}");
         }
     }
 }
