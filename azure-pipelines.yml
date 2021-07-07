@@ -4,7 +4,7 @@ pool:
 trigger:
   branches:
     include:
-    - master
+    - main
     - feature/*
 
 name: 5.0.$(Build.BuildId)
