@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using Task = System.Threading.Tasks.Task;
 using Community.VisualStudio.Toolkit;
 using Settings = SamirBoulema.TSVN.Properties.Settings;
+using File = System.IO.File;
 
 namespace SamirBoulema.TSVN
 {

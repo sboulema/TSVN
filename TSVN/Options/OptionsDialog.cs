@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
+using File = System.IO.File;
 
 namespace SamirBoulema.TSVN.Options
 {
@@ -25,8 +26,8 @@ namespace SamirBoulema.TSVN.Options
 
         private async Task LoadDialog()
         {
-            var solution = await VS.Solution.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FileName;
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FullPath;
 
             if (File.Exists(solutionFilePath))
             {

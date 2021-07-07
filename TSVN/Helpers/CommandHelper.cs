@@ -101,12 +101,12 @@ namespace SamirBoulema.TSVN.Helpers
                 // Try to find the current working folder, either by open document or by open solution
                 if (string.IsNullOrEmpty(path))
                 {
-                    var solution = await VS.Solution.GetCurrentSolutionAsync();
+                    var solution = await VS.Solutions.GetCurrentSolutionAsync();
                     var documentView = await VS.Documents.GetActiveDocumentViewAsync();
 
-                    if (!string.IsNullOrEmpty(solution.FileName))
+                    if (!string.IsNullOrEmpty(solution.FullPath))
                     {
-                        path = Path.GetDirectoryName(solution.FileName);
+                        path = Path.GetDirectoryName(solution.FullPath);
                     }
                     else if (documentView != null)
                     {

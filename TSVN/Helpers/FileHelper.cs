@@ -51,14 +51,14 @@ namespace SamirBoulema.TSVN.Helpers
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == NodeType.Project ||
-                    selectedItem.Type == NodeType.Solution)
+                if (selectedItem.Type == SolutionItemType.Project ||
+                    selectedItem.Type == SolutionItemType.Solution)
                 {
-                    return Path.GetDirectoryName(selectedItem.FileName);
+                    return Path.GetDirectoryName(selectedItem.FullPath);
                 }
-                else if (selectedItem.Type == NodeType.PhysicalFile)
+                else if (selectedItem.Type == SolutionItemType.PhysicalFile)
                 {
-                    return selectedItem.FileName;
+                    return selectedItem.FullPath;
                 }
             }
 

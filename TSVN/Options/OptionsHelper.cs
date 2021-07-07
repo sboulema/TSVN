@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
+using File = System.IO.File;
 
 namespace SamirBoulema.TSVN.Options
 {
@@ -19,8 +20,8 @@ namespace SamirBoulema.TSVN.Options
 
         public static async Task<Options> GetOptions()
         {
-            var solution = await VS.Solution.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FileName;
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FullPath;
 
             if (!File.Exists(solutionFilePath))
             {
@@ -53,8 +54,8 @@ namespace SamirBoulema.TSVN.Options
 
             var json = JsonConvert.SerializeObject(options);
 
-            var solution = await VS.Solution.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FileName;
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FullPath;
 
             if (!File.Exists(solutionFilePath))
             {
