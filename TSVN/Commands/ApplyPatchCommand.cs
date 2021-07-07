@@ -32,7 +32,7 @@ namespace SamirBoulema.TSVN.Commands
                 return;
             }
 
-            CommandHelper.StartProcess("TortoiseMerge.exe", $"/diff:\"{openFileDialog.FileName}\" /patchpath:\"{solutionDir}\"");
+            await CommandHelper.StartProcess("TortoiseMerge.exe", $"/diff:\"{openFileDialog.FileName}\" /patchpath:\"{solutionDir}\"");
         }
     }
 }

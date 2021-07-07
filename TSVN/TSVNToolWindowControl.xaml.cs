@@ -303,19 +303,19 @@ namespace SamirBoulema.TSVN
         private void Commit_Click(object sender, RoutedEventArgs e)
         {
             var filePath = ((e.OriginalSource as MenuItem).DataContext as TSVNTreeViewItem).Path;
-            CommandHelper.Commit(filePath);
+            CommandHelper.Commit(filePath).FireAndForget();
         }
 
         private void Revert_Click(object sender, RoutedEventArgs e)
         {
             var filePath = ((e.OriginalSource as MenuItem).DataContext as TSVNTreeViewItem).Path;
-            CommandHelper.Revert(filePath);
+            CommandHelper.Revert(filePath).FireAndForget();
         }
 
         private void ShowDifferences_Click(object sender, RoutedEventArgs e)
         {
             var filePath = ((e.OriginalSource as MenuItem).DataContext as TSVNTreeViewItem).Path;
-            CommandHelper.ShowDifferences(filePath);
+            CommandHelper.ShowDifferences(filePath).FireAndForget();
         }
     }
 }

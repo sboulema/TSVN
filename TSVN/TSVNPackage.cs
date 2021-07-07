@@ -88,7 +88,7 @@ namespace SamirBoulema.TSVN
                 File.Move(newFilePaths[i], oldFilePaths[i]);
 
                 // So that we can svn rename it properly
-                CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}");
+                await CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}");
             }
         }
 

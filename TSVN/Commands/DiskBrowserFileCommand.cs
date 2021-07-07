@@ -17,7 +17,7 @@ namespace SamirBoulema.TSVN.Commands
                 return;
             }
 
-            CommandHelper.StartProcess("explorer.exe", filePath);
+            await CommandHelper.StartProcess("explorer.exe", filePath);
         }
     }
 }
