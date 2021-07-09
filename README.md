@@ -2,7 +2,7 @@
 Control TortoiseSVN from within Visual Studio
 
 [![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/sboulema.TSVN)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=1)
-[![Donate](https://img.shields.io/badge/%F0%9F%92%B0-Donate-green.svg?style=flat)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X3S369MR8JYCL&source=url)
+[![Sponsor](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/sboulema)
 
 # Getting started
 1. Install [TortoiseSVN](http://www.tortoisesvn.net) with "command line client tools"
@@ -51,7 +51,3 @@ A pending changes window with the most important commands:
 * `(S)VN Unshelve` - Ctrl+Shift+Alt+S, P
 * `(S)VN L(o)ck` - Ctrl+Shift+Alt+S, O
 * `(S)VN Unloc(k)` - Ctrl+Shift+Alt+S, K
-
----
-
-![VS2017 Partner](http://i.imgur.com/wlgwRF1.png)

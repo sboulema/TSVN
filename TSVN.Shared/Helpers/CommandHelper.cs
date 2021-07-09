@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.Shell;
 using Task = System.Threading.Tasks.Task;
 using Community.VisualStudio.Toolkit;
 using Settings = SamirBoulema.TSVN.Properties.Settings;
-using Microsoft.VisualStudio.Shell.Interop;
 
 namespace SamirBoulema.TSVN.Helpers
 {
@@ -17,45 +16,23 @@ namespace SamirBoulema.TSVN.Helpers
     {
         public static async Task Commit()
         {
-            await VS.Commands.ExecuteAsync("File.SaveAll");
-            await Commit(await GetRepositoryRoot());
+            await VS.Commands.ExecuteAsync("File.SaveAll").ConfigureAwait(false);
+            await RunTortoiseSvnCommand("commit").ConfigureAwait(false);
         }
 
         public static async Task Commit(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
+            => await RunTortoiseSvnFileCommand("commit", filePath: filePath).ConfigureAwait(false);
 
-            var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
-            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:commit /path:\"{filePath}\" /closeonend:{closeOnEnd}");
-        }
-
-        public static async Task Revert() => await Revert(await GetRepositoryRoot());
+        public static async Task Revert()
+            => await RunTortoiseSvnCommand("revert").ConfigureAwait(false);
 
         public static async Task Revert(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-
-            var closeOnEnd = OptionsHelper.Options.CloseOnEnd ? 1 : 0;
-            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:revert /path:\"{filePath}\" /closeonend:{closeOnEnd}");
-        }
+            => await RunTortoiseSvnFileCommand("revert", filePath: filePath).ConfigureAwait(false);
 
         public static async Task ShowDifferences(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
+            => await RunTortoiseSvnFileCommand("diff", filePath: filePath).ConfigureAwait(false);
 
-            await StartProcess(FileHelper.GetTortoiseSvnProc(), $"/command:diff /path:\"{filePath}\"");
-        }
-
-        public static List<string> GetPendingChanges()
+        public static async Task<List<string>> GetPendingChanges()
         {
             var pendingChanges = new List<string>();
 
@@ -73,10 +50,12 @@ namespace SamirBoulema.TSVN.Helpers
                         CreateNoWindow = true
                     }
                 };
+
                 proc.Start();
+
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    pendingChanges.Add(proc.StandardOutput.ReadLine());
+                    pendingChanges.Add(await proc.StandardOutput.ReadLineAsync().ConfigureAwait(false));
                 }
             }
             catch (Exception e)
@@ -93,6 +72,7 @@ namespace SamirBoulema.TSVN.Helpers
             {
                 // Override any logic with the solution specific Root Folder setting
                 var options = await OptionsHelper.GetOptions();
+
                 if (!string.IsNullOrEmpty(options.RootFolder))
                 {
                     return options.RootFolder;
@@ -101,16 +81,16 @@ namespace SamirBoulema.TSVN.Helpers
                 // Try to find the current working folder, either by open document or by open solution
                 if (string.IsNullOrEmpty(path))
                 {
-                    var solution = await VS.Solutions.GetCurrentSolutionAsync();
+                    var solution = await VS.Solution.GetCurrentSolutionAsync();
                     var documentView = await VS.Documents.GetActiveDocumentViewAsync();
 
-                    if (!string.IsNullOrEmpty(solution.FullPath))
+                    if (!string.IsNullOrEmpty(solution?.FileName))
                     {
-                        path = Path.GetDirectoryName(solution.FullPath);
+                        path = Path.GetDirectoryName(solution.FileName);
                     }
-                    else if (documentView != null)
+                    else if (!string.IsNullOrEmpty(documentView?.Document?.FilePath))
                     {
-                        path = Path.GetDirectoryName(documentView?.Document?.FilePath);
+                        path = Path.GetDirectoryName(documentView.Document.FilePath);
                     }
                 }
 
@@ -133,18 +113,26 @@ namespace SamirBoulema.TSVN.Helpers
                         CreateNoWindow = true
                     }
                 };
+
                 proc.Start();
+
+                var errors = string.Empty;
+
+                while (!proc.StandardError.EndOfStream)
+                {
+                    errors += await proc.StandardError.ReadLineAsync().ConfigureAwait(false);
+                }
 
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    options.RootFolder = await proc.StandardOutput.ReadLineAsync();
+                    options.RootFolder = await proc.StandardOutput.ReadLineAsync().ConfigureAwait(false);
                 }
 
-                await OptionsHelper.SaveOptions(options);
+                await OptionsHelper.SaveOptions(options).ConfigureAwait(false);
 
                 if (string.IsNullOrEmpty(options.RootFolder))
                 {
-                    await ShowMissingSolutionDirMessage();
+                    await ShowMissingSolutionDirMessage().ConfigureAwait(false);
                 }
 
                 return options.RootFolder;
@@ -154,7 +142,7 @@ namespace SamirBoulema.TSVN.Helpers
                 LogHelper.Log(e);
             }
 
-            await ShowMissingSolutionDirMessage();
+            await ShowMissingSolutionDirMessage().ConfigureAwait(false);
 
             return string.Empty;
         }
@@ -162,7 +150,8 @@ namespace SamirBoulema.TSVN.Helpers
         private static async Task ShowMissingSolutionDirMessage()
         {
             await VS.MessageBox.ShowErrorAsync("Missing Working Copy Root Path",
-                "Unable to determine the solution directory location. Please manually set the directory location in the settings.");
+                "Unable to determine the solution directory location. Please manually set the directory location in the settings.")
+                .ConfigureAwait(false);
         }
 
         public static async Task StartProcess(string application, string args)
@@ -173,7 +162,8 @@ namespace SamirBoulema.TSVN.Helpers
             }
             catch (Exception)
             {
-                await VS.MessageBox.ShowErrorAsync("TortoiseSVN not found", "TortoiseSVN not found. Did you install TortoiseSVN?");
+                await VS.MessageBox.ShowErrorAsync("TortoiseSVN not found", "TortoiseSVN not found. Did you install TortoiseSVN?")
+                    .ConfigureAwait(false);
             }
         }
 
@@ -198,7 +188,7 @@ namespace SamirBoulema.TSVN.Helpers
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                filePath = await FileHelper.GetPath();
+                filePath = await FileHelper.GetPath().ConfigureAwait(false);
             }
 
             if (string.IsNullOrEmpty(filePath))
@@ -208,10 +198,10 @@ namespace SamirBoulema.TSVN.Helpers
 
             var tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
-            var options = await OptionsHelper.GetOptions();
+            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
 
-            await StartProcess (tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}");
+            await StartProcess (tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}").ConfigureAwait(false);
         }
     }
 }

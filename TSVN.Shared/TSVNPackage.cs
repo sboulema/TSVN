@@ -4,12 +4,12 @@ using Microsoft.VisualStudio.Shell;
 using SamirBoulema.TSVN.Helpers;
 using SamirBoulema.TSVN.Options;
 using Microsoft.VisualStudio.Shell.Interop;
-using System.IO;
 using Task = System.Threading.Tasks.Task;
-using Microsoft;
 using Microsoft.VisualStudio;
 using System.Threading;
 using SamirBoulema.TSVN.Commands;
+using Community.VisualStudio.Toolkit;
+using File = System.IO.File;
 
 namespace SamirBoulema.TSVN
 {
@@ -19,12 +19,17 @@ namespace SamirBoulema.TSVN
     [ProvideToolWindow(typeof(TSVNToolWindow.Pane))]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExists_string, PackageAutoLoadFlags.BackgroundLoad)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    public sealed class TsvnPackage : AsyncPackage, IVsTrackProjectDocumentsEvents2
+    public sealed class TsvnPackage : ToolkitPackage, IVsTrackProjectDocumentsEvents2
     {
-        private IVsTrackProjectDocuments2 projectDocTracker;
+        private object projectDocTracker;
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            TSVNToolWindow.Initialize(this);
+
+            // Subscribe to project item events
+            projectDocTracker = await GetServiceAsync(typeof(SVsTrackProjectDocuments));
+
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
             await TSVNToolWindowCommand.InitializeAsync(this);
@@ -66,16 +71,16 @@ namespace SamirBoulema.TSVN
             await RevertFileCommand.InitializeAsync(this);
             await AddFileCommand.InitializeAsync(this);
 
-            // Subscribe to project item events
-            projectDocTracker = await GetServiceAsync(typeof(SVsTrackProjectDocuments)) as IVsTrackProjectDocuments2;
-            Assumes.Present(projectDocTracker);
-            projectDocTracker.AdviseTrackProjectDocumentsEvents(this, out _);
+            if (projectDocTracker != null)
+            {
+                (projectDocTracker as IVsTrackProjectDocuments2).AdviseTrackProjectDocumentsEvents(this, out _);
+            }
         }
 
         #region Events
         private async Task ProjectItemsEvents_ItemRenamedAsync(string[] oldFilePaths, string[] newFilePaths)
         {
-            var options = await OptionsHelper.GetOptions();
+            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
 
             if (!options.OnItemRenamedRenameInSVN)
             {
@@ -88,23 +93,37 @@ namespace SamirBoulema.TSVN
                 File.Move(newFilePaths[i], oldFilePaths[i]);
 
                 // So that we can svn rename it properly
-                await CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}");
+                await CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}").ConfigureAwait(false);
             }
         }
 
         private async Task ProjectItemsEvents_ItemAdded_Async(string[] filePaths)
         {
+            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+
+            if (!options.OnItemAddedAddToSVN)
+            {
+                return;
+            }
+
             foreach (var filePath in filePaths)
             {
-                await CommandHelper.RunTortoiseSvnFileCommand("add", filePath: filePath);
+                await CommandHelper.RunTortoiseSvnFileCommand("add", filePath: filePath).ConfigureAwait(false);
             }
         }
 
         private async Task ProjectItemsEvents_ItemRemoved_Async(string[] filePaths)
         {
+            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+
+            if (!options.OnItemRemovedRemoveFromSVN)
+            {
+                return;
+            }
+
             foreach (var filePath in filePaths)
             {
-                await CommandHelper.RunTortoiseSvnFileCommand("remove", filePath: filePath);
+                await CommandHelper.RunTortoiseSvnFileCommand("remove", filePath: filePath).ConfigureAwait(false);
             }
         }
 
@@ -115,7 +134,7 @@ namespace SamirBoulema.TSVN
 
         public int OnAfterAddFilesEx(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSADDFILEFLAGS[] rgFlags)
         {
-            _ = ProjectItemsEvents_ItemAdded_Async(rgpszMkDocuments);
+            ProjectItemsEvents_ItemAdded_Async(rgpszMkDocuments).FireAndForget();
             return VSConstants.S_OK;
         }
 
@@ -126,7 +145,7 @@ namespace SamirBoulema.TSVN
 
         public int OnAfterRemoveFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgpszMkDocuments, VSREMOVEFILEFLAGS[] rgFlags)
         {
-            _ = ProjectItemsEvents_ItemRemoved_Async(rgpszMkDocuments);
+            ProjectItemsEvents_ItemRemoved_Async(rgpszMkDocuments).FireAndForget();
             return VSConstants.S_OK;
         }
 
@@ -142,7 +161,7 @@ namespace SamirBoulema.TSVN
 
         public int OnAfterRenameFiles(int cProjects, int cFiles, IVsProject[] rgpProjects, int[] rgFirstIndices, string[] rgszMkOldNames, string[] rgszMkNewNames, VSRENAMEFILEFLAGS[] rgFlags)
         {
-            _ = ProjectItemsEvents_ItemRenamedAsync(rgszMkOldNames, rgszMkNewNames);
+            ProjectItemsEvents_ItemRenamedAsync(rgszMkOldNames, rgszMkNewNames).FireAndForget();
             return VSConstants.S_OK;
         }
 

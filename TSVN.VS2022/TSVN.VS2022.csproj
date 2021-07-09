@@ -90,74 +90,24 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ApplyPatchCommand.cs" />
-    <Compile Include="Commands\AddFileCommand.cs" />
-    <Compile Include="Commands\RevertFileCommand.cs" />
-    <Compile Include="Commands\DiffPreviousCommand.cs" />
-    <Compile Include="Commands\ShowOptionsDialogCommand.cs" />
-    <Compile Include="Commands\UpdateFileCommand.cs" />
-    <Compile Include="Commands\PropertiesCommand.cs" />
-    <Compile Include="Commands\UpdateToRevisionFileCommand.cs" />
-    <Compile Include="Commands\MergeFileCommand.cs" />
-    <Compile Include="Commands\RepoBrowserFileCommand.cs" />
-    <Compile Include="Commands\DiskBrowserFileCommand.cs" />
-    <Compile Include="Commands\UnlockCommand.cs" />
-    <Compile Include="Commands\LockCommand.cs" />
-    <Compile Include="Commands\CleanupCommand.cs" />
-    <Compile Include="Commands\ShowLogFileCommand.cs" />
-    <Compile Include="Commands\BlameCommand.cs" />
-    <Compile Include="Commands\DifferencesCommand.cs" />
-    <Compile Include="Commands\MergeCommand.cs" />
-    <Compile Include="Commands\SwitchCommand.cs" />
-    <Compile Include="Commands\DeleteFileCommand.cs" />
-    <Compile Include="Commands\BranchCommand.cs" />
-    <Compile Include="Commands\RepoBrowserCommand.cs" />
-    <Compile Include="Commands\LockFileCommand.cs" />
-    <Compile Include="Commands\UnlockFileCommand.cs" />
-    <Compile Include="Commands\RenameFileCommand.cs" />
-    <Compile Include="Commands\CommitFileCommand.cs" />
-    <Compile Include="Commands\DiskBrowserCommand.cs" />
-    <Compile Include="Commands\RevertCommand.cs" />
-    <Compile Include="Commands\UnshelveCommand.cs" />
-    <Compile Include="Commands\ShelveCommand.cs" />
-    <Compile Include="Commands\TSVNToolWindowCommand.cs" />
-    <Compile Include="Commands\ShowLogCommand.cs" />
-    <Compile Include="Commands\CommitCommand.cs" />
-    <Compile Include="Commands\CreatePatchCommand.cs" />
-    <Compile Include="Commands\UpdateToRevisionCommand.cs" />
-    <Compile Include="Commands\UpdateCommand.cs" />
-    <Compile Include="Commands\ShowChangesCommand.cs" />
-    <Compile Include="Helpers\CommandHelper.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="Helpers\LogHelper.cs" />
-    <Compile Include="Models\PendingChangesViewModel.cs" />
-    <Compile Include="Options\Options.cs" />
-    <Compile Include="Options\OptionsDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Options\OptionsDialog.Designer.cs">
-      <DependentUpon>OptionsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Options\OptionsHelper.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources.Designer.cs" />
     <Compile Include="TSVN.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>TSVN.vsct</DependentUpon>
     </Compile>
-    <Compile Include="TSVNPackage.cs" />
-    <Compile Include="TSVNToolWindow.cs" />
-    <Compile Include="TSVNToolWindowControl.xaml.cs">
-      <DependentUpon>TSVNToolWindowControl.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <VSCTCompile Include="TSVN.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>TSVN.cs</LastGenOutput>
+    </VSCTCompile>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
@@ -165,7 +115,6 @@
       <Link>Resources\LICENSE</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -173,11 +122,6 @@
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
-    <VSCTCompile Include="TSVN.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-      <Generator>VsctGenerator</Generator>
-      <LastGenOutput>TSVN.cs</LastGenOutput>
-    </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -201,7 +145,7 @@
       <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.Toolkit">
-      <Version>15.0.75.199-pre</Version>
+      <Version>17.0.75.172-pre</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.VSCT">
       <Version>16.0.29.6</Version>
@@ -212,31 +156,69 @@
       <Version>2.17.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>17.0.2155-preview2</Version>
+      <Version>17.0.3154-preview3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\Package.ico">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\tortoisesvn.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Options\OptionsDialog.resx">
-      <DependentUpon>OptionsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="TSVNToolWindowControl.xaml">
+    <Page Include="..\Resources\XAML\CheckedIn.xaml">
+      <Link>Resources\XAML\CheckedIn.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Commit.xaml">
+      <Link>Resources\XAML\Commit.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Differences.xaml">
+      <Link>Resources\XAML\Differences.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Document_16x.xaml">
+      <Link>Resources\XAML\Document_16x.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\FolderOpen_16x.xaml">
+      <Link>Resources\XAML\FolderOpen_16x.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Folder_16x.xaml">
+      <Link>Resources\XAML\Folder_16x.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\PendingAdd.xaml">
+      <Link>Resources\XAML\PendingAdd.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\PendingDelete.xaml">
+      <Link>Resources\XAML\PendingDelete.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\PendingEdit.xaml">
+      <Link>Resources\XAML\PendingEdit.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Revert.xaml">
+      <Link>Resources\XAML\Revert.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="..\Resources\XAML\Sync.xaml">
+      <Link>Resources\XAML\Sync.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
+  <Import Project="..\TSVN.Shared\TSVN.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

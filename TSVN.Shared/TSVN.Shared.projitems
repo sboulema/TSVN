@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>900c73f3-67f8-428d-84d6-a29d91d10cea</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>TSVN.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\AddFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ApplyPatchCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\BlameCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\BranchCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CleanupCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommitCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CommitFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\CreatePatchCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DeleteFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DifferencesCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DiffPreviousCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DiskBrowserCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\DiskBrowserFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\LockCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\LockFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\MergeCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\MergeFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\PropertiesCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RenameFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RepoBrowserCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RepoBrowserFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RevertCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\RevertFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShelveCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowChangesCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowLogCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowLogFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ShowOptionsDialogCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SwitchCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\TSVNToolWindowCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UnlockCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UnlockFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UnshelveCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UpdateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UpdateFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UpdateToRevisionCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\UpdateToRevisionFileCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\CommandHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\FileHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Helpers\LogHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\PendingChangesViewModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\Options.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Options\OptionsHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TSVNPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TSVNToolWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TSVNToolWindowControl.xaml.cs">
+      <DependentUpon>TSVNToolWindowControl.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Options\OptionsDialog.resx">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)TSVNToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+</Project>

@@ -1,5 +1,4 @@
 ﻿using Community.VisualStudio.Toolkit;
-using Microsoft.VisualStudio.Shell;
 using Newtonsoft.Json;
 using System.IO;
 using System.Threading.Tasks;
@@ -11,17 +10,11 @@ namespace SamirBoulema.TSVN.Options
     public static class OptionsHelper
     {
         private const string ApplicationName = "TSVN";
-        public static Options Options;
-
-        static OptionsHelper()
-        {
-            Options = ThreadHelper.JoinableTaskFactory.Run(() => GetOptions());
-        }
 
         public static async Task<Options> GetOptions()
         {
-            var solution = await VS.Solutions.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FullPath;
+            var solution = await VS.Solution.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FileName;
 
             if (!File.Exists(solutionFilePath))
             {
@@ -50,12 +43,10 @@ namespace SamirBoulema.TSVN.Options
 
         public static async Task SaveOptions(Options options)
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
             var json = JsonConvert.SerializeObject(options);
 
-            var solution = await VS.Solutions.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FullPath;
+            var solution = await VS.Solution.GetCurrentSolutionAsync().ConfigureAwait(false);
+            var solutionFilePath = solution?.FileName;
 
             if (!File.Exists(solutionFilePath))
             {

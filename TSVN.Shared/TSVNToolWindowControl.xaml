@@ -52,14 +52,14 @@
         </Grid.RowDefinitions>
         
         <StackPanel Orientation="Horizontal" Margin="10,3">
-            <Button x:Name="commitButton" ToolTip="Commit" Click="commitButton_Click" 
+            <Button x:Name="commitButton" ToolTip="Commit" Click="CommitButton_Click" 
                     Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
                 <Viewbox>
                     <Frame Source="Resources/XAML/Commit.xaml" />
                 </Viewbox>
             </Button>
 
-            <Button x:Name="revertButton" ToolTip="Revert" Click="revertButton_Click" 
+            <Button x:Name="revertButton" ToolTip="Revert" Click="RevertButton_Click" 
                     Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
                 <Viewbox>
                     <Frame Source="Resources/XAML/Revert.xaml" />
@@ -99,7 +99,7 @@
                 </Viewbox>
             </ToggleButton>
             
-            <Button x:Name="refreshButton" ToolTip="Refresh" Click="refreshButton_Click" 
+            <Button x:Name="refreshButton" ToolTip="Refresh" Click="RefreshButton_Click" 
                     Margin="0,0,5,0" BorderThickness="0" Background="Transparent" Height="16" Width="16">
                 <Viewbox>
                     <Frame Source="Resources/XAML/Sync.xaml" />

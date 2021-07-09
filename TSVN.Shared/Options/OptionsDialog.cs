@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Task = System.Threading.Tasks.Task;
 using File = System.IO.File;
+using Microsoft.VisualStudio.Shell;
 
 namespace SamirBoulema.TSVN.Options
 {
@@ -21,17 +22,17 @@ namespace SamirBoulema.TSVN.Options
 
         private void OptionsDialog_Load(object sender, EventArgs e)
         {
-            _ = LoadDialog();
+            LoadDialog().FireAndForget();
         }
 
         private async Task LoadDialog()
         {
-            var solution = await VS.Solutions.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FullPath;
+            var solution = await VS.Solution.GetCurrentSolutionAsync().ConfigureAwait(false);
+            var solutionFilePath = solution?.FileName;
 
             if (File.Exists(solutionFilePath))
             {
-                options = await OptionsHelper.GetOptions();
+                options = await OptionsHelper.GetOptions().ConfigureAwait(false);
                 rootFolderTextBox.Text = options.RootFolder;
                 onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
                 onItemRenamedRenameInSVNCheckBox.Checked = options.OnItemRenamedRenameInSVN;
@@ -51,7 +52,7 @@ namespace SamirBoulema.TSVN.Options
 
             if (string.IsNullOrEmpty(rootFolderTextBox.Text))
             {
-                rootFolderTextBox.Text = await CommandHelper.GetRepositoryRoot();
+                rootFolderTextBox.Text = await CommandHelper.GetRepositoryRoot().ConfigureAwait(false);
             }
         }
 
@@ -61,7 +62,7 @@ namespace SamirBoulema.TSVN.Options
         }
 
         private void OkButton_Click(object sender, EventArgs e)
-            => _ = Save();
+            => Save().FireAndForget();
 
         private async Task Save()
         {
@@ -70,7 +71,7 @@ namespace SamirBoulema.TSVN.Options
             options.OnItemRenamedRenameInSVN = onItemRenamedRenameInSVNCheckBox.Checked;
             options.OnItemRemovedRemoveFromSVN = onItemRemovedRemoveFromSVNCheckBox.Checked;
             options.CloseOnEnd = closeOnEndCheckBox.Checked;
-            await OptionsHelper.SaveOptions(options);
+            await OptionsHelper.SaveOptions(options).ConfigureAwait(false);
             Close();
         }
 

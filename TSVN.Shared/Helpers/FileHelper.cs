@@ -2,7 +2,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Community.VisualStudio.Toolkit;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.Win32;
 using Task = System.Threading.Tasks.Task;
 
@@ -34,7 +33,7 @@ namespace SamirBoulema.TSVN.Helpers
                 return;
             }
 
-            await VS.Commands.ExecuteAsync("File.OpenFile", filePath);
+            await VS.Commands.ExecuteAsync("File.OpenFile", filePath).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -44,26 +43,24 @@ namespace SamirBoulema.TSVN.Helpers
         /// <returns>File path</returns>
         public static async Task<string> GetPath()
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
             // Context menu in the Solution Explorer
-            var selectedItem = await VS.Selection.GetSelectedItemAsync();
+            var selectedItem = await VS.Selection.GetSelectedItemAsync().ConfigureAwait(false);
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == SolutionItemType.Project ||
-                    selectedItem.Type == SolutionItemType.Solution)
+                if (selectedItem.Type == NodeType.Project ||
+                    selectedItem.Type == NodeType.Solution)
                 {
-                    return Path.GetDirectoryName(selectedItem.FullPath);
+                    return Path.GetDirectoryName(selectedItem.FileName);
                 }
-                else if (selectedItem.Type == SolutionItemType.PhysicalFile)
+                else if (selectedItem.Type == NodeType.PhysicalFile)
                 {
-                    return selectedItem.FullPath;
+                    return selectedItem.FileName;
                 }
             }
 
             // Context menu in the Code Editor
-            var documentView = await VS.Documents.GetActiveDocumentViewAsync();
+            var documentView = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
             return documentView?.Document?.FilePath;
         }
 

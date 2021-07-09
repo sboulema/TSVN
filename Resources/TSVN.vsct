@@ -9,7 +9,7 @@
     <Menus>
       <!--Main Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
-	    <Parent guid="VSMainMenu" id="MainMenuToolbar.ToolsGroup" />
+		<Parent guid="VSMainMenu" id="Extensions.DefaultGroup" />
         <Strings>
           <ButtonText>&amp;Tsvn</ButtonText>
         </Strings>
@@ -452,7 +452,7 @@
     <Bitmaps>
       <Bitmap 
 		  guid="guidImages" 
-		  href="Resources\octicons.png" 
+		  href="octicons.png" 
 		  usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switchImage, cleanup, stash, fetch, add, properties, delete, shelve, lockImage, unlock, rename" />
     </Bitmaps>
   </Commands>

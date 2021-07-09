@@ -20,7 +20,7 @@ namespace SamirBoulema.TSVN.Commands
 
             var openFileDialog = new OpenFileDialog
             {
-                Filter = Resources.PatchFileFilterString,
+                Filter = "Patch Files (.patch)|*.patch|All Files (*.*)|*.*",
                 FilterIndex = 1,
                 Multiselect = false
             };

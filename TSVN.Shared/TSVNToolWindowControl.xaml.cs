@@ -12,9 +12,9 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Task = System.Threading.Tasks.Task;
-using Community.VisualStudio.Toolkit;
 using Settings = SamirBoulema.TSVN.Properties.Settings;
 using File = System.IO.File;
+using Community.VisualStudio.Toolkit;
 
 namespace SamirBoulema.TSVN
 {
@@ -44,21 +44,21 @@ namespace SamirBoulema.TSVN
 
             HideUnversionedButton.IsChecked = Settings.Default.HideUnversioned;
 
-            _ = Update();
+            Update().FireAndForget();
         }
 
         private void SolutionEvents_OnAfterOpenSolution1(SolutionItem obj)
         {
-            _ = Update();
+            Update().FireAndForget();
         }
 
         private void DocumentEvents_Saved(object sender, string e)
         {
-            _ = Update();
+            Update().FireAndForget();
         }
 
         private async Task Update()
-            => Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
+            => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
 
         public void Update(List<string> pendingChanges, string solutionDir)
         {
@@ -86,17 +86,20 @@ namespace SamirBoulema.TSVN
 
                 commitButton.IsEnabled = true;
                 revertButton.IsEnabled = true;
-            }       
+            }
             else
             {
                 commitButton.IsEnabled = false;
                 revertButton.IsEnabled = false;
-            }    
+            }
         }
 
         private void ProcessChange(TSVNTreeViewFolderItem root, string solutionDir, string change)
         {
-            if (change.Length <= 8) return;
+            if (change.Length <= 8)
+            {
+                return;
+            }
 
             var path = change.Substring(8);
             var pathParts = path.Split('\\');
@@ -129,7 +132,10 @@ namespace SamirBoulema.TSVN
 
         private TSVNTreeViewItem FindItem(TSVNTreeViewFolderItem root, string text)
         {
-            if (root?.Items == null) return null;
+            if (root?.Items == null)
+            {
+                return null;
+            }
 
             foreach (var item in root.Items)
             {
@@ -248,27 +254,23 @@ namespace SamirBoulema.TSVN
             return imageSource;
         }
 
-        private void commitButton_Click(object sender, RoutedEventArgs e) => _ = Commit();
+        private void CommitButton_Click(object sender, RoutedEventArgs e) => CommandHelper.Commit().FireAndForget();
 
-        private async Task Commit() => await CommandHelper.Commit();
+        private void RevertButton_Click(object sender, RoutedEventArgs e) => CommandHelper.Revert().FireAndForget();
 
-        private void revertButton_Click(object sender, RoutedEventArgs e) => _ = Revert();
+        private void RefreshButton_Click(object sender, RoutedEventArgs e) => Refresh().FireAndForget();
 
-        private async Task Revert() => await CommandHelper.Revert();
+        private async Task Refresh() => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
 
-        private void refreshButton_Click(object sender, RoutedEventArgs e) => _ = Refresh();
+        private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e) => ToggleUnversioned(true).FireAndForget();
 
-        private async Task Refresh() => Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
-
-        private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e) => _ = ToggleUnversioned(true);
-
-        private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e) => _ = ToggleUnversioned(false);
+        private void HideUnversionedButton_OnUnchecked(object sender, RoutedEventArgs e) => ToggleUnversioned(false).FireAndForget();
 
         private async Task ToggleUnversioned(bool hide)
         {
             Settings.Default.HideUnversioned = hide;
             Settings.Default.Save();
-            Update(CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
+            Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
         }
 
         private void TreeView_Collapsed(object sender, RoutedEventArgs e)
