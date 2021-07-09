@@ -103,6 +103,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Resources\Package.ico">
+      <Link>Resources\Package.ico</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\Resources\tortoisesvn.png">
+      <Link>Resources\tortoisesvn.png</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <VSCTCompile Include="TSVN.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
