@@ -42,7 +42,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SamirBoulema.TSVN</RootNamespace>
-    <AssemblyName>TSVN</AssemblyName>
+    <AssemblyName>TSVN.VS2022</AssemblyName>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
