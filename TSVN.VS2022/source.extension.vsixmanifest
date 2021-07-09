@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="ddccf913-105f-4243-80c6-16e9cc5bade5" Version="5.1" Language="en-US" Publisher="Samir L. Boulema" />
+        <Identity Id="ddccf913-105f-4243-80c6-16e9cc5bade5" Version="5.1" Language="en-US" Publisher="Samir Boulema" />
         <DisplayName>TSVN 2022</DisplayName>
         <Description>Control TortoiseSVN from within Visual Studio</Description>
         <MoreInfo>https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN</MoreInfo>

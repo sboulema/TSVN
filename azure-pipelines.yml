@@ -7,7 +7,7 @@ trigger:
     - main
     - feature/*
 
-name: 5.0.$(Build.BuildId)
+name: 5.1.$(Build.BuildId)
 
 steps:
 - task: NuGetCommand@2
