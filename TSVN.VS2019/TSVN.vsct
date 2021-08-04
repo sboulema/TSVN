@@ -9,7 +9,7 @@
     <Menus>
       <!--Main Menu-->
       <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
-		<Parent guid="VSMainMenu" id="Extensions.DefaultGroup" />
+		<Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
         <Strings>
           <ButtonText>&amp;Tsvn</ButtonText>
         </Strings>

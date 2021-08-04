@@ -44,18 +44,18 @@ namespace SamirBoulema.TSVN.Helpers
         public static async Task<string> GetPath()
         {
             // Context menu in the Solution Explorer
-            var selectedItem = await VS.Selection.GetSelectedItemAsync().ConfigureAwait(false);
+            var selectedItem = await VS.Solutions.GetActiveItemAsync();
 
             if (selectedItem != null)
             {
-                if (selectedItem.Type == NodeType.Project ||
-                    selectedItem.Type == NodeType.Solution)
+                if (selectedItem.Type == SolutionItemType.Project ||
+                    selectedItem.Type == SolutionItemType.Solution)
                 {
-                    return Path.GetDirectoryName(selectedItem.FileName);
+                    return Path.GetDirectoryName(selectedItem.FullPath);
                 }
-                else if (selectedItem.Type == NodeType.PhysicalFile)
+                else if (selectedItem.Type == SolutionItemType.PhysicalFile)
                 {
-                    return selectedItem.FileName;
+                    return selectedItem.FullPath;
                 }
             }
 

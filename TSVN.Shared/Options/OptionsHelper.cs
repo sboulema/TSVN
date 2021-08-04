@@ -13,8 +13,8 @@ namespace SamirBoulema.TSVN.Options
 
         public static async Task<Options> GetOptions()
         {
-            var solution = await VS.Solution.GetCurrentSolutionAsync();
-            var solutionFilePath = solution?.FileName;
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
+            var solutionFilePath = solution?.FullPath;
 
             if (!File.Exists(solutionFilePath))
             {
@@ -45,8 +45,8 @@ namespace SamirBoulema.TSVN.Options
         {
             var json = JsonConvert.SerializeObject(options);
 
-            var solution = await VS.Solution.GetCurrentSolutionAsync().ConfigureAwait(false);
-            var solutionFilePath = solution?.FileName;
+            var solution = await VS.Solutions.GetCurrentSolutionAsync().ConfigureAwait(false);
+            var solutionFilePath = solution?.FullPath;
 
             if (!File.Exists(solutionFilePath))
             {

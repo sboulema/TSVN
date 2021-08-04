@@ -18,9 +18,6 @@ using Community.VisualStudio.Toolkit;
 
 namespace SamirBoulema.TSVN
 {
-    /// <summary>
-    /// Interaction logic for TSVNToolWindowControl.
-    /// </summary>
     public partial class TSVNToolWindowControl : UserControl
     {
         public PendingChangesViewModel ViewModel;
@@ -47,18 +44,18 @@ namespace SamirBoulema.TSVN
             Update().FireAndForget();
         }
 
+        private void DocumentEvents_Saved(string obj)
+        {
+            Update().FireAndForget();
+        }
+
         private void SolutionEvents_OnAfterOpenSolution1(SolutionItem obj)
         {
             Update().FireAndForget();
         }
 
-        private void DocumentEvents_Saved(object sender, string e)
-        {
-            Update().FireAndForget();
-        }
-
         private async Task Update()
-            => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
+            => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
 
         public void Update(List<string> pendingChanges, string solutionDir)
         {
