@@ -16,21 +16,21 @@ namespace SamirBoulema.TSVN.Helpers
     {
         public static async Task Commit()
         {
-            await VS.Commands.ExecuteAsync("File.SaveAll").ConfigureAwait(false);
-            await RunTortoiseSvnCommand("commit").ConfigureAwait(false);
+            await VS.Commands.ExecuteAsync("File.SaveAll");
+            await RunTortoiseSvnCommand("commit");
         }
 
         public static async Task Commit(string filePath)
-            => await RunTortoiseSvnFileCommand("commit", filePath: filePath).ConfigureAwait(false);
+            => await RunTortoiseSvnFileCommand("commit", filePath: filePath);
 
         public static async Task Revert()
-            => await RunTortoiseSvnCommand("revert").ConfigureAwait(false);
+            => await RunTortoiseSvnCommand("revert");
 
         public static async Task Revert(string filePath)
-            => await RunTortoiseSvnFileCommand("revert", filePath: filePath).ConfigureAwait(false);
+            => await RunTortoiseSvnFileCommand("revert", filePath: filePath);
 
         public static async Task ShowDifferences(string filePath)
-            => await RunTortoiseSvnFileCommand("diff", filePath: filePath).ConfigureAwait(false);
+            => await RunTortoiseSvnFileCommand("diff", filePath: filePath);
 
         public static async Task<List<string>> GetPendingChanges()
         {
@@ -38,12 +38,14 @@ namespace SamirBoulema.TSVN.Helpers
 
             try
             {
+                var repositoryRoot = await GetRepositoryRoot();
+
                 var proc = new Process
                 {
                     StartInfo = new ProcessStartInfo
                     {
                         FileName = "cmd.exe",
-                        Arguments = $"/c cd /D \"{GetRepositoryRoot()}\" && \"{FileHelper.GetSvnExec()}\" status" + (Settings.Default.HideUnversioned ? " -q" : string.Empty),
+                        Arguments = $"/c cd /D \"{repositoryRoot}\" && \"{FileHelper.GetSvnExec()}\" status" + (Settings.Default.HideUnversioned ? " -q" : string.Empty),
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -55,7 +57,7 @@ namespace SamirBoulema.TSVN.Helpers
 
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    pendingChanges.Add(await proc.StandardOutput.ReadLineAsync().ConfigureAwait(false));
+                    pendingChanges.Add(await proc.StandardOutput.ReadLineAsync());
                 }
             }
             catch (Exception e)
@@ -120,19 +122,19 @@ namespace SamirBoulema.TSVN.Helpers
 
                 while (!proc.StandardError.EndOfStream)
                 {
-                    errors += await proc.StandardError.ReadLineAsync().ConfigureAwait(false);
+                    errors += await proc.StandardError.ReadLineAsync();
                 }
 
                 while (!proc.StandardOutput.EndOfStream)
                 {
-                    options.RootFolder = await proc.StandardOutput.ReadLineAsync().ConfigureAwait(false);
+                    options.RootFolder = await proc.StandardOutput.ReadLineAsync();
                 }
 
-                await OptionsHelper.SaveOptions(options).ConfigureAwait(false);
+                await OptionsHelper.SaveOptions(options);
 
                 if (string.IsNullOrEmpty(options.RootFolder))
                 {
-                    await ShowMissingSolutionDirMessage().ConfigureAwait(false);
+                    await ShowMissingSolutionDirMessage();
                 }
 
                 return options.RootFolder;
@@ -142,7 +144,7 @@ namespace SamirBoulema.TSVN.Helpers
                 LogHelper.Log(e);
             }
 
-            await ShowMissingSolutionDirMessage().ConfigureAwait(false);
+            await ShowMissingSolutionDirMessage();
 
             return string.Empty;
         }
@@ -150,8 +152,7 @@ namespace SamirBoulema.TSVN.Helpers
         private static async Task ShowMissingSolutionDirMessage()
         {
             await VS.MessageBox.ShowErrorAsync("Missing Working Copy Root Path",
-                "Unable to determine the solution directory location. Please manually set the directory location in the settings.")
-                .ConfigureAwait(false);
+                "Unable to determine the solution directory location. Please manually set the directory location in the settings.");
         }
 
         public static async Task StartProcess(string application, string args)
@@ -162,8 +163,7 @@ namespace SamirBoulema.TSVN.Helpers
             }
             catch (Exception)
             {
-                await VS.MessageBox.ShowErrorAsync("TortoiseSVN not found", "TortoiseSVN not found. Did you install TortoiseSVN?")
-                    .ConfigureAwait(false);
+                await VS.MessageBox.ShowErrorAsync("TortoiseSVN not found", "TortoiseSVN not found. Did you install TortoiseSVN?");
             }
         }
 
@@ -188,7 +188,7 @@ namespace SamirBoulema.TSVN.Helpers
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                filePath = await FileHelper.GetPath().ConfigureAwait(false);
+                filePath = await FileHelper.GetPath();
             }
 
             if (string.IsNullOrEmpty(filePath))
@@ -198,10 +198,10 @@ namespace SamirBoulema.TSVN.Helpers
 
             var tortoiseProc = FileHelper.GetTortoiseSvnProc();
 
-            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+            var options = await OptionsHelper.GetOptions();
             var closeOnEnd = options.CloseOnEnd ? 1 : 0;
 
-            await StartProcess (tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}").ConfigureAwait(false);
+            await StartProcess (tortoiseProc, $"/command:{command} /path:\"{filePath}\" {args} /closeonend:{closeOnEnd}");
         }
     }
 }
