@@ -26,6 +26,12 @@ steps:
     InformationalVersion: '$(Build.BuildNumber)'
 
 - task: VsixToolsUpdateVersion@1
+  displayName: 'Update Vsix Version (VS2017)'
+  inputs:
+    FileName: $(Build.SourcesDirectory)\TSVN.VS2017\source.extension.vsixmanifest
+    VersionNumber: '$(Build.BuildNumber)'
+
+- task: VsixToolsUpdateVersion@1
   displayName: 'Update Vsix Version (VS2019)'
   inputs:
     FileName: $(Build.SourcesDirectory)\TSVN.VS2019\source.extension.vsixmanifest

@@ -1,0 +1,606 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <Extern href="stdidcmd.h" />
+  <Extern href="vsshlids.h" />
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="guidTSVNPkg">
+    <Menus>
+      <!--Main Menu-->
+      <Menu guid="guidTSVNCmdSet" id="TSVNMenu" priority="0x0100" type="Menu">
+		<Parent guid="guidSHLMainMenu" id="IDG_VS_MM_TOOLSADDINS" />
+        <Strings>
+          <ButtonText>&amp;Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+
+      <!--Context Menu-->
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="guidTSVNCmdSet" id="contextMenuGroup" />
+        <Strings>
+          <ButtonText>&amp;Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+
+      <!--Solution Explorer Context Menu-->
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="VSMainMenu" id="SolutionNode.SourceControlGroup" />
+        <Strings>
+          <ButtonText>&amp;Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="VSMainMenu" id="ProjectNode.SourceControlGroup" />
+        <Strings>
+          <ButtonText>&amp;Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+      <Menu guid="guidTSVNCmdSet" id="TSVNContextMenu" priority="0x0200" type="Menu">
+        <Parent guid="VSMainMenu" id="Node.SourceControlGroup" />
+        <Strings>
+          <ButtonText>&amp;Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+   
+      <!--Toolbar-->
+      <Menu guid="guidTSVNCmdSet" id="Toolbar" type="Toolbar">
+        <Strings>
+          <ButtonText>Tsvn</ButtonText>
+        </Strings>
+      </Menu>
+
+      <!--Window Menu-->
+      <Menu guid="guidTSVNCmdSet" id="TSVNWindowMenu" priority="0x0700" type="Menu">
+        <Parent guid="guidTSVNCmdSet" id="sixthMenuGroup"/>
+        <Strings>
+          <ButtonText>Windows</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
+    
+    <Groups>
+      <Group guid="guidTSVNCmdSet" id="firstMenuGroup" priority="0x0100">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="firstMenuGroup" priority="0x0100">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="secondMenuGroup" priority="0x0200">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="secondMenuGroup" priority="0x0200">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="thirdMenuGroup" priority="0x0300">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="thirdMenuGroup" priority="0x0300">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="fourthMenuGroup" priority="0x0400">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="fourthMenuGroup" priority="0x0400">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="fifthMenuGroup" priority="0x0500">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="fifthMenuGroup" priority="0x0500">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="sixthMenuGroup" priority="0x0600">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0904">
+        <Parent guid="guidTSVNCmdSet" id="TSVNMenu" />
+      </Group>
+
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+      </Group>
+      
+      <!--Solution Explorer - Folder View - Context Menu-->
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
+        <Parent guid="guidWorkspaceExplorerToolWindowCmdSet" id="idmWSE_ContextMenu" />
+      </Group>
+      
+      <!--Solution Explorer - Folder View - Context Menu-->
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0200">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_EZDOCWINTAB" />
+      </Group>
+      
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="HTMLContext" id="HTMLContextMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="CSSContext" id="CSSContextMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="contextMenuGroup" priority="0x0600">
+        <Parent guid="ASPXContext" id="ASPXContextMenu" />
+      </Group>
+      
+      <Group guid="guidTSVNCmdSet" id="firstContextMenuGroup" priority="0x0700">
+        <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="secondContextMenuGroup" priority="0x0800">
+        <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="thirdContextMenuGroup" priority="0x0900">
+        <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="fourthContextMenuGroup" priority="0x0901">
+        <Parent guid="guidTSVNCmdSet" id="TSVNContextMenu" />
+      </Group>
+
+      <Group guid="guidTSVNCmdSet" id="itemMenuGroup" priority="0x0902">
+        <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE" />
+      </Group>
+      <Group guid="guidTSVNCmdSet" id="firstItemMenuGroup" priority="0x0903">
+        <Parent guid="guidTSVNCmdSet" id="TSVNItemMenu" />
+      </Group>
+
+      <Group guid="guidTSVNCmdSet" id="ToolbarGroup" priority="0x0000">
+        <Parent guid="guidTSVNCmdSet" id="Toolbar" />
+      </Group>
+
+      <Group guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" priority="0x0000">
+        <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenu"/>
+      </Group>
+    </Groups>
+    
+    <Buttons>
+      <Button guid="guidTSVNCmdSet" id="showChangesCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
+        <Icon guid="guidImages" id="showChanges" />
+        <Strings>
+          <ButtonText>Sho&amp;w Changes</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="updateCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
+        <Icon guid="guidImages" id="pull" />
+        <Strings>
+          <ButtonText>&amp;Update</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="commitCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstMenuGroup" />
+        <Icon guid="guidImages" id="commit" />
+        <Strings>
+          <ButtonText>&amp;Commit...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="showLogCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="secondMenuGroup" />
+        <Icon guid="guidImages" id="showLog" />
+        <Strings>
+          <ButtonText>Show &amp;Log...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="diskBrowserCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="secondMenuGroup" />
+        <Icon guid="guidImages" id="disk" />
+        <Strings>
+          <ButtonText>Disk-Browser</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="repoBrowserCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="secondMenuGroup" />
+        <Icon guid="guidImages" id="repo" />
+        <Strings>
+          <ButtonText>Repo-Browser</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="createPatchCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="stash" />
+        <Strings>
+          <ButtonText>Create P&amp;atch...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="applyPatchCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="stash" />
+        <Strings>
+          <ButtonText>Apply Patc&amp;h...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="shelveCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="shelve" />
+        <Strings>
+          <ButtonText>Sh&amp;elve...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="unshelveCommand" priority="0x0400" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdMenuGroup" />
+        <Icon guid="guidImages" id="shelve" />
+        <Strings>
+          <ButtonText>Unshelve...</ButtonText>
+        </Strings>
+      </Button>
+        
+      <Button guid="guidTSVNCmdSet" id="branchCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
+        <Icon guid="guidImages" id="branch" />
+        <Strings>
+          <ButtonText>Branch...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="switchCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
+        <Icon guid="guidImages" id="switchImage" />
+        <Strings>
+          <ButtonText>&amp;Switch...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="mergeCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthMenuGroup" />
+        <Icon guid="guidImages" id="merge" />
+        <Strings>
+          <ButtonText>&amp;Merge...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="revertCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="revert" />
+        <Strings>
+          <ButtonText>&amp;Revert Changes...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="updateToRevisionCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="fetch" />
+        <Strings>
+          <ButtonText>Update To Revision...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="cleanupCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="cleanup" />
+        <Strings>
+          <ButtonText>Clea&amp;nup working copy...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="lockCommand" priority="0x0400" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="lockImage" />
+        <Strings>
+          <ButtonText>Get l&amp;ock...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="unlockCommand" priority="0x0500" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fifthMenuGroup" />
+        <Icon guid="guidImages" id="unlock" />
+        <Strings>
+          <ButtonText>Release loc&amp;k...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="showLogFileCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
+        <Icon guid="guidImages" id="showLog" />
+        <Strings>
+          <ButtonText>Show Log for file...</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="diskBrowserFileCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
+        <Icon guid="guidImages" id="disk" />
+        <Strings>
+          <ButtonText>Disk-Browser</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="repoBrowserFileCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="firstContextMenuGroup" />
+        <Icon guid="guidImages" id="repo" />
+        <Strings>
+          <ButtonText>Repo-browser</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="blameCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="secondContextMenuGroup" />
+        <Icon guid="guidImages" id="blame" />
+        <Strings>
+          <ButtonText>&amp;Blame...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="mergeFileCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Icon guid="guidImages" id="merge" />
+        <Strings>
+          <ButtonText>Merge...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="updateToRevisionFileCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Icon guid="guidImages" id="fetch" />
+        <Strings>
+          <ButtonText>Update To Revision...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="propertiesCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="thirdContextMenuGroup" />
+        <Icon guid="guidImages" id="properties" />
+        <Strings>
+          <ButtonText>Properties...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="updateFileCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="pull" />
+        <Strings>
+          <ButtonText>Update...</ButtonText>
+        </Strings>
+      </Button>
+    
+      <Button guid="guidTSVNCmdSet" id="commitFileCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="commit" />
+        <Strings>
+          <ButtonText>Commit...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="revertFileCommand" priority="0x0300" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="revert" />
+        <Strings>
+          <ButtonText>Revert...</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="addFileCommand" priority="0x0310" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="add" />
+        <Strings>
+          <ButtonText>Add</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="differencesCommand" priority="0x0400" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="differences" />
+        <Strings>
+          <ButtonText>Show &amp;Differences</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="diffPreviousCommand" priority="0x0500" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="differences" />
+        <Strings>
+          <ButtonText>Diff with previous version</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="deleteFileCommand" priority="0x0600" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="delete" />
+        <Strings>
+          <ButtonText>Delete</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="lockFileCommand" priority="0x0700" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="lockImage" />
+        <Strings>
+          <ButtonText>Get Lock</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="unlockFileCommand" priority="0x0800" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="unlock" />
+        <Strings>
+          <ButtonText>Release Lock</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidTSVNCmdSet" id="renameFileCommand" priority="0x0900" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="fourthContextMenuGroup" />
+        <Icon guid="guidImages" id="rename" />
+        <Strings>
+          <ButtonText>Rename</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="showToolwindowCommand" priority="0x0100" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" />
+        <Icon guid="guidImages" id="showChanges" />
+        <Strings>
+          <ButtonText>Pending Changes</ButtonText>
+        </Strings>
+      </Button>
+
+      <Button guid="guidTSVNCmdSet" id="showOptionsDialogCommand" priority="0x0200" type="Button">
+        <Parent guid="guidTSVNCmdSet" id="TSVNWindowMenuGroup" />
+        <Icon guid="guidImages" id="properties" />
+        <Strings>
+          <ButtonText>Options</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+
+    <!--Menu icons-->
+    <Bitmaps>
+      <Bitmap 
+		  guid="guidImages" 
+		  href="../Resources/octicons.png" 
+		  usedList="showChanges, pull, push, showLog, revert, branch, merge, differences, blame, repo, resolve, sync, commit, disk, switchImage, cleanup, stash, fetch, add, properties, delete, shelve, lockImage, unlock, rename" />
+    </Bitmaps>
+  </Commands>
+
+  <KeyBindings>
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="C" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="commitCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="W" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="showChangesCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="U" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="updateCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="L" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="showLogCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="A" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="createPatchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="H" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="applyPatchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="S" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="switchCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="M" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="mergeCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="R" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="revertCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="N" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="cleanupCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="B" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="blameCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="D" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="differencesCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="E" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="shelveCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="P" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="unshelveCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="O" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="lockCommand" />
+    <KeyBinding guid="guidTSVNCmdSet" key1="S" key2="K" mod1="CONTROL SHIFT ALT" editor="guidVSStd97" id="unlockCommand" />
+  </KeyBindings>
+
+  <Symbols>
+    <GuidSymbol name="guidImages" value="{1a3d6932-4781-4605-861f-47dbe78e262b}">
+      <IDSymbol name="showChanges" value="1" />
+      <IDSymbol name="pull" value="2" />
+      <IDSymbol name="push" value="3" />
+      <IDSymbol name="showLog" value="4" />
+      <IDSymbol name="revert" value="5" />
+      <IDSymbol name="branch" value="6" />
+      <IDSymbol name="merge" value="7" />
+      <IDSymbol name="differences" value="8" />
+      <IDSymbol name="blame" value="9" />
+      <IDSymbol name="repo" value="10" />
+      <IDSymbol name="resolve" value="11" />
+      <IDSymbol name="sync" value="12" />
+      <IDSymbol name="commit" value="13" />
+      <IDSymbol name="disk" value="14" />
+      <IDSymbol name="switchImage" value="15" />
+      <IDSymbol name="cleanup" value="16" />
+      <IDSymbol name="stash" value="17" />
+      <IDSymbol name="fetch" value="18" />
+      <IDSymbol name="add" value="19" />
+      <IDSymbol name="properties" value="20" />
+      <IDSymbol name="delete" value="21" />
+      <IDSymbol name="shelve" value="22" />
+      <IDSymbol name="lockImage" value="23" />
+      <IDSymbol name="unlock" value="24" />
+      <IDSymbol name="rename" value="25" />
+    </GuidSymbol>
+
+    <GuidSymbol name="guidTSVNPkg" value="{f2e68d5a-c95e-4d53-bbc6-072ff3ed9c53}" />
+	  
+    <GuidSymbol name="guidTSVNCmdSet" value="{65ab72da-3aa4-4e36-8182-b3dbe7ff6b56}">
+      <IDSymbol name="Toolbar" value="0x1000" />
+      <IDSymbol name="ToolbarGroup" value="0x1050" />
+      
+      <IDSymbol name="TSVNMenu" value="0x1021" />
+      <IDSymbol name="firstMenuGroup" value="0x1020" />
+      <IDSymbol name="secondMenuGroup" value="0x1022" />
+      <IDSymbol name="thirdMenuGroup" value="0x1023" />
+      <IDSymbol name="fourthMenuGroup" value="0x1024" />
+      <IDSymbol name="fifthMenuGroup" value="0x1025" />
+      <IDSymbol name="sixthMenuGroup" value="0x1040" />
+
+      <IDSymbol name="TSVNItemMenu" value="0x1032" />
+      <IDSymbol name="itemMenuGroup" value="0x1033" />
+      <IDSymbol name="firstItemMenuGroup" value="0x1034" />
+      <IDSymbol name="secondItemMenuGroup" value="0x1035" />
+      <IDSymbol name="thirdItemMenuGroup" value="0x1036" />
+      <IDSymbol name="fourthItemMenuGroup" value="0x1037" />
+
+      <IDSymbol name="TSVNContextMenu" value="0x1027" />
+      <IDSymbol name="contextMenuGroup" value="0x1026" />
+      <IDSymbol name="firstContextMenuGroup" value="0x1028" />
+      <IDSymbol name="secondContextMenuGroup" value="0x1029" />
+      <IDSymbol name="thirdContextMenuGroup" value="0x1030" />
+      <IDSymbol name="fourthContextMenuGroup" value="0x1031" />
+
+      <IDSymbol name="TSVNMainContextMenu" value="0x1038" />
+      <IDSymbol name="contextMainMenuGroup" value="0x1039" />
+
+      <IDSymbol name="showChangesCommand" value="0x0100" />
+      <IDSymbol name="updateCommand" value="0x0101" />
+      <IDSymbol name="commitCommand" value="0x0102" />
+      
+      <IDSymbol name="showLogCommand" value="0x0200" />
+      <IDSymbol name="diskBrowserCommand" value="0x0201" />
+      <IDSymbol name="repoBrowserCommand" value="0x0202" />
+      
+      <IDSymbol name="createPatchCommand" value="0x0300" />
+      <IDSymbol name="applyPatchCommand" value="0x0301" />
+      <IDSymbol name="shelveCommand" value="0x0302" />
+      <IDSymbol name="unshelveCommand" value="0x0303" />
+      
+      <IDSymbol name="branchCommand" value="0x0400" />
+      <IDSymbol name="switchCommand" value="0x0401" />
+      <IDSymbol name="mergeCommand" value="0x0402" />
+      
+      <IDSymbol name="revertCommand" value="0x0500" />
+      <IDSymbol name="updateToRevisionCommand" value="0x0501" />
+      <IDSymbol name="cleanupCommand" value="0x0502" />
+      <IDSymbol name="lockCommand" value="0x0503" />
+      <IDSymbol name="unlockCommand" value="0x0504" />
+
+      <IDSymbol name="showLogFileCommand" value="0x0600" />   
+      <IDSymbol name="blameCommand" value="0x0601" />
+      <IDSymbol name="differencesCommand" value="0x0602" />  
+      <IDSymbol name="diskBrowserFileCommand" value="0x0603" /> 
+      <IDSymbol name="repoBrowserFileCommand" value="0x0604" /> 
+      <IDSymbol name="mergeFileCommand" value="0x0605" />
+      <IDSymbol name="updateToRevisionFileCommand" value="0x0606" />
+      <IDSymbol name="propertiesCommand" value="0x0607" />
+      <IDSymbol name="updateFileCommand" value="0x0608" />
+      <IDSymbol name="commitFileCommand" value="0x0609" />
+      <IDSymbol name="diffPreviousCommand" value="0x0610" />
+      <IDSymbol name="revertFileCommand" value="0x0611" />
+      <IDSymbol name="addFileCommand" value="0x0612" />
+      <IDSymbol name="deleteFileCommand" value="0x0613" />
+      <IDSymbol name="lockFileCommand" value="0x0615" />
+      <IDSymbol name="unlockFileCommand" value="0x0616" />
+      <IDSymbol name="renameFileCommand" value="0x0617" />
+      
+      <IDSymbol name="showOptionsDialogCommand" value="0x0614"/>
+
+      <!--Windows Menu-->
+      <IDSymbol name="TSVNWindowMenu" value="0x2000"/>
+      <IDSymbol name="TSVNWindowMenuGroup" value="0x2001"/>
+
+      <IDSymbol name="showToolwindowCommand" value="0x2002" />
+    </GuidSymbol>  
+  
+    <!-- Solution Explorer folder mode GUIDs and IDs. -->
+    <GuidSymbol name="guidWorkspaceExplorerToolWindowCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
+      <IDSymbol name="idmWSE_ContextMenu" value="0x0002" />
+    </GuidSymbol>
+
+    <!--Special Context Menus-->
+    <GuidSymbol name="HTMLContext" value="{78F03954-2FB8-4087-8CE7-59D71710B3BB}">
+      <IDSymbol name="HTMLContextMenu" value="0x0001"/>
+    </GuidSymbol>
+    <GuidSymbol name="CSSContext" value="{64DA400E-B4AD-4D67-AA92-4B7ACB01ECD5}">
+      <IDSymbol name="CSSContextMenu" value="0x0002"/>
+    </GuidSymbol>
+    <GuidSymbol name="ASPXContext" value="{D7E8C5E1-BDB8-11D0-9C88-0000F8040A53}">
+      <IDSymbol name="ASPXContextMenu" value="0x0035"/>
+    </GuidSymbol>
+  </Symbols>
+
+</CommandTable>
