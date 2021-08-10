@@ -257,7 +257,7 @@ namespace SamirBoulema.TSVN
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e) => Refresh().FireAndForget();
 
-        private async Task Refresh() => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
+        private async Task Refresh() => Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
 
         private void HideUnversionedButton_OnChecked(object sender, RoutedEventArgs e) => ToggleUnversioned(true).FireAndForget();
 
@@ -267,7 +267,7 @@ namespace SamirBoulema.TSVN
         {
             Settings.Default.HideUnversioned = hide;
             Settings.Default.Save();
-            Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot().ConfigureAwait(false));
+            Update(await CommandHelper.GetPendingChanges(), await CommandHelper.GetRepositoryRoot());
         }
 
         private void TreeView_Collapsed(object sender, RoutedEventArgs e)

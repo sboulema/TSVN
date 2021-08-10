@@ -27,12 +27,12 @@ namespace SamirBoulema.TSVN.Options
 
         private async Task LoadDialog()
         {
-            var solution = await VS.Solutions.GetCurrentSolutionAsync().ConfigureAwait(false);
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
             var solutionFilePath = solution?.FullPath;
 
             if (File.Exists(solutionFilePath))
             {
-                options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+                options = await OptionsHelper.GetOptions();
                 rootFolderTextBox.Text = options.RootFolder;
                 onItemAddedAddToSVNCheckBox.Checked = options.OnItemAddedAddToSVN;
                 onItemRenamedRenameInSVNCheckBox.Checked = options.OnItemRenamedRenameInSVN;
@@ -52,7 +52,7 @@ namespace SamirBoulema.TSVN.Options
 
             if (string.IsNullOrEmpty(rootFolderTextBox.Text))
             {
-                rootFolderTextBox.Text = await CommandHelper.GetRepositoryRoot().ConfigureAwait(false);
+                rootFolderTextBox.Text = await CommandHelper.GetRepositoryRoot();
             }
         }
 
@@ -71,7 +71,7 @@ namespace SamirBoulema.TSVN.Options
             options.OnItemRenamedRenameInSVN = onItemRenamedRenameInSVNCheckBox.Checked;
             options.OnItemRemovedRemoveFromSVN = onItemRemovedRemoveFromSVNCheckBox.Checked;
             options.CloseOnEnd = closeOnEndCheckBox.Checked;
-            await OptionsHelper.SaveOptions(options).ConfigureAwait(false);
+            await OptionsHelper.SaveOptions(options);
             Close();
         }
 

@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		azure-pipelines.yml = azure-pipelines.yml
-		publish-manifest.VS2017.json = publish-manifest.VS2017.json
 		publish-manifest.VS2019.json = publish-manifest.VS2019.json
 		publish-manifest.VS2022.json = publish-manifest.VS2022.json
 		README.md = README.md
@@ -19,13 +18,10 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TSVN.Shared", "TSVN.Shared\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSVN.VS2019", "TSVN.VS2019\TSVN.VS2019.csproj", "{1C161366-D879-43BB-AC85-D7F5C82B9880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TSVN.VS2017", "TSVN.VS2017\TSVN.VS2017.csproj", "{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}"
-EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		TSVN.Shared\TSVN.Shared.projitems*{1c161366-d879-43bb-ac85-d7f5c82b9880}*SharedItemsImports = 4
 		TSVN.Shared\TSVN.Shared.projitems*{81ad421f-adcc-41fb-bd06-23a6cfeb1d65}*SharedItemsImports = 4
-		TSVN.Shared\TSVN.Shared.projitems*{8b7b2ab8-91b0-4cb2-87a0-eae2a637c55e}*SharedItemsImports = 4
 		TSVN.Shared\TSVN.Shared.projitems*{900c73f3-67f8-428d-84d6-a29d91d10cea}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,14 +47,6 @@ Global
 		{1C161366-D879-43BB-AC85-D7F5C82B9880}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1C161366-D879-43BB-AC85-D7F5C82B9880}.Release|x86.ActiveCfg = Release|x86
 		{1C161366-D879-43BB-AC85-D7F5C82B9880}.Release|x86.Build.0 = Release|x86
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Debug|x86.ActiveCfg = Debug|x86
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Debug|x86.Build.0 = Debug|x86
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Release|x86.ActiveCfg = Release|x86
-		{8B7B2AB8-91B0-4CB2-87A0-EAE2A637C55E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -153,7 +153,7 @@
       <Version>4.0.173</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.Toolkit">
-      <Version>16.0.76.257-pre</Version>
+      <Version>15.0.76.257-pre</Version>
     </PackageReference>
     <PackageReference Include="Community.VisualStudio.VSCT">
       <Version>16.0.29.6</Version>

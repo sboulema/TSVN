@@ -11,3 +11,6 @@ dotnet_diagnostic.IDE0022.severity = none
 
 # IDE0008: Use explicit type
 dotnet_diagnostic.IDE0008.severity = none
+
+# VSTHRD111: Use ConfigureAwait(bool)
+dotnet_diagnostic.VSTHRD111.severity = none

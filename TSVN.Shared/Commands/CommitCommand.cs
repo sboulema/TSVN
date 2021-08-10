@@ -11,8 +11,9 @@ namespace SamirBoulema.TSVN.Commands
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
-            await KnownCommands.File_SaveAll.ExecuteAsync().ConfigureAwait(false);
-            await CommandHelper.RunTortoiseSvnCommand("commit").ConfigureAwait(false);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+            await KnownCommands.File_SaveAll.ExecuteAsync();
+            await CommandHelper.RunTortoiseSvnCommand("commit");
         }
     }
 }

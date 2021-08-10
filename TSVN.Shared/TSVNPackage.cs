@@ -80,7 +80,7 @@ namespace SamirBoulema.TSVN
         #region Events
         private async Task ProjectItemsEvents_ItemRenamedAsync(string[] oldFilePaths, string[] newFilePaths)
         {
-            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+            var options = await OptionsHelper.GetOptions();
 
             if (!options.OnItemRenamedRenameInSVN)
             {
@@ -93,13 +93,13 @@ namespace SamirBoulema.TSVN
                 File.Move(newFilePaths[i], oldFilePaths[i]);
 
                 // So that we can svn rename it properly
-                await CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}").ConfigureAwait(false);
+                await CommandHelper.StartProcess(FileHelper.GetSvnExec(), $"mv {oldFilePaths[i]} {newFilePaths[i]}");
             }
         }
 
         private async Task ProjectItemsEvents_ItemAdded_Async(string[] filePaths)
         {
-            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+            var options = await OptionsHelper.GetOptions();
 
             if (!options.OnItemAddedAddToSVN)
             {
@@ -108,13 +108,13 @@ namespace SamirBoulema.TSVN
 
             foreach (var filePath in filePaths)
             {
-                await CommandHelper.RunTortoiseSvnFileCommand("add", filePath: filePath).ConfigureAwait(false);
+                await CommandHelper.RunTortoiseSvnFileCommand("add", filePath: filePath);
             }
         }
 
         private async Task ProjectItemsEvents_ItemRemoved_Async(string[] filePaths)
         {
-            var options = await OptionsHelper.GetOptions().ConfigureAwait(false);
+            var options = await OptionsHelper.GetOptions();
 
             if (!options.OnItemRemovedRemoveFromSVN)
             {
@@ -123,7 +123,7 @@ namespace SamirBoulema.TSVN
 
             foreach (var filePath in filePaths)
             {
-                await CommandHelper.RunTortoiseSvnFileCommand("remove", filePath: filePath).ConfigureAwait(false);
+                await CommandHelper.RunTortoiseSvnFileCommand("remove", filePath: filePath);
             }
         }
 

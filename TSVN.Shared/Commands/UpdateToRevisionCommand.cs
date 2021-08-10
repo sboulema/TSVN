@@ -11,6 +11,7 @@ namespace SamirBoulema.TSVN.Commands
     {
         protected override async Task ExecuteAsync(OleMenuCmdEventArgs e)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             await KnownCommands.File_SaveAll.ExecuteAsync();
             await CommandHelper.RunTortoiseSvnCommand("update", "/rev");
         }

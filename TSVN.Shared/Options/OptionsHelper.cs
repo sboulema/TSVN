@@ -45,7 +45,7 @@ namespace SamirBoulema.TSVN.Options
         {
             var json = JsonConvert.SerializeObject(options);
 
-            var solution = await VS.Solutions.GetCurrentSolutionAsync().ConfigureAwait(false);
+            var solution = await VS.Solutions.GetCurrentSolutionAsync();
             var solutionFilePath = solution?.FullPath;
 
             if (!File.Exists(solutionFilePath))

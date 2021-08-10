@@ -33,7 +33,7 @@ namespace SamirBoulema.TSVN.Helpers
                 return;
             }
 
-            await VS.Commands.ExecuteAsync("File.OpenFile", filePath).ConfigureAwait(false);
+            await VS.Commands.ExecuteAsync("File.OpenFile", filePath);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace SamirBoulema.TSVN.Helpers
             }
 
             // Context menu in the Code Editor
-            var documentView = await VS.Documents.GetActiveDocumentViewAsync().ConfigureAwait(false);
+            var documentView = await VS.Documents.GetActiveDocumentViewAsync();
             return documentView?.Document?.FilePath;
         }
 
