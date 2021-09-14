@@ -1,7 +1,7 @@
 # TSVN
 Control TortoiseSVN from within Visual Studio
 
-[![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/sboulema.TSVN)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=1)
+[![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/TSVN?branchName=main)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=27&branchName=main)
 [![Sponsor](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/sboulema)
 
 # Getting started
@@ -10,7 +10,7 @@ Control TortoiseSVN from within Visual Studio
 3. Enjoy! 
 
 # Links
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN) ![Visual Studio Marketplace](http://vsmarketplacebadge.apphb.com/version-short/SamirBoulema.TSVN.svg)
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN) ![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version-short/SamirBoulema.TSVN.svg)
 
 [Github Releases](https://github.com/sboulema/TSVN/releases)
 
@@ -19,19 +19,19 @@ Control TortoiseSVN from within Visual Studio
 # Features
 All the SVN functions quickly accessible from the TSVN menu:
 
-![Main Menu](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/TSVN-main.png)
+![Main Menu](https://raw.githubusercontent.com/sboulema/TSVN/main/Resources/Screenshots/TSVN-main.png)
 
 When working on a single file you can find all SVN functions related to that file in the context menu:
 
-![Context Menu](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/tsvn-context.png)
+![Context Menu](https://raw.githubusercontent.com/sboulema/TSVN/main/Resources/Screenshots/tsvn-context.png)
 
 A customizable toolbar with all your favorite commands:
 
-![Toolbar](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/tsvn-toolbar.png)
+![Toolbar](https://raw.githubusercontent.com/sboulema/TSVN/main/Resources/Screenshots/tsvn-toolbar.png)
 
 A pending changes window with the most important commands:
 
-![Pending Changes](https://raw.githubusercontent.com/sboulema/TSVN/master/TSVN/Resources/Screenshots/pendingchanges.png)
+![Pending Changes](https://raw.githubusercontent.com/sboulema/TSVN/main/Resources/Screenshots/pendingchanges.png)
 
 ## Keyboard shortcuts
 
