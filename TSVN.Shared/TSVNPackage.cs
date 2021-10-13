@@ -22,6 +22,8 @@ namespace SamirBoulema.TSVN
     {
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
             this.RegisterToolWindows();
 
             await this.RegisterCommandsAsync();
