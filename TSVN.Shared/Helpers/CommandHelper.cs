@@ -15,10 +15,7 @@ namespace SamirBoulema.TSVN.Helpers
     public static class CommandHelper
     {
         public static async Task Commit()
-        {
-            await VS.Commands.ExecuteAsync("File.SaveAll");
-            await RunTortoiseSvnCommand("commit");
-        }
+            => await RunTortoiseSvnCommand("commit");
 
         public static async Task Commit(string filePath)
             => await RunTortoiseSvnFileCommand("commit", filePath: filePath);

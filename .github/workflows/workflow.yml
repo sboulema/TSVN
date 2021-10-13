@@ -1,0 +1,110 @@
+name: TSVN
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/**'
+
+env:
+  version: '5.2.${{ github.run_number }}'
+  repoUrl: ${{ github.server_url }}/${{ github.repository }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2   
+
+      - name: Update Assembly Version
+        uses: dannevesdantas/set-version-assemblyinfo@v.1.0.0
+        with:
+          version: ${{ env.version }}
+
+      - name: Update Vsix Version (VS2019)
+        uses: cezarypiatek/VsixVersionAction@1.0
+        with:
+          version: ${{ env.version }}
+          vsix-manifest-file: 'TSVN.VS2019\source.extension.vsixmanifest'
+
+      - name: Update Vsix Version (VS2022)
+        uses: cezarypiatek/VsixVersionAction@1.0
+        with:
+          version: ${{ env.version }}
+          vsix-manifest-file: 'TSVN.VS2022\source.extension.vsixmanifest'
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.2
+
+      - name: NuGet restore
+        run: nuget restore TSVN.sln -ConfigFile nuget.config
+
+      - name: Build VSIX
+        run: msbuild TSVN.sln /t:Rebuild /p:Configuration=Release
+        env: 
+          DeployExtension: False
+
+      - name: Publish Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: TSVN
+          path: |
+            **\*.vsix
+            publish-manifest.*.json
+            readme.md
+
+  release:
+    name: Release
+    needs: build
+    runs-on: windows-latest
+    environment: Release
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+
+      - name: Tag release
+        id: tag_release
+        uses: mathieudutour/github-tag-action@v5.6
+        with:
+          custom_tag: '${{ env.version }}'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create a GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_release.outputs.new_tag }}
+          name: ${{ steps.tag_release.outputs.new_tag }}
+          body: ${{ steps.tag_release.outputs.changelog }}
+          artifacts: "**/*.vsix"
+
+      - name: Publish to Marketplace - VS2019
+        uses: cezarypiatek/VsixPublisherAction@0.1
+        with:
+          extension-file: TSVN/TSVN.VS2019/bin/release/TSVN.VS2019.vsix
+          publish-manifest-file: TSVN/publish-manifest.VS2019.json
+          personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
+          
+      - name: Publish to Marketplace - VS2022
+        uses: cezarypiatek/VsixPublisherAction@0.1
+        with:
+          extension-file: TSVN/TSVN.VS2022/bin/release/TSVN.VS2022.vsix
+          publish-manifest-file: TSVN/publish-manifest.VS2022.json
+          personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
+
+      - name: Publish to Open VSIX Gallery - VS2019
+        uses: leandro-hermes/action-upload-file@v1.1.0
+        with:
+          host: 'www.vsixgallery.com'
+          path: '/api/upload?repo=${{ env.repoUrl }}&issuetracker=${{ env.repoUrl }}/issues'
+          https: true 
+          filePath: TSVN/TSVN.VS2019/bin/release/TSVN.VS2019.vsix
+
+      - name: Publish to Open VSIX Gallery - VS2022
+        uses: leandro-hermes/action-upload-file@v1.1.0
+        with:
+          host: 'www.vsixgallery.com'
+          path: '/api/upload?repo=${{ env.repoUrl }}&issuetracker=${{ env.repoUrl }}/issues'
+          https: true 
+          filePath: TSVN/TSVN.VS2022/bin/release/TSVN.VS2022.vsix

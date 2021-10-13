@@ -43,19 +43,25 @@ namespace SamirBoulema.TSVN.Helpers
         /// <returns>File path</returns>
         public static async Task<string> GetPath()
         {
-            // Context menu in the Solution Explorer
-            var selectedItem = await VS.Solutions.GetActiveItemAsync();
+            var windowFrame = await VS.Windows.GetCurrentWindowAsync();
+            var solutionExplorerIsActive = windowFrame.Guid == new Guid(WindowGuids.SolutionExplorer);
 
-            if (selectedItem != null)
+            // Context menu in the Solution Explorer
+            if (solutionExplorerIsActive)
             {
-                if (selectedItem.Type == SolutionItemType.Project ||
-                    selectedItem.Type == SolutionItemType.Solution)
+                var selectedItem = await VS.Solutions.GetActiveItemAsync();
+
+                if (selectedItem != null)
                 {
-                    return Path.GetDirectoryName(selectedItem.FullPath);
-                }
-                else if (selectedItem.Type == SolutionItemType.PhysicalFile)
-                {
-                    return selectedItem.FullPath;
+                    if (selectedItem.Type == SolutionItemType.Project ||
+                        selectedItem.Type == SolutionItemType.Solution)
+                    {
+                        return Path.GetDirectoryName(selectedItem.FullPath);
+                    }
+                    else if (selectedItem.Type == SolutionItemType.PhysicalFile)
+                    {
+                        return selectedItem.FullPath;
+                    }
                 }
             }
 
@@ -71,8 +77,8 @@ namespace SamirBoulema.TSVN.Helpers
 
             return localMachineKey
                 .OpenSubKey(@"SOFTWARE\TortoiseSVN")
-                .GetValue("ProcPath", DEFAULT_PROC_PATH)
-                .ToString();
+                ?.GetValue("ProcPath", DEFAULT_PROC_PATH)
+                ?.ToString();
         }
     }
 }
