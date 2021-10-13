@@ -1,7 +1,7 @@
 # TSVN
 Control TortoiseSVN from within Visual Studio
 
-[![Build Status](https://dev.azure.com/sboulema/TSVN/_apis/build/status/TSVN?branchName=main)](https://dev.azure.com/sboulema/TSVN/_build/latest?definitionId=27&branchName=main)
+[![TSVN](https://github.com/sboulema/TSVN/actions/workflows/workflow.yml/badge.svg)](https://github.com/sboulema/TSVN/actions/workflows/workflow.yml)
 [![Sponsor](https://img.shields.io/badge/-Sponsor-fafbfc?logo=GitHub%20Sponsors)](https://github.com/sponsors/sboulema)
 
 # Getting started
