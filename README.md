@@ -10,7 +10,7 @@ Control TortoiseSVN from within Visual Studio
 3. Enjoy! 
 
 # Links
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN) ![Visual Studio Marketplace](https://vsmarketplacebadge.apphb.com/version-short/SamirBoulema.TSVN.svg)
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=SamirBoulema.TSVN)
 
 [Github Releases](https://github.com/sboulema/TSVN/releases)
 
