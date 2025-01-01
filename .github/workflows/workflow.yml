@@ -7,7 +7,7 @@ on:
       - 'feature/**'
 
 env:
-  version: '5.2.${{ github.run_number }}'
+  version: '5.3.${{ github.run_number }}'
   repoUrl: ${{ github.server_url }}/${{ github.repository }}
 
 jobs:
@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2   
+        uses: actions/checkout@v4   
 
       - name: Update Assembly Version
         uses: dannevesdantas/set-version-assemblyinfo@v.1.0.0
@@ -24,19 +24,19 @@ jobs:
           version: ${{ env.version }}
 
       - name: Update Vsix Version (VS2019)
-        uses: cezarypiatek/VsixVersionAction@1.0
+        uses: cezarypiatek/VsixVersionAction@1.1
         with:
           version: ${{ env.version }}
           vsix-manifest-file: 'TSVN.VS2019\source.extension.vsixmanifest'
 
       - name: Update Vsix Version (VS2022)
-        uses: cezarypiatek/VsixVersionAction@1.0
+        uses: cezarypiatek/VsixVersionAction@1.1
         with:
           version: ${{ env.version }}
           vsix-manifest-file: 'TSVN.VS2022\source.extension.vsixmanifest'
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v2
 
       - name: NuGet restore
         run: nuget restore TSVN.sln -ConfigFile nuget.config
@@ -62,11 +62,11 @@ jobs:
     environment: Release
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
 
       - name: Tag release
         id: tag_release
-        uses: mathieudutour/github-tag-action@v5.6
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           custom_tag: '${{ env.version }}'
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -80,14 +80,14 @@ jobs:
           artifacts: "**/*.vsix"
 
       - name: Publish to Marketplace - VS2019
-        uses: cezarypiatek/VsixPublisherAction@0.1
+        uses: cezarypiatek/VsixPublisherAction@1.1
         with:
           extension-file: TSVN/TSVN.VS2019/bin/release/TSVN.VS2019.vsix
           publish-manifest-file: TSVN/publish-manifest.VS2019.json
           personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
           
       - name: Publish to Marketplace - VS2022
-        uses: cezarypiatek/VsixPublisherAction@0.1
+        uses: cezarypiatek/VsixPublisherAction@1.1
         with:
           extension-file: TSVN/TSVN.VS2022/bin/release/TSVN.VS2022.vsix
           publish-manifest-file: TSVN/publish-manifest.VS2022.json
