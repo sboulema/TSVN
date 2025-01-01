@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,9 +17,11 @@ namespace SamirBoulema.TSVN.Helpers
 
         private static void GetClient()
         {
-            _client = new TelemetryClient();
+            _client = new TelemetryClient(new TelemetryConfiguration
+            {
+                ConnectionString = "InstrumentationKey=3baac5da-a1cb-461f-a82b-ff3d96ddef68;IngestionEndpoint=https://westeurope-0.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/;ApplicationId=a07354ce-5706-4d24-be64-931abbfcb13d",
+            });
             _client.Context.Session.Id = Guid.NewGuid().ToString();
-            _client.InstrumentationKey = InstrumentationKey;
             _client.Context.Component.Version = GetExecutingAssemblyVersion().ToString();
 
             var enc = Encoding.UTF8.GetBytes(Environment.UserName + Environment.MachineName);
