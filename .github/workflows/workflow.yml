@@ -78,6 +78,7 @@ jobs:
           name: ${{ steps.tag_release.outputs.new_tag }}
           body: ${{ steps.tag_release.outputs.changelog }}
           artifacts: "**/*.vsix"
+          skipIfReleaseExists: true
 
       - name: Publish to Marketplace - VS2019
         uses: cezarypiatek/VsixPublisherAction@1.1
